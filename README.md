@@ -53,7 +53,7 @@ Attribute specific for a control pattern can be found [here](https://learn.micro
 
 Specific pattern attribute example: UIA_ValueValuePropertyId -> Value_Value
 
-# Suppored API
+# Supported API
 
 | Method 	| Path                                                        	|
 |--------	|-------------------------------------------------------------	|
