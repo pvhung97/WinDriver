@@ -46,8 +46,11 @@ You can find some sample code inside [WindowsDriverSample](./src/WindowsDriverSa
 # Element Attribute
 
 List of element attribute can be found [here](https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-automation-element-propids)
+
 Element attribute name example: UIA_AcceleratorKeyPropertyId -> AcceleratorKey
+
 Attribute specific for a control pattern can be found [here](https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-control-pattern-propids)
+
 Specific pattern attribute example: UIA_ValueValuePropertyId -> Value_Value
 
 # Suppored API
