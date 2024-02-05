@@ -4,6 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using WindowsDriver;
 
+Console.WriteLine($"WinDriver Version {System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}");
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
