@@ -55,11 +55,8 @@ namespace UIADriver.uia3
                 origin.AsObject().TryGetPropertyValue("element-6066-11e4-a52e-4f735466cecf", out var elementId);
                 if (elementId != null)
                 {
-                    IUIAutomationElement element = elementFinder.getElement(elementId.ToString());
-                    var cacheRequest = automation.CreateCacheRequest();
-                    cacheRequest.AddProperty(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
-                    var updated = element.BuildUpdatedCache(cacheRequest);
-                    double[] rect = (double[])updated.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
+                    IUIAutomationElement element = elementFinder.GetElement(elementId.ToString());
+                    double[] rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
 
                     var windowLocation = GetCurrentWindowLocation();
 

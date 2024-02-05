@@ -210,7 +210,7 @@ namespace UIADriver.uia3.session
         public override FindElementResponse GetActiveElement()
         {
             getCurrentWindow(null);
-            return elementFinder.getActiveElement(currentHdl);
+            return elementFinder.GetActiveElement(currentHdl);
         }
 
         public override string? GetElementAttribute(string id, string attribute)
@@ -228,10 +228,7 @@ namespace UIADriver.uia3.session
         public override RectResponse GetElementRect(string id)
         {
             var currentWindowRect = GetCurrentWindowRect();
-            var element = elementFinder.getElement(id);
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
-            element = element.BuildUpdatedCache(cacheRequest);
+            var element = elementFinder.GetElement(id);
             double[] rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
             return new RectResponse((int)rect[0] - currentWindowRect.x, (int)rect[1] - currentWindowRect.y, double.IsInfinity(rect[2]) ? 0 : (int)rect[2], double.IsInfinity(rect[3]) ? 0 : (int)rect[3]);
         }

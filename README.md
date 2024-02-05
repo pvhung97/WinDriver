@@ -22,7 +22,7 @@ You can find some sample code inside [WindowsDriverSample](./src/WindowsDriverSa
 
 | Capabilities                 	| Description                                                          	| Default Value 	|
 |------------------------------	|----------------------------------------------------------------------	|---------------	|
-| platform                     	| Must be "windows"                                                    	|               	|
+| platformName                     	| Must be "windows"                                                    	|               	|
 | windriver:automationName     	| Must be "uia3"                                                       	|               	|
 | windriver:appPath            	| Executable path                                                      	|               	|
 | windriver:aumid              	| Window store application's aumid                                     	|               	|

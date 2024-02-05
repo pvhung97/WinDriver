@@ -25,44 +25,44 @@ namespace UIADriver.uia3
             cachedElement.Clear();
         }
 
-        public FindElementResponse findElement(FindElementRequest request, IUIAutomationElement topLevelWindow)
+        public FindElementResponse FindElement(FindElementRequest request, IUIAutomationElement topLevelWindow)
         {
             //  Both FindFirst and FindAll will miss any element that is neither ControlElement nor ContentElement
-            var found = findElements(request, topLevelWindow, true);
+            var found = FindElements(request, topLevelWindow, true);
             if (found.Count == 0) throw new NoSuchElement("Cannot find element with given location strategy and selector");
             return found[0];
         }
 
-        public List<FindElementResponse> findElements(FindElementRequest request, IUIAutomationElement topLevelWindow)
+        public List<FindElementResponse> FindElements(FindElementRequest request, IUIAutomationElement topLevelWindow)
         {
-            return findElements(request, topLevelWindow, false);
+            return FindElements(request, topLevelWindow, false);
         }
 
-        private List<FindElementResponse> findElements(FindElementRequest request, IUIAutomationElement topLevelWindow, bool stopAtFirst)
+        private List<FindElementResponse> FindElements(FindElementRequest request, IUIAutomationElement topLevelWindow, bool stopAtFirst)
         {
             List<IUIAutomationElement> rs = [];
             switch (request.strategy)
             {
                 case "xpath":
-                    rs = findElementsWithXpath(request.value, topLevelWindow);
+                    rs = FindElementsWithXpath(request.value, topLevelWindow);
                     break;
                 case "name":
-                    rs = findElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_NamePropertyId, request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_NamePropertyId, request.value, topLevelWindow, stopAtFirst);
                     break;
                 case "automation id":
-                    rs = findElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_AutomationIdPropertyId, request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_AutomationIdPropertyId, request.value, topLevelWindow, stopAtFirst);
                     break;
                 case "id":
-                    rs = findElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_RuntimeIdPropertyId, request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_RuntimeIdPropertyId, request.value, topLevelWindow, stopAtFirst);
                     break;
                 case "tag name":
-                    rs = findElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_ControlTypePropertyId, request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_ControlTypePropertyId, request.value, topLevelWindow, stopAtFirst);
                     break;
                 default:
                     throw new InvalidArgument("Unsupported location strategy " + request.strategy);
             }
 
-            List<FindElementResponse> resp = new List<FindElementResponse>();
+            var resp = new List<FindElementResponse>();
             foreach (var item in rs)
             {
                 string id = Guid.NewGuid().ToString();
@@ -72,11 +72,11 @@ namespace UIADriver.uia3
             return resp;
         }
 
-        private List<IUIAutomationElement> findElementsWithXpath(string xpath, IUIAutomationElement topLevelWindow)
+        private List<IUIAutomationElement> FindElementsWithXpath(string xpath, IUIAutomationElement topLevelWindow)
         {
             var source = sourceBuilder.buildPageSource(topLevelWindow);
             var nodes = source.pageSource.XPathSelectElements(xpath);
-            List<IUIAutomationElement> rs = new List<IUIAutomationElement>();
+            var rs = new List<IUIAutomationElement>();
 
             foreach (var node in nodes)
             {
@@ -86,19 +86,24 @@ namespace UIADriver.uia3
             return rs;
         }
 
-        private List<IUIAutomationElement> findElementsWithPropertIdAndValue(int propertyId, string value, IUIAutomationElement topLevelWindow, bool stopAtFirst)
+        private List<IUIAutomationElement> FindElementsWithPropertIdAndValue(int propertyId, string value, IUIAutomationElement topLevelWindow, bool stopAtFirst)
         {
             return sourceBuilder.findElementByProperty(topLevelWindow, propertyId, value, stopAtFirst);
         }
 
-        public IUIAutomationElement getElement(string id)
+        public IUIAutomationElement GetElement(string id)
+        {
+            var cacheRequest = automation.CreateCacheRequest();
+            cacheRequest.AddProperty(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
+            return GetElement(id, cacheRequest);
+        }
+
+        public IUIAutomationElement GetElement(string id, IUIAutomationCacheRequest cacheRequest)
         {
             cachedElement.TryGetValue(id, out var element);
             if (element == null) throw new StaleElementReference("element is stale");
             try
             {
-                var cacheRequest = automation.CreateCacheRequest();
-                cacheRequest.AddProperty(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
                 element = element.BuildUpdatedCache(cacheRequest);
                 return element;
             }
@@ -109,12 +114,12 @@ namespace UIADriver.uia3
             }
         }
 
-        public FindElementResponse getActiveElement()
+        public FindElementResponse GetActiveElement()
         {
-            return getActiveElement(null);
+            return GetActiveElement(null);
         }
 
-        public FindElementResponse getActiveElement(int? topLevelHdl)
+        public FindElementResponse GetActiveElement(int? topLevelHdl)
         {
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);

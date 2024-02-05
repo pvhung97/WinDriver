@@ -13,8 +13,7 @@ public class CalculatorSample {
     public static void main(String[] args) throws Exception {
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setPlatform(Platform.WINDOWS);
-        cap.setCapability("windriver:aumid",
-        "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
+        cap.setCapability("windriver:aumid", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
         cap.setCapability("windriver:automationName", "uia3");
         RemoteWebDriver driver = new WinDriver(URI.create("http://localhost:5058").toURL(), cap);
 

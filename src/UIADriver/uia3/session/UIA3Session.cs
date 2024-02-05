@@ -82,13 +82,13 @@ namespace UIADriver.uia3.session
         public override FindElementResponse FindElement(JsonObject data)
         {
             FindElementRequest rq = FindElementRequest.Validate(data);
-            return elementFinder.findElement(rq, getCurrentWindow(null));
+            return elementFinder.FindElement(rq, getCurrentWindow(null));
         }
 
         public override List<FindElementResponse> FindElements(JsonObject data)
         {
             FindElementRequest rq = FindElementRequest.Validate(data);
-            return elementFinder.findElements(rq, getCurrentWindow(null));
+            return elementFinder.FindElements(rq, getCurrentWindow(null));
         }
 
         public override FindElementResponse FindElementFromElement(string elementId, JsonObject data)
@@ -97,12 +97,12 @@ namespace UIADriver.uia3.session
             IUIAutomationElement? startPoint = null;
             try
             {
-                startPoint = elementFinder.getElement(elementId);
+                startPoint = elementFinder.GetElement(elementId);
             }
             catch { }
             if (startPoint == null) throw new NoSuchElement("Cannot find any element with given parent element");
 
-            return elementFinder.findElement(rq, startPoint);
+            return elementFinder.FindElement(rq, startPoint);
         }
 
         public override List<FindElementResponse> FindElementsFromElement(string elementId, JsonObject data)
@@ -111,60 +111,57 @@ namespace UIADriver.uia3.session
             IUIAutomationElement? startPoint = null;
             try
             {
-                startPoint = elementFinder.getElement(elementId);
+                startPoint = elementFinder.GetElement(elementId);
             }
             catch { }
             if (startPoint == null) return [];
 
-            return elementFinder.findElements(rq, startPoint);
+            return elementFinder.FindElements(rq, startPoint);
         }
 
         public override string? GetElementAttribute(string id, string attribute)
         {
-            var element = elementFinder.getElement(id);
+            var element = elementFinder.GetElement(id);
             return attrGetter.getAttribute(automation, element, attribute);
         }
 
         public override string GetElementTagName(string id)
         {
-            var element = elementFinder.getElement(id);
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_ControlTypePropertyId);
-            element = element.BuildUpdatedCache(cacheRequest);
+            var element = elementFinder.GetElement(id, cacheRequest);
             return Utilities.GetControlTypeString((int)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_ControlTypePropertyId));
         }
 
         public override string GetElementText(string id)
         {
-            var element = elementFinder.getElement(id);
+            var cacheRequest = automation.CreateCacheRequest();
+            cacheRequest.AddProperty(UIA_PropertyIds.UIA_NamePropertyId);
+
+            var element = elementFinder.GetElement(id, cacheRequest);
             var treeWalker = automation.CreateTreeWalker(automation.CreateTrueCondition());
             var firstChild = treeWalker.GetFirstChildElement(element);
             if (firstChild != null) return "";
 
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_NamePropertyId);
-            element = element.BuildUpdatedCache(cacheRequest);
             return (string)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_NamePropertyId);
         }
 
         public override bool IsElementEnabled(string id)
         {
-            var element = elementFinder.getElement(id);
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsEnabledPropertyId);
-            element = element.BuildUpdatedCache(cacheRequest);
+            var element = elementFinder.GetElement(id, cacheRequest);
             return (bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsEnabledPropertyId);
         }
 
         public override bool IsElementSelected(string id)
         {
-            var element = elementFinder.getElement(id);
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsSelectionItemPatternAvailablePropertyId);
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_SelectionItemIsSelectedPropertyId);
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsTogglePatternAvailablePropertyId);
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_ToggleToggleStatePropertyId);
-            element = element.BuildUpdatedCache(cacheRequest);
+            var element = elementFinder.GetElement(id, cacheRequest);
 
             if ((bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsSelectionItemPatternAvailablePropertyId))
             {
@@ -181,10 +178,9 @@ namespace UIADriver.uia3.session
 
         public override bool IsElementDisplayed(string id)
         {
-            var element = elementFinder.getElement(id);
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsOffscreenPropertyId);
-            element = element.BuildUpdatedCache(cacheRequest);
+            var element = elementFinder.GetElement(id, cacheRequest);
 
             return !(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsOffscreenPropertyId);
         }
@@ -210,18 +206,16 @@ namespace UIADriver.uia3.session
         {
             getCurrentWindowThenFocus(null);
 
-            var element = elementFinder.getElement(elementId);
             var elementCacheRequest = automation.CreateCacheRequest();
             elementCacheRequest.AddPattern(UIA_PatternIds.UIA_ScrollItemPatternId);
             elementCacheRequest.AddProperty(UIA_PropertyIds.UIA_IsOffscreenPropertyId);
             elementCacheRequest.AddProperty(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
-            element = element.BuildUpdatedCache(elementCacheRequest);
+            var element = elementFinder.GetElement(elementId, elementCacheRequest);
             var pattern = element.GetCachedPattern(UIA_PatternIds.UIA_ScrollItemPatternId);
             if (pattern != null && pattern is IUIAutomationScrollItemPattern scrollItemPatern)
             {
                 scrollItemPatern.ScrollIntoView();
-                Thread.Sleep(capabilities.delayAfterFocus);
-                element = element.BuildUpdatedCache(elementCacheRequest);
+                element = WaitUntilElementPropertyEqual(element, elementCacheRequest, UIA_PropertyIds.UIA_IsOffscreenPropertyId, false, capabilities.delayAfterFocus);
             }
             if ((bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsOffscreenPropertyId))
             {
@@ -247,14 +241,13 @@ namespace UIADriver.uia3.session
         {
             getCurrentWindowThenFocus(null);
 
-            var element = elementFinder.getElement(elementId);
             var elementCacheRequest = automation.CreateCacheRequest();
             elementCacheRequest.AddPattern(UIA_PatternIds.UIA_ValuePatternId);
             elementCacheRequest.AddPattern(UIA_PatternIds.UIA_ScrollItemPatternId);
             elementCacheRequest.AddProperty(UIA_PropertyIds.UIA_IsOffscreenPropertyId);
             elementCacheRequest.AddProperty(UIA_PropertyIds.UIA_ValueIsReadOnlyPropertyId);
             elementCacheRequest.AddProperty(UIA_PropertyIds.UIA_IsEnabledPropertyId);
-            element = element.BuildUpdatedCache(elementCacheRequest);
+            var element = elementFinder.GetElement(elementId, elementCacheRequest);
             var pattern = element.GetCachedPattern(UIA_PatternIds.UIA_ValuePatternId);
             if (pattern != null && pattern is IUIAutomationValuePattern valuePattern)
             {
@@ -271,8 +264,7 @@ namespace UIADriver.uia3.session
                 if (sPattern != null && sPattern is IUIAutomationScrollItemPattern scrollItemPattern)
                 {
                     scrollItemPattern.ScrollIntoView();
-                    Thread.Sleep(capabilities.delayAfterFocus);
-                    element = element.BuildUpdatedCache(elementCacheRequest);
+                    element = WaitUntilElementPropertyEqual(element, elementCacheRequest, UIA_PropertyIds.UIA_IsOffscreenPropertyId, false, capabilities.delayAfterFocus);
                 }
                 if ((bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsOffscreenPropertyId))
                 {
@@ -295,7 +287,6 @@ namespace UIADriver.uia3.session
 
             getCurrentWindowThenFocus(null);
 
-            var element = elementFinder.getElement(elementId);
             var elementCacheRequest = automation.CreateCacheRequest();
             elementCacheRequest.AddPattern(UIA_PatternIds.UIA_ScrollItemPatternId);
             elementCacheRequest.AddPattern(UIA_PatternIds.UIA_TextPattern2Id);
@@ -303,13 +294,12 @@ namespace UIADriver.uia3.session
             elementCacheRequest.AddProperty(UIA_PropertyIds.UIA_IsEnabledPropertyId);
             elementCacheRequest.AddProperty(UIA_PropertyIds.UIA_HasKeyboardFocusPropertyId);
             elementCacheRequest.AddProperty(UIA_PropertyIds.UIA_IsKeyboardFocusablePropertyId);
-            element = element.BuildUpdatedCache(elementCacheRequest);
+            var element = elementFinder.GetElement(elementId, elementCacheRequest);
             var pattern = element.GetCachedPattern(UIA_PatternIds.UIA_ScrollItemPatternId);
             if (pattern != null && pattern is IUIAutomationScrollItemPattern scrollItemPatern)
             {
                 scrollItemPatern.ScrollIntoView();
-                Thread.Sleep(capabilities.delayAfterFocus);
-                element = element.BuildUpdatedCache(elementCacheRequest);
+                element = WaitUntilElementPropertyEqual(element, elementCacheRequest, UIA_PropertyIds.UIA_IsOffscreenPropertyId, false, capabilities.delayAfterFocus);
             }
             if ((bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsOffscreenPropertyId)
                 || !(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsEnabledPropertyId)
@@ -327,7 +317,7 @@ namespace UIADriver.uia3.session
             if (!alreadyHasKbFocus)
             {
                 element.SetFocus();
-                Thread.Sleep(capabilities.delayAfterFocus);
+                element = WaitUntilElementPropertyEqual(element, elementCacheRequest, UIA_PropertyIds.UIA_HasKeyboardFocusPropertyId, true, capabilities.delayAfterFocus);
                 var tpattern = element.GetCachedPattern(UIA_PatternIds.UIA_TextPattern2Id);
                 if (tpattern != null)
                 {
@@ -399,13 +389,31 @@ namespace UIADriver.uia3.session
         {
             getCurrentWindow(null);
             //  Get element already include rect in cache
-            var element = elementFinder.getElement(elementId);
+            var element = elementFinder.GetElement(elementId);
             double[] rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
 
             using (Bitmap bmp = screenCapture.CaptureElementScreenshot((int)rect[0], (int)rect[1], (int)rect[2], (int)rect[3]))
             {
                 return screenCapture.ConvertToBase64(bmp);
             }
+        }
+
+        protected IUIAutomationElement WaitUntilElementPropertyEqual(IUIAutomationElement element, IUIAutomationCacheRequest cacheRequest, int propId, object expectedValue, int timeout)
+        {
+            var pointer = element;
+            var start = DateTime.Now;
+            while (true)
+            {
+                object value = pointer.GetCachedPropertyValue(propId);
+                if (expectedValue.Equals(value) || (DateTime.Now - start).TotalMilliseconds > timeout)
+                {
+                    break;
+                }
+
+                Thread.Sleep(50);
+                pointer = pointer.BuildUpdatedCache(cacheRequest);
+            }
+            return pointer;
         }
 
     }
