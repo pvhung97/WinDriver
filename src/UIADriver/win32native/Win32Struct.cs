@@ -137,5 +137,20 @@ namespace UIA3Driver.win32native
             public RECT work;
             public uint flags;
         }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WindowInfo
+        {
+            public uint size;
+            public RECT rcWindow;
+            public RECT rcClient;
+            public uint dwStyle;
+            public uint dwExStyle;
+            public uint dwWindowStatus;
+            public uint cxWindowBorders;
+            public uint cyWindowBorders;
+            public ushort atomWindowType;
+            public ushort wCreatorVersion;
+        }
     }
 }

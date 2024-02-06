@@ -13,9 +13,7 @@ namespace UIADriver.uia3.session
             var p = new Process();
             p.StartInfo.WorkingDirectory = capabilities.workingDirectory != null ? capabilities.workingDirectory : Path.GetDirectoryName(capabilities.appPath);
             p.StartInfo.FileName = capabilities.appPath;
-            p.StartInfo.CreateNoWindow = true;
             p.StartInfo.UseShellExecute = true;
-            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             foreach (var arg in capabilities.appArgument)
             {
                 p.StartInfo.ArgumentList.Add(arg);

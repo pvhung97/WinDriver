@@ -10,6 +10,7 @@ using UIA3Driver.exception;
 using UIA3Driver.win32;
 using UIA3Driver.win32native;
 using UIADriver.uia3.sourcebuilder;
+using static UIA3Driver.win32native.Win32Struct;
 
 namespace UIADriver.uia3.session
 {
@@ -115,7 +116,14 @@ namespace UIADriver.uia3.session
             int hdl = (int)currentWindow.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             nint currentFocus = Win32Methods.GetForegroundWindow();
             if (currentFocus == hdl) return currentWindow;
-            Win32Methods.SetForegroundWindow(hdl);
+            //  Should not active popup window
+            var wi = new WindowInfo();
+            wi.size = (uint)Marshal.SizeOf(wi);
+            Win32Methods.GetWindowInfo(hdl, ref wi);
+            if ((wi.dwStyle & 0x80000000) != 0x80000000)
+            {
+                Win32Methods.SetForegroundWindow(hdl);
+            }
             return currentWindow;
         }
 
@@ -178,6 +186,8 @@ namespace UIADriver.uia3.session
             return CollectWindowHandles();
         }
 
+        //  Should not active or restore window on switch since context menu will dissapear if other window is activated
+        //  To restore window, use maximize or setRect
         public override void SwitchToWindow(JsonObject data)
         {
             var rq = SwitchWindowRequest.Validate(data);
@@ -191,8 +201,6 @@ namespace UIADriver.uia3.session
             
             if (newHdl != currentHdl) elementFinder.resetCache();
             currentHdl = newHdl;
-            if (Win32Methods.IsIconic(currentHdl)) Win32Methods.ShowWindow(currentHdl, Win32Constants.SW_RESTORE);
-            Win32Methods.SetForegroundWindow(currentHdl);
         }
 
         public override FindElementResponse FindElementFromElement(string elementId, JsonObject data)

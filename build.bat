@@ -1,8 +1,8 @@
 cd ./src/WindowsDriver
-msbuild WindowsDriver.sln /t:Clean;Rebuild /property:Configuration=Release
+msbuild WindowsDriver.sln /t:Clean;Restore;Build /property:Configuration=Release
 
 cd ../UIADriver
-msbuild UIADriver.sln /t:Clean;Rebuild /property:Configuration=Release
+msbuild UIADriver.sln /t:Clean;Restore;Build /property:Configuration=Release
 
 cd ../../
 rmdir build /s /q
