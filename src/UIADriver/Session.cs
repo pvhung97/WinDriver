@@ -1,9 +1,9 @@
 ﻿using System.Management;
 using System.Text;
 using System.Text.Json.Nodes;
-using UIA3Driver.dto.response;
+using UIADriver.dto.response;
 
-namespace UIA3Driver
+namespace UIADriver
 {
     public abstract class Session
     {

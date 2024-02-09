@@ -1,16 +1,15 @@
 ﻿using Interop.UIAutomationClient;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using UIA3Driver;
-using UIA3Driver.actions;
-using UIA3Driver.actions.action;
-using UIA3Driver.actions.inputsource;
-using UIA3Driver.attribute;
-using UIA3Driver.dto.request;
-using UIA3Driver.dto.response;
-using UIA3Driver.exception;
+using UIADriver.actions;
+using UIADriver.actions.action;
+using UIADriver.actions.inputsource;
+using UIADriver.attribute;
+using UIADriver.dto.request;
+using UIADriver.dto.response;
+using UIADriver.exception;
 using UIADriver.uia3.sourcebuilder;
-using Action = UIA3Driver.actions.action.Action;
+using Action = UIADriver.actions.action.Action;
 
 namespace UIADriver.uia3.session
 {

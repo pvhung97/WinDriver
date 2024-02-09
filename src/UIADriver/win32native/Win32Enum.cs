@@ -1,4 +1,4 @@
-﻿namespace UIA3Driver.win32native
+﻿namespace UIADriver.win32native
 {
     public class Win32Enum
     {

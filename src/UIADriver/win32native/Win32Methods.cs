@@ -1,10 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
-using static UIA3Driver.win32native.Win32Enum;
-using static UIA3Driver.win32native.Win32Struct;
+using static UIADriver.win32native.Win32Enum;
+using static UIADriver.win32native.Win32Struct;
 using System;
 
-namespace UIA3Driver.win32native
+namespace UIADriver.win32native
 {
     public class Win32Methods
     {

@@ -1,12 +1,12 @@
 ﻿using System.Runtime.InteropServices;
-using UIA3Driver.actions.action;
-using UIA3Driver.actions.inputsource;
-using UIA3Driver.exception;
-using UIA3Driver.win32native;
-using static UIA3Driver.win32native.Win32Enum;
-using static UIA3Driver.win32native.Win32Struct;
+using UIADriver.actions.action;
+using UIADriver.actions.inputsource;
+using UIADriver.exception;
+using UIADriver.win32native;
+using static UIADriver.win32native.Win32Enum;
+using static UIADriver.win32native.Win32Struct;
 
-namespace UIA3Driver.actions.executor
+namespace UIADriver.actions.executor
 {
     public class MouseActionExecutor
     {

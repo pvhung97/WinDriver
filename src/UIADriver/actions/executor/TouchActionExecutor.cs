@@ -1,12 +1,12 @@
-﻿using static UIA3Driver.win32native.Win32Enum;
-using static UIA3Driver.win32native.Win32Struct;
-using UIA3Driver.actions.action;
-using UIA3Driver.actions.executor;
-using UIA3Driver.actions.inputsource;
-using UIA3Driver.actions;
-using UIA3Driver.exception;
-using UIA3Driver.win32native;
-using UIA3Driver;
+﻿using static UIADriver.win32native.Win32Enum;
+using static UIADriver.win32native.Win32Struct;
+using UIADriver.actions.action;
+using UIADriver.actions.executor;
+using UIADriver.actions.inputsource;
+using UIADriver.actions;
+using UIADriver.exception;
+using UIADriver.win32native;
+using UIADriver;
 
 namespace UIADriver.actions.executor
 {

@@ -1,6 +1,6 @@
 ﻿using Interop.UIAutomationClient;
 
-namespace UIA3Driver
+namespace UIADriver
 {
     public enum UIAPropertyEnum
     {

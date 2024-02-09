@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace UIA3Driver.exception
+namespace UIADriver.exception
 {
     public class MoveTargetOutofBounds(string message) : WebDriverException(message)
     {

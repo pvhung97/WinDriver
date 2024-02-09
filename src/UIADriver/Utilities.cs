@@ -1,9 +1,9 @@
 ﻿using Interop.UIAutomationClient;
-using static UIA3Driver.win32native.Win32Struct;
+using static UIADriver.win32native.Win32Struct;
 using System.Runtime.InteropServices;
-using UIA3Driver.win32native;
+using UIADriver.win32native;
 
-namespace UIA3Driver
+namespace UIADriver
 {
     public class Utilities
     {

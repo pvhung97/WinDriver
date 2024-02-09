@@ -1,5 +1,5 @@
 ﻿
-namespace UIA3Driver.actions.inputsource
+namespace UIADriver.actions.inputsource
 {
     public class WheelInpoutSource : NullInputSource
     {

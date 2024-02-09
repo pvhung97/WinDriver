@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
-using static UIA3Driver.win32native.Win32Enum;
+using static UIADriver.win32native.Win32Enum;
 
-namespace UIA3Driver.win32native
+namespace UIADriver.win32native
 {
     public class Win32Struct
     {

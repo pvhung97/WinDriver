@@ -1,8 +1,7 @@
 ﻿using Interop.UIAutomationClient;
 using System.Text;
-using UIA3Driver;
-using UIA3Driver.exception;
-using UIA3Driver.win32native;
+using UIADriver.exception;
+using UIADriver.win32native;
 
 namespace UIADriver.uia3.session
 {

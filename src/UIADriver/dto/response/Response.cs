@@ -1,4 +1,4 @@
-﻿namespace UIA3Driver.dto.response
+﻿namespace UIADriver.dto.response
 {
     public class Response
     {

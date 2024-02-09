@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
-using UIA3Driver.exception;
+using UIADriver.exception;
 
-namespace UIA3Driver.dto.request
+namespace UIADriver.dto.request
 {
     public class FindElementRequest
     {

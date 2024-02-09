@@ -1,8 +1,8 @@
 ﻿using Interop.UIAutomationClient;
 using System.Text;
-using UIA3Driver.win32native;
+using UIADriver.win32native;
 
-namespace UIA3Driver.attribute
+namespace UIADriver.attribute
 {
     public class BasicElementPropertyValueGetter
     {

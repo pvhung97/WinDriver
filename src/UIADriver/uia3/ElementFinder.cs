@@ -1,8 +1,8 @@
 ﻿using Interop.UIAutomationClient;
 using System.Xml.XPath;
-using UIA3Driver.dto.request;
-using UIA3Driver.dto.response;
-using UIA3Driver.exception;
+using UIADriver.dto.request;
+using UIADriver.dto.response;
+using UIADriver.exception;
 using UIADriver.uia3.sourcebuilder;
 
 namespace UIADriver.uia3

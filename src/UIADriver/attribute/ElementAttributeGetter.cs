@@ -1,6 +1,6 @@
 ﻿using Interop.UIAutomationClient;
 
-namespace UIA3Driver.attribute
+namespace UIADriver.attribute
 {
     public class ElementAttributeGetter
     {

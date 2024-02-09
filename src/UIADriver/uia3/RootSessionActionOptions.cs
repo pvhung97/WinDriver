@@ -1,7 +1,7 @@
 ﻿using Interop.UIAutomationClient;
 using System.Text.Json.Nodes;
-using UIA3Driver.actions.inputsource;
-using UIA3Driver.exception;
+using UIADriver.actions.inputsource;
+using UIADriver.exception;
 
 namespace UIADriver.uia3
 {

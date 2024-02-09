@@ -1,8 +1,7 @@
 ﻿using Interop.UIAutomationClient;
 using System.Xml.Linq;
-using UIA3Driver;
-using UIA3Driver.attribute;
-using UIA3Driver.win32native;
+using UIADriver.attribute;
+using UIADriver.win32native;
 
 namespace UIADriver.uia3.sourcebuilder
 {

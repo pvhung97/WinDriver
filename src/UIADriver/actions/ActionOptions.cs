@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Nodes;
-using UIA3Driver.actions.inputsource;
+using UIADriver.actions.inputsource;
 
-namespace UIA3Driver.actions
+namespace UIADriver.actions
 {
     public abstract class ActionOptions
     {

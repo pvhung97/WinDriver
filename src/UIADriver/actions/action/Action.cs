@@ -1,4 +1,4 @@
-﻿namespace UIA3Driver.actions.action
+﻿namespace UIADriver.actions.action
 {
     public abstract class Action
     {

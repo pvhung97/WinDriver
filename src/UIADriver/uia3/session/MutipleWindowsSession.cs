@@ -2,15 +2,14 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text.Json.Nodes;
-using UIA3Driver;
-using UIA3Driver.actions;
-using UIA3Driver.dto.request;
-using UIA3Driver.dto.response;
-using UIA3Driver.exception;
-using UIA3Driver.win32;
-using UIA3Driver.win32native;
+using UIADriver.actions;
+using UIADriver.dto.request;
+using UIADriver.dto.response;
+using UIADriver.exception;
+using UIADriver.win32;
+using UIADriver.win32native;
 using UIADriver.uia3.sourcebuilder;
-using static UIA3Driver.win32native.Win32Struct;
+using static UIADriver.win32native.Win32Struct;
 
 namespace UIADriver.uia3.session
 {
