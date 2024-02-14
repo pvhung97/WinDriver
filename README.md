@@ -4,7 +4,7 @@ Windriver is a driver to support testing on Windows Application (UWP, WinForms, 
 
 This driver using [UI Automation](https://learn.microsoft.com/en-us/dotnet/framework/ui-automation/ui-automation-overview) as its core. Some of the ideas are from [FlaUI](https://github.com/FlaUI/FlaUI), [Selenium IEDriver](https://github.com/SeleniumHQ/selenium/tree/trunk/cpp/iedriver)
 
-This driver is divided into 2 application WindowsDriver and UIADriver. WindowsDriver will manage session, routing request to corresponding UIADriver session. UIADriver is the automation core. The reason for this is to support both UIA2 and UIA3. Currently only UIA3 is available
+This driver is divided into 2 application WindowsDriver and UIADriver. WindowsDriver will manage session, routing request to corresponding UIADriver session. UIADriver is the automation core. The reason for this is to support both UIA2 and UIA3.
 
 # Run WinDriver
 
@@ -22,8 +22,8 @@ You can find some sample code inside [WindowsDriverSample](./src/WindowsDriverSa
 
 | Capabilities                 	| Description                                                          	| Default Value 	|
 |------------------------------	|----------------------------------------------------------------------	|---------------	|
-| platformName                     	| Must be "windows"                                                    	|               	|
-| windriver:automationName     	| Must be "uia3"                                                       	|               	|
+| platformName                  | Must be "windows"                                                    	|               	|
+| windriver:automationName     	| Must be "uia3" or "uia2"                                              |               	|
 | windriver:appPath            	| Executable path                                                      	|               	|
 | windriver:aumid              	| Window store application's aumid                                     	|               	|
 | windriver:nativeWindowHandle 	| NativeWindowHandle of top level window to inject                     	|               	|

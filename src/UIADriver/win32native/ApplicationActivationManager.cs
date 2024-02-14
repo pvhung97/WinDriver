@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace UIA3Driver.win32native
+namespace UIADriver.win32native
 {
     [ComImport, Guid("45BA127D-10A8-46EA-8AB7-56EA9078943C")]
     public class ApplicationActivationManager : IApplicationActivationManager

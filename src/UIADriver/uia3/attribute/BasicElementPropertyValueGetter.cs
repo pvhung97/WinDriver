@@ -1,8 +1,6 @@
 ﻿using Interop.UIAutomationClient;
-using System.Text;
-using UIA3Driver.win32native;
 
-namespace UIA3Driver.attribute
+namespace UIADriver.uia3.attribute
 {
     public class BasicElementPropertyValueGetter
     {
@@ -14,7 +12,7 @@ namespace UIA3Driver.attribute
             switch (propertyId)
             {
                 case UIA_PropertyIds.UIA_CulturePropertyId:
-                    return GetLocalizeName((int)v);
+                    return Utilities.GetLocalizeName((int)v);
                 case UIA_PropertyIds.UIA_ControlTypePropertyId:
                     return Utilities.GetControlTypeString((int)v);
                 case UIA_PropertyIds.UIA_LandmarkTypePropertyId:
@@ -34,15 +32,8 @@ namespace UIA3Driver.attribute
             if (v is bool vb)
             {
                 if (!vb) return null;
-            } 
-            return v.ToString().Normalize();
-        }
-
-        private string GetLocalizeName(int localizeId)
-        {
-            var data = new StringBuilder(500);
-            Win32Methods.LCIDToLocaleName(Convert.ToUInt32(localizeId), data, data.Capacity, 0);
-            return data.ToString();
+            }
+            return v.ToString()?.Normalize();
         }
 
     }

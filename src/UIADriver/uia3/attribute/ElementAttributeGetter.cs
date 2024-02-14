@@ -1,6 +1,6 @@
 ﻿using Interop.UIAutomationClient;
 
-namespace UIA3Driver.attribute
+namespace UIADriver.uia3.attribute
 {
     public class ElementAttributeGetter
     {
@@ -8,7 +8,7 @@ namespace UIA3Driver.attribute
 
         public string? getAttribute(IUIAutomation automation, IUIAutomationElement element, string attribute)
         {
-            var found = Enum.TryParse<UIAPropertyEnum>(attribute, out var propertyId);
+            var found = Enum.TryParse<UIA3PropertyEnum>(attribute, out var propertyId);
             if (found == false) return null;
 
             var cacheRequest = automation.CreateCacheRequest();

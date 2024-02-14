@@ -1,4 +1,4 @@
-﻿namespace UIA3Driver.win32
+﻿namespace UIADriver.win32
 {
     public class Win32Constants
     {

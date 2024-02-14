@@ -1,7 +1,7 @@
-﻿using UIA3Driver.win32native;
-using static UIA3Driver.win32native.Win32Enum;
+﻿using UIADriver.win32native;
+using static UIADriver.win32native.Win32Enum;
 
-namespace UIA3Driver.actions.inputsource
+namespace UIADriver.actions.inputsource
 {
     public class PointerInputSource : NullInputSource, IDisposable
     {

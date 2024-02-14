@@ -135,7 +135,8 @@ namespace WindowsDriver
         public async Task CloseSession(string sessionId, HttpContext context)
         {
             CloseSession(sessionId);
-            sessionUrl.Remove(sessionId);
+            sessionUrl.Remove(sessionId, out var removed);
+            if (removed != null) removed.Dispose();
             await context.Response.WriteAsJsonAsync(new Response(null));
         }
 
@@ -146,13 +147,11 @@ namespace WindowsDriver
             {
                 //  Tell driver to shutdown
                 string url = sessionInfo.url + "/session/" + sessionId;
-                using (var httpClient = GetHttpClient(sessionInfo))
+                var httpClient = sessionInfo.httpClient;
+                try
                 {
-                    try
-                    {
-                       await httpClient.DeleteAsync(url);
-                    } catch { }
-                }
+                    await httpClient.DeleteAsync(url);
+                } catch { }
 
                 //  Wait for shutdown until timeout
                 bool hasExited = sessionInfo.p.WaitForExit(5000);
@@ -187,11 +186,6 @@ namespace WindowsDriver
                 cleanAll.Add(Task.Run(() => CloseSession(item.Key)));
             }
             return Task.WhenAll(cleanAll);
-        }
-
-        public HttpClient GetHttpClient(SessionInfo info)
-        {
-            return GetHttpClient(info.commandTimeout);
         }
 
         private HttpClient GetHttpClient(int timeout)

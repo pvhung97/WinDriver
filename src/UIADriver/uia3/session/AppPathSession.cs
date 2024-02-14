@@ -1,11 +1,10 @@
 ﻿using System.Diagnostics;
-using UIA3Driver;
-using UIA3Driver.exception;
-using UIA3Driver.win32native;
+using System.IO;
+using UIADriver.exception;
 
 namespace UIADriver.uia3.session
 {
-    public class AppPathSession : MutipleWindowsSession
+    public class AppPathSession : MultipleWindowsSession
     {
         public AppPathSession(SessionCapabilities capabilities) : base(capabilities)
         {
@@ -27,7 +26,7 @@ namespace UIADriver.uia3.session
             List<WndHdlAndPid> windows = CollectWindows();
             if (windows.Count == 0) throw new SessionNotStartException("Session cannot be created. Cannot find any window");
             currentHdl = windows[0].hdl;
-            Win32Methods.SetForegroundWindow(currentHdl);
+            Utilities.BringWindowToTop(currentHdl);
         }
 
     }

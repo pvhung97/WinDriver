@@ -1,10 +1,11 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace UIA3Driver
+namespace UIADriver
 {
     public struct SessionCapabilities
     {
+        public string? automationName;
         public string? appPath;
         public string? aumid;
         public int? nativeWindowHandle;
@@ -18,8 +19,15 @@ namespace UIA3Driver
 
         public static SessionCapabilities ParseCapabilities(JsonObject data)
         {
-            data.TryGetPropertyValue("windriver:appPath", out var appPath);
             var cap = new SessionCapabilities();
+
+            data.TryGetPropertyValue("windriver:automationName", out var automationName);
+            if (automationName != null)
+            {
+                cap.automationName = automationName.ToString();
+            }
+
+            data.TryGetPropertyValue("windriver:appPath", out var appPath);
             if (appPath != null)
             {
                 cap.appPath = appPath.ToString();

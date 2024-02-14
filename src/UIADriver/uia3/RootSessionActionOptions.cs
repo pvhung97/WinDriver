@@ -1,7 +1,7 @@
 ﻿using Interop.UIAutomationClient;
 using System.Text.Json.Nodes;
-using UIA3Driver.actions.inputsource;
-using UIA3Driver.exception;
+using UIADriver.actions.inputsource;
+using UIADriver.exception;
 
 namespace UIADriver.uia3
 {
@@ -21,7 +21,7 @@ namespace UIADriver.uia3
                 origin.AsObject().TryGetPropertyValue("element-6066-11e4-a52e-4f735466cecf", out var elementId);
                 if (elementId != null)
                 {
-                    IUIAutomationElement element = elementFinder.GetElement(elementId.ToString());
+                    var element = elementFinder.GetElement(elementId.ToString());
                     double[] rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
                     int x = (int)rect[0];
                     int y = (int)rect[1];

@@ -1,9 +1,9 @@
-﻿using Interop.UIAutomationClient;
-using static UIA3Driver.win32native.Win32Struct;
+﻿using static UIADriver.win32native.Win32Struct;
 using System.Runtime.InteropServices;
-using UIA3Driver.win32native;
+using UIADriver.win32native;
+using System.Text;
 
-namespace UIA3Driver
+namespace UIADriver
 {
     public class Utilities
     {
@@ -103,6 +103,27 @@ namespace UIA3Driver
                 return true;
             }
             return new Point(Math.Abs(minX), Math.Abs(minY));
+        }
+
+        public static string GetLocalizeName(int localizeId)
+        {
+            var data = new StringBuilder(500);
+            Win32Methods.LCIDToLocaleName(Convert.ToUInt32(localizeId), data, data.Capacity, 0);
+            return data.ToString();
+        }
+
+        public static void BringWindowToTop(nint hwnd)
+        {
+            var wi = new WindowInfo();
+            wi.size = (uint)Marshal.SizeOf(wi);
+            Win32Methods.GetWindowInfo(hwnd, ref wi);
+            var isTopMostWnd = (wi.dwExStyle & 0x00000008) == 0x00000008;
+            if (!isTopMostWnd)
+            {
+                Win32Methods.SetWindowPos(hwnd, -1, 0, 0, 0, 0, 0x0002 | 0x0001 | 0x0040);  //  Make it a top most window
+                Win32Methods.SetWindowPos(hwnd, -2, 0, 0, 0, 0, 0x0002 | 0x0001);  //  Then remove top most style
+            }
+            Win32Methods.SetForegroundWindow(hwnd);
         }
     }
 }

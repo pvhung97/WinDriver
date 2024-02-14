@@ -1,10 +1,9 @@
 ﻿
 using Interop.UIAutomationClient;
 using System.Text.Json.Nodes;
-using UIA3Driver;
-using UIA3Driver.actions;
-using UIA3Driver.dto.response;
-using UIA3Driver.exception;
+using UIADriver.actions;
+using UIADriver.dto.response;
+using UIADriver.exception;
 using UIADriver.uia3.sourcebuilder;
 
 namespace UIADriver.uia3.session

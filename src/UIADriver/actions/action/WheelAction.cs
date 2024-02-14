@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
-using UIA3Driver.exception;
+using UIADriver.exception;
 
-namespace UIA3Driver.actions.action
+namespace UIADriver.actions.action
 {
     public class WheelAction(string id, string subtype) : Action(id, "wheel", subtype)
     {

@@ -1,6 +1,6 @@
-﻿using UIA3Driver.actions.action;
+﻿using UIADriver.actions.action;
 
-namespace UIA3Driver.actions.executor
+namespace UIADriver.actions.executor
 {
     public class PauseActionExecutor
     {

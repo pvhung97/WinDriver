@@ -2,17 +2,24 @@
 
 namespace WindowsDriver
 {
-    public class SessionInfo
+    public class SessionInfo : IDisposable
     {
-        public string url;
-        public Process p;
-        public int commandTimeout;
+        public readonly string url;
+        public readonly Process p;
+        public readonly HttpClient httpClient;
 
         public SessionInfo(string url, Process p, int commandTimeout)
         {
             this.url = url;
             this.p = p;
-            this.commandTimeout = commandTimeout;
+            this.httpClient = new HttpClient();
+            this.httpClient.Timeout = TimeSpan.FromMilliseconds(commandTimeout);
+        }
+
+        public void Dispose()
+        {
+            this.httpClient.Dispose();
+            this.p.Dispose();
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
-using UIA3Driver.actions.action;
-using UIA3Driver.actions.executor;
-using UIA3Driver.actions.inputsource;
-using UIA3Driver.exception;
+using UIADriver.actions.action;
 using UIADriver.actions.executor;
-using Action = UIA3Driver.actions.action.Action;
+using UIADriver.actions.inputsource;
+using UIADriver.exception;
+using UIADriver.actions.executor;
+using Action = UIADriver.actions.action.Action;
 
-namespace UIA3Driver.actions
+namespace UIADriver.actions
 {
     public class InputState : IDisposable
     {

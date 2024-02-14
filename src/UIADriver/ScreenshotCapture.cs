@@ -1,6 +1,7 @@
-﻿using UIA3Driver.win32native;
+﻿using System.IO;
+using UIADriver.win32native;
 
-namespace UIA3Driver
+namespace UIADriver
 {
     public class ScreenshotCapture
     {

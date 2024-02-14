@@ -1,12 +1,11 @@
 ﻿using Interop.UIAutomationClient;
 using System.Text;
-using UIA3Driver;
-using UIA3Driver.exception;
-using UIA3Driver.win32native;
+using UIADriver.exception;
+using UIADriver.win32native;
 
 namespace UIADriver.uia3.session
 {
-    public class WindowsStoreAppSession : MutipleWindowsSession
+    public class WindowsStoreAppSession : MultipleWindowsSession
     {
         public WindowsStoreAppSession(SessionCapabilities capabilities) : base(capabilities)
         {
@@ -30,7 +29,7 @@ namespace UIADriver.uia3.session
             if (foundWindow == null) throw new SessionNotStartException("Session cannot be created. Cannot find any window");
             pids.Add(foundWindow.pid);
             currentHdl = foundWindow.hdl;
-            Win32Methods.SetForegroundWindow(currentHdl);
+            Utilities.BringWindowToTop(currentHdl);
         }
 
         private WndHdlAndPid? SearchForWindowLaunchedByApp()

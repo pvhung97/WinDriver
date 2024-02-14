@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Nodes;
-using UIA3Driver.exception;
+using UIADriver.exception;
 
-namespace UIA3Driver.dto.request
+namespace UIADriver.dto.request
 {
     public class SetRectRequest
     {

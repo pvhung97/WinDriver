@@ -15,7 +15,7 @@ public class CalculatorSample {
         cap.setPlatform(Platform.WINDOWS);
         cap.setCapability("windriver:aumid", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
         cap.setCapability("windriver:automationName", "uia3");
-        RemoteWebDriver driver = new WinDriver(URI.create("http://localhost:5058").toURL(), cap);
+        RemoteWebDriver driver = new WinDriver(URI.create("http://localhost:5000").toURL(), cap);
 
         try {
             System.out.println(driver.findElements(By.xpath("//Button")).size());
@@ -42,7 +42,7 @@ public class CalculatorSample {
             Thread.sleep(500);
             driver.findElement(new AutomationIdBy("FeedbackButton")).click();
             Thread.sleep(5000);
-            
+
             for (String wnd: driver.getWindowHandles()) {
                 driver.switchTo().window(wnd);
                 if (driver.getTitle().equals("Feedback Hub")) {

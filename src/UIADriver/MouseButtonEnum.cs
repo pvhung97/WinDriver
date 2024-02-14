@@ -1,4 +1,4 @@
-﻿namespace UIA3Driver
+﻿namespace UIADriver
 {
     public enum MouseButtonEnum
     {

@@ -1,7 +1,7 @@
 ﻿using System.Net;
-using UIA3Driver.dto.response;
+using UIADriver.dto.response;
 
-namespace UIA3Driver.exception
+namespace UIADriver.exception
 {
     public abstract class WebDriverException : Exception
     {

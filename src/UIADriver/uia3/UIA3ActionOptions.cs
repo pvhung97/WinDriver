@@ -1,9 +1,8 @@
 ﻿using Interop.UIAutomationClient;
-using System.Text.Json;
 using System.Text.Json.Nodes;
-using UIA3Driver.actions;
-using UIA3Driver.actions.inputsource;
-using UIA3Driver.exception;
+using UIADriver.actions;
+using UIADriver.actions.inputsource;
+using UIADriver.exception;
 
 namespace UIADriver.uia3
 {
@@ -55,7 +54,7 @@ namespace UIADriver.uia3
                 origin.AsObject().TryGetPropertyValue("element-6066-11e4-a52e-4f735466cecf", out var elementId);
                 if (elementId != null)
                 {
-                    IUIAutomationElement element = elementFinder.GetElement(elementId.ToString());
+                    var element = elementFinder.GetElement(elementId.ToString());
                     double[] rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
 
                     var windowLocation = GetCurrentWindowLocation();
@@ -78,15 +77,5 @@ namespace UIADriver.uia3
             return (int)updated.GetCachedPropertyValue(UIA_PropertyIds.UIA_ProcessIdPropertyId);
         }
 
-        public override bool IsElementOrigin(JsonNode origin)
-        {
-            if (origin.GetValueKind() == JsonValueKind.Object)
-            {
-                JsonObject originObj = origin.AsObject();
-                originObj.TryGetPropertyValue("element-6066-11e4-a52e-4f735466cecf", out var elementId);
-                if (elementId != null && elementId.GetValueKind() == JsonValueKind.String) return true;
-            }
-            return false;
-        }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using Interop.UIAutomationClient;
 using System.Xml.Linq;
-using UIA3Driver;
-using UIA3Driver.attribute;
-using UIA3Driver.win32native;
+using UIADriver.uia3.attribute;
+using UIADriver.win32native;
 
 namespace UIADriver.uia3.sourcebuilder
 {
@@ -30,7 +29,7 @@ namespace UIADriver.uia3.sourcebuilder
         protected override void buildRecursive(XElement parent, Dictionary<XElement, IUIAutomationElement> mapping, IUIAutomationElement element, IUIAutomationTreeWalker walker, IUIAutomationCacheRequest request, int layer)
         {
             if (layer > capabilities.maxTreeDepth) return;
-            IUIAutomationElement elementNode = walker.GetFirstChildElementBuildCache(element, request);
+            var elementNode = walker.GetFirstChildElementBuildCache(element, request);
 
             while (elementNode != null)
             {
@@ -162,7 +161,7 @@ namespace UIADriver.uia3.sourcebuilder
                     case UIA_PropertyIds.UIA_BoundingRectanglePropertyId:
                         break;
                     default:
-                        UIAPropertyEnum propEnum = (UIAPropertyEnum)propId;
+                        UIA3PropertyEnum propEnum = (UIA3PropertyEnum)propId;
                         string? propName = Enum.GetName(propEnum);
                         if (string.IsNullOrEmpty(propName)) break;
                         var value = attributeGetter.basicAttr.GetPropertyStrValue(element, propId);
@@ -171,8 +170,6 @@ namespace UIADriver.uia3.sourcebuilder
                 }
 
             }
-            var VisualEffects = attributeGetter.basicAttr.GetPropertyStrValue(element, UIA_PropertyIds.UIA_VisualEffectsPropertyId);
-            if (!string.IsNullOrEmpty(VisualEffects)) rs.SetAttributeValue("VisualEffects", VisualEffects);
 
             return rs;
         }

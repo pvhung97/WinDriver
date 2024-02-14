@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using UIA3Driver;
-using UIA3Driver.actions;
-using UIA3Driver.dto.response;
-using UIA3Driver.exception;
-using UIADriver.uia3.session;
+using UIADriver;
+using UIADriver.actions;
+using UIADriver.dto.response;
+using UIADriver.exception;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -93,22 +93,48 @@ app.MapPost("/session", async context =>
 
     var capabilities = await parseBody(context);
     SessionCapabilities cap = SessionCapabilities.ParseCapabilities(capabilities);
-    if (cap.appPath != null)
+
+    if (string.Equals("uia2", cap.automationName, StringComparison.OrdinalIgnoreCase))
     {
-        session = new AppPathSession(cap);
-        return;
-    }
-    if (cap.aumid != null)
+        if (cap.appPath != null)
+        {
+            session = new UIADriver.uia2.session.AppPathSession(cap);
+            return;
+        }
+        if (cap.aumid != null)
+        {
+            session = new UIADriver.uia2.session.WindowsStoreAppSession(cap);
+            return;
+        }
+        if (cap.nativeWindowHandle != null)
+        {
+            session = new UIADriver.uia2.session.InjectWindowSession(cap);
+            return;
+        }
+        session = new UIADriver.uia2.session.RootSession(cap);
+    } else if (string.Equals("uia3", cap.automationName, StringComparison.OrdinalIgnoreCase))
     {
-        session = new WindowsStoreAppSession(cap);
-        return;
-    }
-    if (cap.nativeWindowHandle != null)
+        if (cap.appPath != null)
+        {
+            session = new UIADriver.uia3.session.AppPathSession(cap);
+            return;
+        }
+        if (cap.aumid != null)
+        {
+            session = new UIADriver.uia3.session.WindowsStoreAppSession(cap);
+            return;
+        }
+        if (cap.nativeWindowHandle != null)
+        {
+            session = new UIADriver.uia3.session.InjectWindowSession(cap);
+            return;
+        }
+        session = new UIADriver.uia3.session.RootSession(cap);
+    } else
     {
-        session = new InjectWindowSession(cap);
-        return;
+        await context.Response.WriteAsJsonAsync(new Response(new Error("unknown error", "Invalid automation name")));
     }
-    session = new RootSession(cap);
+
 });
 
 app.MapDelete("/session/{id}", async context =>
