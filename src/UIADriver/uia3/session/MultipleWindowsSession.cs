@@ -9,16 +9,15 @@ using UIADriver.exception;
 using UIADriver.win32;
 using UIADriver.win32native;
 using UIADriver.uia3.sourcebuilder;
-using static UIADriver.win32native.Win32Struct;
 
 namespace UIADriver.uia3.session
 {
-    public abstract class MutipleWindowsSession : UIA3Session
+    public abstract class MultipleWindowsSession : UIA3Session
     {
         protected int currentHdl = 0;
         protected override PageSourceBuilder PageSourceBuilder => new WindowPageSourceBuilder(automation, attrGetter, capabilities);
 
-        protected MutipleWindowsSession(SessionCapabilities capabilities) : base(capabilities) { }
+        protected MultipleWindowsSession(SessionCapabilities capabilities) : base(capabilities) { }
 
         public override Task CloseSession()
         {
@@ -110,18 +109,16 @@ namespace UIADriver.uia3.session
         {
             var request = cacheRequest == null ? automation.CreateCacheRequest() : cacheRequest;
             request.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+            request.AddProperty(UIA_PropertyIds.UIA_IsWindowPatternAvailablePropertyId);
             var currentWindow = getCurrentWindow(request);
 
             int hdl = (int)currentWindow.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             nint currentFocus = Win32Methods.GetForegroundWindow();
             if (currentFocus == hdl) return currentWindow;
-            //  Should not active popup window
-            var wi = new WindowInfo();
-            wi.size = (uint)Marshal.SizeOf(wi);
-            Win32Methods.GetWindowInfo(hdl, ref wi);
-            if ((wi.dwStyle & 0x80000000) != 0x80000000)
+            //  Only active window that has window pattern
+            if ((bool) currentWindow.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsWindowPatternAvailablePropertyId))
             {
-                Win32Methods.SetForegroundWindow(hdl);
+                Utilities.BringWindowToTop(hdl);
             }
             return currentWindow;
         }

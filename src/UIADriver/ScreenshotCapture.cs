@@ -1,4 +1,5 @@
-﻿using UIADriver.win32native;
+﻿using System.IO;
+using UIADriver.win32native;
 
 namespace UIADriver
 {

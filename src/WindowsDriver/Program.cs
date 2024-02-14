@@ -5,6 +5,7 @@ using System.Text.Json.Nodes;
 using WindowsDriver;
 
 Console.WriteLine($"WinDriver Version {System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}");
+if (args.Contains("-version")) return;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -40,26 +41,24 @@ app.Use(async (context, next) =>
         }
         string redirectBase = sessionInfo.url;
         string newUrl = redirectBase + path;
-        using (var httpClient = sessionManage.GetHttpClient(sessionInfo))
+        var httpClient = sessionInfo.httpClient;
+        var message = new HttpRequestMessage(HttpMethod.Parse(context.Request.Method), newUrl);
+        using (StreamReader reader = new StreamReader(context.Request.Body))
         {
-            var message = new HttpRequestMessage(HttpMethod.Parse(context.Request.Method), newUrl);
-            using (StreamReader reader = new StreamReader(context.Request.Body))
+            string bodyContent = await reader.ReadToEndAsync();
+            if (bodyContent != null && bodyContent.Length > 0)
             {
-                string bodyContent = await reader.ReadToEndAsync();
-                if (bodyContent != null && bodyContent.Length > 0)
-                {
-                    var body = new StringContent(bodyContent, Encoding.UTF8, "application/json");
-                    message.Content = body;
-                }
+                var body = new StringContent(bodyContent, Encoding.UTF8, "application/json");
+                message.Content = body;
             }
-
-            var response = await httpClient.SendAsync(message);
-            var result = await response.Content.ReadAsStringAsync();
-            context.Response.StatusCode = (int)response.StatusCode;
-            await context.Response.WriteAsJsonAsync(JsonNode.Parse(result));
-
-            return;
         }
+
+        var response = await httpClient.SendAsync(message);
+        var result = await response.Content.ReadAsStringAsync();
+        context.Response.StatusCode = (int)response.StatusCode;
+        await context.Response.WriteAsJsonAsync(JsonNode.Parse(result));
+
+        return;
     } else await next();
 
     if (context.Response.StatusCode == ((int)HttpStatusCode.NotFound))

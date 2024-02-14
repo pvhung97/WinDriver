@@ -1,8 +1,8 @@
 ﻿using Interop.UIAutomationClient;
 
-namespace UIADriver
+namespace UIADriver.uia3
 {
-    public enum UIAPropertyEnum
+    public enum UIA3PropertyEnum
     {
         RuntimeId = UIA_PropertyIds.UIA_RuntimeIdPropertyId,
         BoundingRectangle = UIA_PropertyIds.UIA_BoundingRectanglePropertyId,
