@@ -15,7 +15,7 @@ public class SwitchWindowSample {
         cap.setPlatform(Platform.WINDOWS);
         cap.setCapability("windriver:aumid", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
         cap.setCapability("windriver:automationName", "uia3");
-        RemoteWebDriver driver = new WinDriver(URI.create("http://localhost:5058").toURL(), cap);
+        RemoteWebDriver driver = new WinDriver(URI.create("http://localhost:5000").toURL(), cap);
 
         try {
             System.out.println(driver.getWindowHandle());
@@ -51,7 +51,7 @@ public class SwitchWindowSample {
             capRoot.setPlatform(Platform.WINDOWS);
             capRoot.setCapability("windriver:maxTreeDepth", 2);
             capRoot.setCapability("windriver:automationName", "uia3");
-            RemoteWebDriver driverRoot = new WinDriver(URI.create("http://localhost:5058").toURL(), capRoot);
+            RemoteWebDriver driverRoot = new WinDriver(URI.create("http://localhost:5000").toURL(), capRoot);
 
             try {
                 String handle = driverRoot.findElement(By.xpath("//Pane[@Name=\"Taskbar\"]")).getAttribute("NativeWindowHandle");
@@ -59,7 +59,7 @@ public class SwitchWindowSample {
                 capInject.setPlatform(Platform.WINDOWS);
                 capInject.setCapability("windriver:nativeWindowHandle", Integer.parseInt(handle));
                 capInject.setCapability("windriver:automationName", "uia3");
-                RemoteWebDriver driverInject = new WinDriver(URI.create("http://localhost:5058").toURL(), capInject);
+                RemoteWebDriver driverInject = new WinDriver(URI.create("http://localhost:5000").toURL(), capInject);
 
                 try {
                     driverInject.findElement(By.xpath("//Button[contains(@Name, \"Feedback Hub\")]")).click();

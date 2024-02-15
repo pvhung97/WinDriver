@@ -134,13 +134,13 @@ namespace WindowsDriver
 
         public async Task CloseSession(string sessionId, HttpContext context)
         {
-            CloseSession(sessionId);
+            await CloseSession(sessionId);
             sessionUrl.Remove(sessionId, out var removed);
             if (removed != null) removed.Dispose();
             await context.Response.WriteAsJsonAsync(new Response(null));
         }
 
-        private async void CloseSession(string sessionId)
+        private async Task CloseSession(string sessionId)
         {
             bool hasSession = sessionUrl.TryGetValue(sessionId, out var sessionInfo);
             if (hasSession && sessionInfo != null)
@@ -183,7 +183,7 @@ namespace WindowsDriver
             var cleanAll = new List<Task>();
             foreach (var item in sessionUrl)
             {
-                cleanAll.Add(Task.Run(() => CloseSession(item.Key)));
+                cleanAll.Add(CloseSession(item.Key));
             }
             return Task.WhenAll(cleanAll);
         }
