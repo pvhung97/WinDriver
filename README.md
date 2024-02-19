@@ -8,7 +8,7 @@ This driver is divided into 2 application WindowsDriver and UIADriver. WindowsDr
 
 # Run WinDriver
 
-Require .NET Framework 4.8.1 Runtime to run
+Require .NET 8.0 Runtime (ASP.NET Core Hosting Bundle) to run
 
 Use bellow command to start:
 ```
