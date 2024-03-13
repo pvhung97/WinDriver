@@ -79,5 +79,13 @@ namespace UIADriver.uia3.session
         {
             return new RootSessionActionOptions(automation, getCurrentWindow(null), elementFinder);
         }
+
+        public override string GetScreenshot()
+        {
+            using (Bitmap bmp = screenCapture.CaptureAllMonitor())
+            {
+                return screenCapture.ConvertToBase64(bmp);
+            }
+        }
     }
 }

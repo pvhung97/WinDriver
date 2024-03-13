@@ -78,5 +78,13 @@ namespace UIADriver.uia2.session
         {
             return new RootSessionActionOptions(getCurrentWindow(null), elementFinder);
         }
+
+        public override string GetScreenshot()
+        {
+            using (Bitmap bmp = screenCapture.CaptureAllMonitor())
+            {
+                return screenCapture.ConvertToBase64(bmp);
+            }
+        }
     }
 }
