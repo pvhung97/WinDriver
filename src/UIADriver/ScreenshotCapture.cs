@@ -47,7 +47,7 @@ namespace UIADriver
         public string ConvertToBase64(Bitmap bitmap)
         {
             using var ms = new MemoryStream();
-            bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             return Convert.ToBase64String(ms.ToArray());
         }
     }

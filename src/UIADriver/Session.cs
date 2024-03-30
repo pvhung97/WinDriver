@@ -21,16 +21,10 @@ namespace UIADriver
         protected void UpdateProcessList()
         {
             if (pids.Count == 0) return;
-            var queryBuilder = new StringBuilder("SELECT ProcessId, ParentProcessId FROM Win32_Process WHERE ");
-            int i = 0;
-            foreach (var item in pids)
-            {
-                if (i > 0) queryBuilder.Append(" OR ");
-                queryBuilder.Append("(ParentProcessId = " + item + ")");
-                i++;
-            }
-            string query = queryBuilder.ToString();
-            var newPids = new HashSet<int>(pids, pids.Comparer);
+
+            Dictionary<int, int> allProcess = [];
+            string query = "SELECT ProcessId, ParentProcessId FROM Win32_Process";
+            
             using (var searcher = new ManagementObjectSearcher(query))
             {
                 using var results = searcher.Get();
@@ -39,9 +33,28 @@ namespace UIADriver
                 foreach (ManagementObject obj in results.Cast<ManagementObject>())
                 {
                     int pid = Convert.ToInt32((uint)obj["ProcessId"]);
-                    newPids.Add(pid);
+                    int parentId = Convert.ToInt32((uint)obj["ParentProcessId"]);
+                    allProcess.Add(pid, parentId);
                 }
             }
+
+            var newPids = new HashSet<int>(pids, pids.Comparer);
+            while (true)
+            {
+                var oldSize = newPids.Count;
+
+                foreach (var entry in allProcess)
+                {
+                    if (newPids.Contains(entry.Value))
+                    {
+                        newPids.Add(entry.Key);
+                    }
+                }
+
+                var newSize = newPids.Count;
+                if (oldSize == newSize) break;
+            }
+
             pids = newPids;
         }
 

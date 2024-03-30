@@ -190,7 +190,11 @@ namespace WindowsDriver
 
         private HttpClient GetHttpClient(int timeout)
         {
-            var httpClient = new HttpClient();
+            var handler = new HttpClientHandler()
+            {
+                UseProxy = false,
+            };
+            var httpClient = new HttpClient(handler);
             httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
             return httpClient;
         }

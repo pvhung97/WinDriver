@@ -201,7 +201,7 @@ namespace UIADriver.uia2.session
             elementCacheRequest.Add(AutomationElement.IsOffscreenProperty);
             elementCacheRequest.Add(AutomationElement.BoundingRectangleProperty);
             var element = elementFinder.GetElement(elementId, elementCacheRequest);
-            var pattern = element.GetCachedPattern(ScrollItemPattern.Pattern);
+            element.TryGetCachedPattern(ScrollItemPattern.Pattern, out var pattern);
             if (pattern != null && pattern is ScrollItemPattern scrollItemPatern)
             {
                 scrollItemPatern.ScrollIntoView();
@@ -238,7 +238,7 @@ namespace UIADriver.uia2.session
             elementCacheRequest.Add(ValuePattern.IsReadOnlyProperty);
             elementCacheRequest.Add(AutomationElement.IsEnabledProperty);
             var element = elementFinder.GetElement(elementId, elementCacheRequest);
-            var pattern = element.GetCachedPattern(ValuePattern.Pattern);
+            element.TryGetCachedPattern(ValuePattern.Pattern, out var pattern);
             if (pattern != null && pattern is ValuePattern valuePattern)
             {
                 if ((bool)element.GetCachedPropertyValue(ValuePattern.IsReadOnlyProperty))
@@ -250,7 +250,7 @@ namespace UIADriver.uia2.session
                     throw new InvalidElementState("Element is disabled");
                 }
 
-                var sPattern = element.GetCachedPattern(ScrollItemPattern.Pattern);
+                element.TryGetCachedPattern(ScrollItemPattern.Pattern, out var sPattern);
                 if (sPattern != null && sPattern is ScrollItemPattern scrollItemPattern)
                 {
                     scrollItemPattern.ScrollIntoView();
@@ -284,7 +284,7 @@ namespace UIADriver.uia2.session
             elementCacheRequest.Add(AutomationElement.HasKeyboardFocusProperty);
             elementCacheRequest.Add(AutomationElement.IsKeyboardFocusableProperty);
             var element = elementFinder.GetElement(elementId, elementCacheRequest);
-            var pattern = element.GetCachedPattern(ScrollItemPattern.Pattern);
+            element.TryGetCachedPattern(ScrollItemPattern.Pattern, out var pattern);
             if (pattern != null && pattern is ScrollItemPattern scrollItemPatern)
             {
                 scrollItemPatern.ScrollIntoView();
