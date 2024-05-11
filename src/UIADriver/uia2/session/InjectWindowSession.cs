@@ -17,7 +17,7 @@ namespace UIADriver.uia2.session
             cacheRequest.Add(AutomationElement.ProcessIdProperty);
             var walker = new TreeWalker(Condition.TrueCondition);
 
-            WndHdlAndPid? foundWindow = null;
+            Tuple<int, int, AutomationElement>? foundWindow = null;
             var element = walker.GetFirstChild(rootElement, cacheRequest);
             while (element != null)
             {
@@ -29,7 +29,7 @@ namespace UIADriver.uia2.session
                 {
                     if (nativeHdl == capabilities.nativeWindowHandle)
                     {
-                        foundWindow = new WndHdlAndPid(nativeHdl, pid, element);
+                        foundWindow = Tuple.Create(nativeHdl, pid, element);
                         break;
                     }
                 }
@@ -38,9 +38,9 @@ namespace UIADriver.uia2.session
             }
 
             if (foundWindow == null) throw new SessionNotStartException("Session cannot be created. Cannot find any window");
-            pids.Add(foundWindow.pid);
-            currentHdl = foundWindow.hdl;
-            Utilities.BringWindowToTop(currentHdl);
+            GetWindowManageService().InitPids(foundWindow.Item2);
+            GetWindowManageService().InitCurrentWnd(foundWindow.Item3);
+            Utilities.BringWindowToTop(foundWindow.Item1);
         }
 
         public override Task CloseSession()

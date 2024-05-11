@@ -1,11 +1,12 @@
-﻿using Interop.UIAutomationClient;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
+using System.Windows.Automation;
 using UIADriver.actions.inputsource;
 using UIADriver.exception;
+using UIADriver.services;
 
-namespace UIADriver.uia3
+namespace UIADriver.uia2.actionoptions
 {
-    public class RootSessionActionOptions(IUIAutomation automation, IUIAutomationElement topLevelWindow, ElementFinder elementFinder) : UIA3ActionOptions(automation, topLevelWindow, elementFinder)
+    public class RootSessionActionOptions(AutomationElement topLevelWindow, ElementFinderService<AutomationElement, CacheRequest> elementFinder) : UIA2ActionOptions(topLevelWindow, elementFinder)
     {
         public override void AssertPositionInViewPort(int x, int y) { }
 
@@ -22,11 +23,11 @@ namespace UIADriver.uia3
                 if (elementId != null)
                 {
                     var element = elementFinder.GetElement(elementId.ToString());
-                    double[] rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
-                    int x = (int)rect[0];
-                    int y = (int)rect[1];
-                    int width = (int)rect[2];
-                    int height = (int)rect[3];
+                    var rect = element.Cached.BoundingRectangle;
+                    int x = (int)rect.X;
+                    int y = (int)rect.Y;
+                    int width = (int)rect.Width;
+                    int height = (int)rect.Height;
                     return new Point(x + width / 2, y + height / 2);
                 }
             }

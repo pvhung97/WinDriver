@@ -1,16 +1,16 @@
 ﻿using System.Windows.Automation;
 using System.Xml.Linq;
-using UIADriver.uia2.attribute;
+using UIADriver.services;
 
 namespace UIADriver.uia2.sourcebuilder
 {
     public class WindowPageSourceBuilder : RootPageSourceBuilder
     {
-        public WindowPageSourceBuilder(ElementAttributeGetter attributeGetter, SessionCapabilities capabilities) : base(attributeGetter, capabilities) { }
+        public WindowPageSourceBuilder(SessionCapabilities capabilities, ElementAttributeService<AutomationElement> attrService) : base(capabilities, attrService) { }
 
-        public override PageSource buildPageSource(AutomationElement startElement)
+        public override PageSource BuildPageSource(AutomationElement startElement)
         {
-            var rs = base.buildPageSource(startElement);
+            var rs = base.BuildPageSource(startElement);
             if (rs.pageSource.Root != null)
             {
                 modifyRect(rs.pageSource.Root);
@@ -70,14 +70,14 @@ namespace UIADriver.uia2.sourcebuilder
             }
         }
 
-        protected override void findElementByPropertyRecursive(AutomationElement element, AutomationProperty propertyId, string? propertyValue, bool stopAtFirst, int layer, TreeWalker walker, CacheRequest request, List<AutomationElement> rs)
+        protected override void findElementByPropertyRecursive(AutomationElement element, string propertyName, string? propertyValue, bool stopAtFirst, int layer, TreeWalker walker, CacheRequest request, List<AutomationElement> rs)
         {
             if (layer > capabilities.maxTreeDepth) return;
 
             try
             {
                 var updated = element.GetUpdatedCache(request);
-                var propValue = attributeGetter.basicAttr.GetPropertyStrValue(updated, propertyId);
+                var propValue = attrService.GetAttributeString(updated, propertyName);
                 if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
                 {
                     rs.Add(updated);
@@ -89,7 +89,7 @@ namespace UIADriver.uia2.sourcebuilder
             var child = walker.GetFirstChild(element);
             while (child != null)
             {
-                findElementByPropertyRecursive(child, propertyId, propertyValue, stopAtFirst, layer + 1, walker, request, rs);
+                findElementByPropertyRecursive(child, propertyName, propertyValue, stopAtFirst, layer + 1, walker, request, rs);
                 if (rs.Count > 0 && stopAtFirst) return;
 
                 child = walker.GetNextSibling(child);

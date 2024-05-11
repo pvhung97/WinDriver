@@ -23,16 +23,15 @@ namespace UIADriver.uia2.session
             if (pidW32 == 0) throw new SessionNotStartException("Session cannot be created. Cannot launch app with aumid " + capabilities.aumid);
             Thread.Sleep(capabilities.delayAfterOpenApp);
             int pid = Convert.ToInt32(pidW32);
-            pids.Add(pid);
-            UpdateProcessList();
-            var foundWindow = SearchForWindowLaunchedByApp();
+            var pids = GetWindowManageService().InitPids(pid);
+            var foundWindow = SearchForWindowLaunchedByApp(pids);
             if (foundWindow == null) throw new SessionNotStartException("Session cannot be created. Cannot find any window");
-            pids.Add(foundWindow.pid);
-            currentHdl = foundWindow.hdl;
-            Utilities.BringWindowToTop(currentHdl);
+            GetWindowManageService().InitPids(foundWindow.Item2);
+            GetWindowManageService().InitCurrentWnd(foundWindow.Item3);
+            Utilities.BringWindowToTop(foundWindow.Item1);
         }
 
-        private WndHdlAndPid? SearchForWindowLaunchedByApp()
+        private Tuple<int, int, AutomationElement>? SearchForWindowLaunchedByApp(HashSet<int> pids)
         {
             var rootElement = AutomationElement.RootElement;
             var cacheRequest = new CacheRequest();
@@ -50,14 +49,14 @@ namespace UIADriver.uia2.session
 
                 if (!Win32Methods.IsIconic(nativeHdl) && !double.IsInfinity(rect.Width) && rect.Width != 0)
                 {
-                    if (pids.Contains(pid)) return new WndHdlAndPid(nativeHdl, pid, element);
+                    if (pids.Contains(pid)) return Tuple.Create(nativeHdl, pid, element);
 
                     var childPointer = walker.GetFirstChild(element, cacheRequest);
                     while (childPointer != null)
                     {
                         var pidChild = childPointer.Cached.ProcessId;
 
-                        if (pids.Contains(pidChild)) return new WndHdlAndPid(nativeHdl, pid, element);
+                        if (pids.Contains(pidChild)) return Tuple.Create(nativeHdl, pid, element);
 
                         childPointer = walker.GetNextSibling(childPointer, cacheRequest);
                     }

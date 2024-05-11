@@ -1,16 +1,17 @@
 ﻿using Interop.UIAutomationClient;
 using System.Xml.Linq;
+using UIADriver.services;
 using UIADriver.uia3.attribute;
 
 namespace UIADriver.uia3.sourcebuilder
 {
     public class WindowPageSourceBuilder : RootPageSourceBuilder
     {
-        public WindowPageSourceBuilder(IUIAutomation automation, ElementAttributeGetter attributeGetter, SessionCapabilities capabilities) : base(automation, attributeGetter, capabilities) { }
+        public WindowPageSourceBuilder(IUIAutomation automation, SessionCapabilities capabilities, ElementAttributeService<IUIAutomationElement> attrService) : base(automation, capabilities, attrService) { }
 
-        public override PageSource buildPageSource(IUIAutomationElement startElement)
+        public override PageSource BuildPageSource(IUIAutomationElement startElement)
         {
-            var rs = base.buildPageSource(startElement);
+            var rs = base.BuildPageSource(startElement);
             if (rs.pageSource.Root != null)
             {
                 modifyRect(rs.pageSource.Root);
@@ -70,14 +71,14 @@ namespace UIADriver.uia3.sourcebuilder
             }
         }
 
-        protected override void findElementByPropertyRecursive(IUIAutomationElement element, int propertyId, string? propertyValue, bool stopAtFirst, int layer, IUIAutomationTreeWalker walker, IUIAutomationCacheRequest request, List<IUIAutomationElement> rs)
+        protected override void findElementByPropertyRecursive(IUIAutomationElement element, string propertyName, string? propertyValue, bool stopAtFirst, int layer, IUIAutomationTreeWalker walker, IUIAutomationCacheRequest request, List<IUIAutomationElement> rs)
         {
             if (layer > capabilities.maxTreeDepth) return;
 
             try
             {
                 var updated = element.BuildUpdatedCache(request);
-                var propValue = attributeGetter.basicAttr.GetPropertyStrValue(updated, propertyId);
+                var propValue = attrService.GetAttributeString(updated, propertyName);
                 if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
                 {
                     rs.Add(updated);
@@ -89,7 +90,7 @@ namespace UIADriver.uia3.sourcebuilder
             var child = walker.GetFirstChildElement(element);
             while (child != null)
             {
-                findElementByPropertyRecursive(child, propertyId, propertyValue, stopAtFirst, layer + 1, walker, request, rs);
+                findElementByPropertyRecursive(child, propertyName, propertyValue, stopAtFirst, layer + 1, walker, request, rs);
                 if (rs.Count > 0 && stopAtFirst) return;
 
                 child = walker.GetNextSiblingElement(child);

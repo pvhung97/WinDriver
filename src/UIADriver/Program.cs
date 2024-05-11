@@ -7,13 +7,14 @@ using UIADriver;
 using UIADriver.actions;
 using UIADriver.dto.response;
 using UIADriver.exception;
+using ISession = UIADriver.ISession;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-Session? session = null;
+ISession? session = null;
 
-Func<Session> getSession = () =>
+Func<ISession> getSession = () =>
 {
     if (session == null) throw new SessionNotStartException("Session has been closed or already died");
     return session;
@@ -91,8 +92,13 @@ app.MapPost("/session", async context =>
         return;
     }
 
-    var capabilities = await parseBody(context);
-    SessionCapabilities cap = SessionCapabilities.ParseCapabilities(capabilities);
+    SessionCapabilities cap = new SessionCapabilities();
+    cap.automationName = "uia3";
+    cap.aumid = "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App";
+
+
+    //var capabilities = await parseBody(context);
+    //SessionCapabilities cap = SessionCapabilities.ParseCapabilities(capabilities);
 
     if (string.Equals("uia2", cap.automationName, StringComparison.OrdinalIgnoreCase))
     {
@@ -122,6 +128,13 @@ app.MapPost("/session", async context =>
         if (cap.aumid != null)
         {
             session = new UIADriver.uia3.session.WindowsStoreAppSession(cap);
+
+            var capjson = new JsonObject();
+            capjson["platformName"] = "windows";
+            capjson["windriver:automationName"] = "uia3";
+            capjson["windriver:aumid"] = "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App";
+            var sessionRsp = new { sessionId = "debug", capabilities = capjson };
+            await context.Response.WriteAsJsonAsync(new Response(sessionRsp));
             return;
         }
         if (cap.nativeWindowHandle != null)
@@ -134,7 +147,6 @@ app.MapPost("/session", async context =>
     {
         await context.Response.WriteAsJsonAsync(new Response(new Error("unknown error", "Invalid automation name")));
     }
-
 });
 
 app.MapDelete("/session/{id}", async context =>

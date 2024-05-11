@@ -3,15 +3,16 @@ using UIADriver.actions;
 using UIADriver.actions.inputsource;
 using System.Windows.Automation;
 using UIADriver.exception;
+using UIADriver.services;
 
-namespace UIADriver.uia2
+namespace UIADriver.uia2.actionoptions
 {
     public class UIA2ActionOptions : ActionOptions
     {
         protected AutomationElement topLevelWindow;
-        protected ElementFinder elementFinder;
+        protected ElementFinderService<AutomationElement, CacheRequest> elementFinder;
 
-        public UIA2ActionOptions(AutomationElement topLevelWindow, ElementFinder elementFinder)
+        public UIA2ActionOptions(AutomationElement topLevelWindow, ElementFinderService<AutomationElement, CacheRequest> elementFinder)
         {
             this.topLevelWindow = topLevelWindow;
             this.elementFinder = elementFinder;

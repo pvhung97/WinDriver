@@ -1,15 +1,15 @@
 ﻿using Interop.UIAutomationClient;
 using System.Xml.Linq;
-using UIADriver.uia3.attribute;
+using UIADriver.services;
 using UIADriver.win32native;
 
 namespace UIADriver.uia3.sourcebuilder
 {
     public class RootPageSourceBuilder : PageSourceBuilder
     {
-        public RootPageSourceBuilder(IUIAutomation automation, ElementAttributeGetter attributeGetter, SessionCapabilities capabilities) : base(automation, attributeGetter, capabilities) { }
+        public RootPageSourceBuilder(IUIAutomation automation, SessionCapabilities capabilities, ElementAttributeService<IUIAutomationElement> attrService) : base(automation, capabilities, attrService) { }
 
-        public override PageSource buildPageSource(IUIAutomationElement startElement)
+        public override PageSource BuildPageSource(IUIAutomationElement startElement)
         {
             var walker = automation.CreateTreeWalker(automation.CreateTrueCondition());
             var cacheRequest = automation.CreateCacheRequest();
@@ -164,7 +164,7 @@ namespace UIADriver.uia3.sourcebuilder
                         UIA3PropertyEnum propEnum = (UIA3PropertyEnum)propId;
                         string? propName = Enum.GetName(propEnum);
                         if (string.IsNullOrEmpty(propName)) break;
-                        var value = attributeGetter.basicAttr.GetPropertyStrValue(element, propId);
+                        var value = attrService.GetAttributeString(element, propName);
                         if (!string.IsNullOrEmpty(value)) rs.SetAttributeValue(propName, value);
                         break;
                 }
@@ -174,25 +174,26 @@ namespace UIADriver.uia3.sourcebuilder
             return rs;
         }
 
-        public override List<IUIAutomationElement> findElementByProperty(IUIAutomationElement topLevelWindow, int propertyId, string? propertyValue, bool stopAtFirst)
+        public override List<IUIAutomationElement> FindElementByProperty(IUIAutomationElement topLevelWindow, string propertyName, string? propertyValue, bool stopAtFirst)
         {
+            int propertyId = (int)Enum.Parse(typeof(UIA3PropertyEnum), propertyName);
             List<IUIAutomationElement> rs = [];
             var walker = automation.CreateTreeWalker(automation.CreateTrueCondition());
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(propertyId);
 
-            findElementByPropertyRecursive(topLevelWindow, propertyId, propertyValue, stopAtFirst, 1, walker, cacheRequest, rs);
+            findElementByPropertyRecursive(topLevelWindow, propertyName, propertyValue, stopAtFirst, 1, walker, cacheRequest, rs);
             return rs;
         }
 
-        protected override void findElementByPropertyRecursive(IUIAutomationElement element, int propertyId, string? propertyValue, bool stopAtFirst, int layer, IUIAutomationTreeWalker walker, IUIAutomationCacheRequest request, List<IUIAutomationElement> rs)
+        protected override void findElementByPropertyRecursive(IUIAutomationElement element, string propertyName, string? propertyValue, bool stopAtFirst, int layer, IUIAutomationTreeWalker walker, IUIAutomationCacheRequest request, List<IUIAutomationElement> rs)
         {
             if (layer > capabilities.maxTreeDepth) return;
 
             try
             {
                 var updated = element.BuildUpdatedCache(request);
-                var propValue = attributeGetter.basicAttr.GetPropertyStrValue(updated, propertyId);
+                var propValue = attrService.GetAttributeString(updated, propertyName);
                 if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
                 {
                     rs.Add(updated);
@@ -219,7 +220,7 @@ namespace UIADriver.uia3.sourcebuilder
                     catch { }
                 }
 
-                findElementByPropertyRecursive(child, propertyId, propertyValue, stopAtFirst, layer + 1, walker, request, rs);
+                findElementByPropertyRecursive(child, propertyName, propertyValue, stopAtFirst, layer + 1, walker, request, rs);
                 if (rs.Count > 0 && stopAtFirst) return;
 
                 child = walker.GetNextSiblingElement(child);

@@ -3,16 +3,17 @@ using System.Text.Json.Nodes;
 using UIADriver.actions;
 using UIADriver.actions.inputsource;
 using UIADriver.exception;
+using UIADriver.services;
 
-namespace UIADriver.uia3
+namespace UIADriver.uia3.actionoptions
 {
     public class UIA3ActionOptions : ActionOptions
     {
         protected IUIAutomation automation;
         protected IUIAutomationElement topLevelWindow;
-        protected ElementFinder elementFinder;
+        protected ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> elementFinder;
 
-        public UIA3ActionOptions(IUIAutomation automation, IUIAutomationElement topLevelWindow, ElementFinder elementFinder)
+        public UIA3ActionOptions(IUIAutomation automation, IUIAutomationElement topLevelWindow, ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> elementFinder)
         {
             this.automation = automation;
             this.topLevelWindow = topLevelWindow;

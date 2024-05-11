@@ -3,29 +3,20 @@ using System.Xml.XPath;
 using UIADriver.dto.request;
 using UIADriver.dto.response;
 using UIADriver.exception;
-using UIADriver.uia3.sourcebuilder;
+using UIADriver.services;
 
 namespace UIADriver.uia3
 {
-    public class ElementFinder
+    public class ElementFinder : ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         private IUIAutomation automation;
-        private PageSourceBuilder sourceBuilder;
-        private Dictionary<string, IUIAutomationElement> cachedElement;
 
-        public ElementFinder(IUIAutomation automation, PageSourceBuilder sourceBuilder)
+        public ElementFinder(IUIAutomation automation, PageSourceService<IUIAutomationElement> pageSourceService, ElementAttributeService<IUIAutomationElement> attrService) : base(pageSourceService, attrService)
         {
             this.automation = automation;
-            cachedElement = [];
-            this.sourceBuilder = sourceBuilder;
         }
 
-        public void resetCache()
-        {
-            cachedElement.Clear();
-        }
-
-        public FindElementResponse FindElement(FindElementRequest request, IUIAutomationElement topLevelWindow)
+        public override FindElementResponse FindElement(FindElementRequest request, IUIAutomationElement topLevelWindow)
         {
             //  Both FindFirst and FindAll will miss any element that is neither ControlElement nor ContentElement
             var found = FindElements(request, topLevelWindow, true);
@@ -33,7 +24,7 @@ namespace UIADriver.uia3
             return found[0];
         }
 
-        public List<FindElementResponse> FindElements(FindElementRequest request, IUIAutomationElement topLevelWindow)
+        public override List<FindElementResponse> FindElements(FindElementRequest request, IUIAutomationElement topLevelWindow)
         {
             return FindElements(request, topLevelWindow, false);
         }
@@ -47,16 +38,16 @@ namespace UIADriver.uia3
                     rs = FindElementsWithXpath(request.value, topLevelWindow);
                     break;
                 case "name":
-                    rs = FindElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_NamePropertyId, request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertyNameAndValue(nameof(UIA3PropertyEnum.Name), request.value, topLevelWindow, stopAtFirst);
                     break;
                 case "automation id":
-                    rs = FindElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_AutomationIdPropertyId, request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertyNameAndValue(nameof(UIA3PropertyEnum.AutomationId), request.value, topLevelWindow, stopAtFirst);
                     break;
                 case "id":
-                    rs = FindElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_RuntimeIdPropertyId, request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertyNameAndValue(nameof(UIA3PropertyEnum.RuntimeId), request.value, topLevelWindow, stopAtFirst);
                     break;
                 case "tag name":
-                    rs = FindElementsWithPropertIdAndValue(UIA_PropertyIds.UIA_ControlTypePropertyId, request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertyNameAndValue(nameof(UIA3PropertyEnum.ControlType), request.value, topLevelWindow, stopAtFirst);
                     break;
                 default:
                     throw new InvalidArgument("Unsupported location strategy " + request.strategy);
@@ -65,8 +56,7 @@ namespace UIADriver.uia3
             var resp = new List<FindElementResponse>();
             foreach (var item in rs)
             {
-                string id = Guid.NewGuid().ToString();
-                cachedElement[id] = item;
+                var id = RegisterElement(item);
                 resp.Add(new FindElementResponse(id));
             }
             return resp;
@@ -74,7 +64,7 @@ namespace UIADriver.uia3
 
         private List<IUIAutomationElement> FindElementsWithXpath(string xpath, IUIAutomationElement topLevelWindow)
         {
-            var source = sourceBuilder.buildPageSource(topLevelWindow);
+            var source = pageSourceService.BuildPageSource(topLevelWindow);
             var nodes = source.pageSource.XPathSelectElements(xpath);
             var rs = new List<IUIAutomationElement>();
 
@@ -86,19 +76,19 @@ namespace UIADriver.uia3
             return rs;
         }
 
-        private List<IUIAutomationElement> FindElementsWithPropertIdAndValue(int propertyId, string value, IUIAutomationElement topLevelWindow, bool stopAtFirst)
+        private List<IUIAutomationElement> FindElementsWithPropertyNameAndValue(string propertyName, string value, IUIAutomationElement topLevelWindow, bool stopAtFirst)
         {
-            return sourceBuilder.findElementByProperty(topLevelWindow, propertyId, value, stopAtFirst);
+            return pageSourceService.FindElementByProperty(topLevelWindow, propertyName, value, stopAtFirst);
         }
 
-        public IUIAutomationElement GetElement(string id)
+        public override IUIAutomationElement GetElement(string id)
         {
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
             return GetElement(id, cacheRequest);
         }
 
-        public IUIAutomationElement GetElement(string id, IUIAutomationCacheRequest cacheRequest)
+        public override IUIAutomationElement GetElement(string id, IUIAutomationCacheRequest cacheRequest)
         {
             cachedElement.TryGetValue(id, out var element);
             if (element == null) throw new StaleElementReference("element is stale");
@@ -109,26 +99,25 @@ namespace UIADriver.uia3
             }
             catch
             {
-                cachedElement.Remove(id);
+                RemoveElement(id);
                 throw new StaleElementReference("element is stale");
             }
         }
 
-        public FindElementResponse GetActiveElement()
+        public override FindElementResponse GetActiveElement()
         {
             return GetActiveElement(null);
         }
 
-        public FindElementResponse GetActiveElement(int? topLevelHdl)
+        public override FindElementResponse GetActiveElement(int? topLevelHdl)
         {
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
-            var id = Guid.NewGuid().ToString();
 
             var active = automation.GetFocusedElementBuildCache(cacheRequest);
             if (topLevelHdl == null)
             {
-                cachedElement[id] = active;
+                string id = RegisterElement(active);
                 return new FindElementResponse(id);
             }
 
@@ -146,10 +135,36 @@ namespace UIADriver.uia3
             }
             if (topLevelHdl == prevHdl)
             {
-                cachedElement[id] = active;
+                string id = RegisterElement(active);
                 return new FindElementResponse(id);
             }
             throw new NoSuchElement("No active element on current window");
+        }
+
+        public override FindElementResponse FindElementFromParentElement(FindElementRequest request, string parentElementId)
+        {
+            IUIAutomationElement? startPoint = null;
+            try
+            {
+                startPoint = GetElement(parentElementId);
+            }
+            catch { }
+            if (startPoint == null) throw new NoSuchElement("Cannot find any element with given parent element");
+
+            return FindElement(request, startPoint);
+        }
+
+        public override List<FindElementResponse> FindElementsFromParentElement(FindElementRequest request, string parentElementId)
+        {
+            IUIAutomationElement? startPoint = null;
+            try
+            {
+                startPoint = GetElement(parentElementId);
+            }
+            catch { }
+            if (startPoint == null) return [];
+
+            return FindElements(request, startPoint);
         }
     }
 }

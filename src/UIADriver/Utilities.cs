@@ -114,15 +114,8 @@ namespace UIADriver
 
         public static void BringWindowToTop(nint hwnd)
         {
-            var wi = new WindowInfo();
-            wi.size = (uint)Marshal.SizeOf(wi);
-            Win32Methods.GetWindowInfo(hwnd, ref wi);
-            var isTopMostWnd = (wi.dwExStyle & 0x00000008) == 0x00000008;
-            if (!isTopMostWnd)
-            {
-                Win32Methods.SetWindowPos(hwnd, -1, 0, 0, 0, 0, 0x0002 | 0x0001 | 0x0040);  //  Make it a top most window
-                Win32Methods.SetWindowPos(hwnd, -2, 0, 0, 0, 0, 0x0002 | 0x0001);  //  Then remove top most style
-            }
+            Win32Methods.SetWindowPos(hwnd, -2, 0, 0, 0, 0, 0x0002 | 0x0001);
+            Win32Methods.SetWindowPos(hwnd, -1, 0, 0, 0, 0, 0x0002 | 0x0001);
             Win32Methods.SetForegroundWindow(hwnd);
         }
     }

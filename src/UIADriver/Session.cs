@@ -1,62 +1,31 @@
-﻿using System.Management;
-using System.Text;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using UIADriver.dto.response;
+using UIADriver.services;
 
 namespace UIADriver
 {
-    public abstract class Session
+    public abstract class Session<T, U> : ISession
     {
         protected SessionCapabilities capabilities;
-        protected HashSet<int> pids = [];
 
-        protected ScreenshotCapture screenCapture;
-        
+        protected ScreenshotCapture? ScreenCaptureService;
+        protected ElementAttributeService<T>? AttrService;
+        protected PageSourceService<T>? PageSourceService;
+        protected ElementFinderService<T, U>? ElementFinderService;
+        protected WindowManageService<T, U>? WindowManageService;
+        protected ActionsService<T>? ActionsService;
+
         public Session(SessionCapabilities capabilities)
         {
             this.capabilities = capabilities;
-            this.screenCapture = new ScreenshotCapture();
         }
 
-        protected void UpdateProcessList()
-        {
-            if (pids.Count == 0) return;
-
-            Dictionary<int, int> allProcess = [];
-            string query = "SELECT ProcessId, ParentProcessId FROM Win32_Process";
-            
-            using (var searcher = new ManagementObjectSearcher(query))
-            {
-                using var results = searcher.Get();
-                if (results == null || results.Count == 0) return;
-
-                foreach (ManagementObject obj in results.Cast<ManagementObject>())
-                {
-                    int pid = Convert.ToInt32((uint)obj["ProcessId"]);
-                    int parentId = Convert.ToInt32((uint)obj["ParentProcessId"]);
-                    allProcess.Add(pid, parentId);
-                }
-            }
-
-            var newPids = new HashSet<int>(pids, pids.Comparer);
-            while (true)
-            {
-                var oldSize = newPids.Count;
-
-                foreach (var entry in allProcess)
-                {
-                    if (newPids.Contains(entry.Value))
-                    {
-                        newPids.Add(entry.Key);
-                    }
-                }
-
-                var newSize = newPids.Count;
-                if (oldSize == newSize) break;
-            }
-
-            pids = newPids;
-        }
+        protected abstract ScreenshotCapture GetScreenCaptureService();
+        protected abstract ElementAttributeService<T> GetElementAttributeService();
+        protected abstract PageSourceService<T> GetPageSourceService();
+        protected abstract ElementFinderService<T, U> GetElementFinderService();
+        protected abstract WindowManageService<T, U> GetWindowManageService();
+        protected abstract ActionsService<T> GetActionsService();
 
         public abstract HashSet<string> CollectWindowHandles();
         public abstract Task CloseSession();

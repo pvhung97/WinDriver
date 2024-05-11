@@ -4,7 +4,6 @@ using UIADriver.actions.action;
 using UIADriver.actions.executor;
 using UIADriver.actions.inputsource;
 using UIADriver.exception;
-using UIADriver.actions.executor;
 using Action = UIADriver.actions.action.Action;
 
 namespace UIADriver.actions
