@@ -20,13 +20,25 @@ namespace UIADriver.uia3.attribute
                 case UIA_PropertyIds.UIA_LiveSettingPropertyId:
                     return ((LiveSetting)v).ToString();
                 case UIA_PropertyIds.UIA_OrientationPropertyId:
-                    return ((OrientationType)v).ToString();
+                    return ((OrientationType)v).ToString().Replace("OrientationType_", "");
                 case UIA_PropertyIds.UIA_VisualEffectsPropertyId:
                     return Utilities.GetVisualEffect((int)v);
                 case UIA_PropertyIds.UIA_NativeWindowHandlePropertyId:
                     return (int)v == 0 ? null : v.ToString();
                 case UIA_PropertyIds.UIA_RuntimeIdPropertyId:
                     return string.Join(",", (int[])v);
+                case UIA_PropertyIds.UIA_DockDockPositionPropertyId:
+                    return ((DockPosition)v).ToString().Replace("DockPosition_", "");
+                case UIA_PropertyIds.UIA_ExpandCollapseExpandCollapseStatePropertyId:
+                    return ((ExpandCollapseState)v).ToString().Replace("ExpandCollapseState_", "");
+                case UIA_PropertyIds.UIA_ToggleToggleStatePropertyId:
+                    return ((ToggleState)v).ToString().Replace("ToggleState_", "");
+                case UIA_PropertyIds.UIA_TableRowOrColumnMajorPropertyId:
+                    return ((RowOrColumnMajor)v).ToString().Replace("RowOrColumnMajor_", "");
+                case UIA_PropertyIds.UIA_WindowWindowInteractionStatePropertyId:
+                    return ((WindowInteractionState)v).ToString().Replace("WindowInteractionState_", "");
+                case UIA_PropertyIds.UIA_WindowWindowVisualStatePropertyId:
+                    return ((WindowVisualState)v).ToString().Replace("WindowVisualState_", "");
 
             }
             if (v is bool vb)

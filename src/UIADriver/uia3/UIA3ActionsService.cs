@@ -30,7 +30,7 @@ namespace UIADriver.uia3
             elementCacheRequest.AddProperty(UIA_PropertyIds.UIA_IsEnabledPropertyId);
             element = element.BuildUpdatedCache(elementCacheRequest);
             var pattern = element.GetCachedPattern(UIA_PatternIds.UIA_ValuePatternId);
-            if (pattern != null && pattern is IUIAutomationValuePattern valuePattern)
+            if (pattern is IUIAutomationValuePattern valuePattern)
             {
                 if ((bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_ValueIsReadOnlyPropertyId))
                 {
@@ -42,7 +42,7 @@ namespace UIADriver.uia3
                 }
 
                 var sPattern = element.GetCachedPattern(UIA_PatternIds.UIA_ScrollItemPatternId);
-                if (sPattern != null && sPattern is IUIAutomationScrollItemPattern scrollItemPattern)
+                if (sPattern is IUIAutomationScrollItemPattern scrollItemPattern)
                 {
                     scrollItemPattern.ScrollIntoView();
                     element = WaitUntilElementPropertyEqual(element, elementCacheRequest, UIA_PropertyIds.UIA_IsOffscreenPropertyId, false, capabilities.delayAfterFocus);
@@ -66,7 +66,7 @@ namespace UIADriver.uia3
             elementCacheRequest.AddProperty(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
             element = element.BuildUpdatedCache(elementCacheRequest);
             var pattern = element.GetCachedPattern(UIA_PatternIds.UIA_ScrollItemPatternId);
-            if (pattern != null && pattern is IUIAutomationScrollItemPattern scrollItemPatern)
+            if (pattern is IUIAutomationScrollItemPattern scrollItemPatern)
             {
                 scrollItemPatern.ScrollIntoView();
                 element = WaitUntilElementPropertyEqual(element, elementCacheRequest, UIA_PropertyIds.UIA_IsOffscreenPropertyId, false, capabilities.delayAfterFocus);
@@ -101,7 +101,7 @@ namespace UIADriver.uia3
             elementCacheRequest.AddProperty(UIA_PropertyIds.UIA_IsKeyboardFocusablePropertyId);
             element = element.BuildUpdatedCache(elementCacheRequest);
             var pattern = element.GetCachedPattern(UIA_PatternIds.UIA_ScrollItemPatternId);
-            if (pattern != null && pattern is IUIAutomationScrollItemPattern scrollItemPatern)
+            if (pattern is IUIAutomationScrollItemPattern scrollItemPatern)
             {
                 scrollItemPatern.ScrollIntoView();
                 element = WaitUntilElementPropertyEqual(element, elementCacheRequest, UIA_PropertyIds.UIA_IsOffscreenPropertyId, false, capabilities.delayAfterFocus);

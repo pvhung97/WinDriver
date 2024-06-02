@@ -1,6 +1,5 @@
 ﻿using UIADriver.dto.request;
 using UIADriver.dto.response;
-using UIADriver.exception;
 
 namespace UIADriver.services
 {
@@ -27,7 +26,7 @@ namespace UIADriver.services
             cachedRuntimeId.Clear();
         }
 
-        protected string RegisterElement(T element)
+        public string RegisterElement(T element)
         {
             string? runtimeId = attrService.GetAttributeString(element, "RuntimeId");
             if (runtimeId == null || runtimeId.Length == 0)
