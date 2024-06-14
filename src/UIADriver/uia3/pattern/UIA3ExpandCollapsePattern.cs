@@ -26,13 +26,6 @@ namespace UIADriver.uia3.pattern
             return element;
         }
 
-        public override string GetExpandCollapseState(string elementId)
-        {
-            var element = AssertPattern(elementId, automation.CreateCacheRequest());
-            var state = attributeService.GetAttributeString(element, nameof(UIA3PropertyEnum.ExpandCollapse_ExpandCollapseState));
-            return state == null ? "" : state;
-        }
-
         public override void ExpandOrCollapseElement(string elementId, bool expand)
         {
             var element = AssertPattern(elementId, automation.CreateCacheRequest());

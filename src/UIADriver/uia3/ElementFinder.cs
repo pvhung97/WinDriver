@@ -38,16 +38,16 @@ namespace UIADriver.uia3
                     rs = FindElementsWithXpath(request.value, topLevelWindow);
                     break;
                 case "name":
-                    rs = FindElementsWithPropertyNameAndValue(nameof(UIA3PropertyEnum.Name), request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertyNameAndValue(Enum.GetName(UIA3PropertyEnum.Name), request.value, topLevelWindow, stopAtFirst);
                     break;
                 case "automation id":
-                    rs = FindElementsWithPropertyNameAndValue(nameof(UIA3PropertyEnum.AutomationId), request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertyNameAndValue(Enum.GetName(UIA3PropertyEnum.AutomationId), request.value, topLevelWindow, stopAtFirst);
                     break;
                 case "id":
-                    rs = FindElementsWithPropertyNameAndValue(nameof(UIA3PropertyEnum.RuntimeId), request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertyNameAndValue(Enum.GetName(UIA3PropertyEnum.RuntimeId), request.value, topLevelWindow, stopAtFirst);
                     break;
                 case "tag name":
-                    rs = FindElementsWithPropertyNameAndValue(nameof(UIA3PropertyEnum.ControlType), request.value, topLevelWindow, stopAtFirst);
+                    rs = FindElementsWithPropertyNameAndValue(Enum.GetName(UIA3PropertyEnum.ControlType), request.value, topLevelWindow, stopAtFirst);
                     break;
                 default:
                     throw new InvalidArgument("Unsupported location strategy " + request.strategy);

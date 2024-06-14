@@ -17,13 +17,6 @@ namespace UIADriver.uia2.pattern
             else pattern.Collapse();
         }
 
-        public override string GetExpandCollapseState(string elementId)
-        {
-            var element = AssertPattern(elementId, new CacheRequest());
-            var state = attributeService.GetAttributeString(element, UIA2PropertyDictionary.GetAutomationPropertyName(ExpandCollapsePattern.ExpandCollapseStateProperty.Id));
-            return state == null ? "" : state;
-        }
-
         protected override AutomationElement AssertPattern(string elementId, CacheRequest cacheRequest)
         {
             cacheRequest.Add(AutomationElement.IsExpandCollapsePatternAvailableProperty);

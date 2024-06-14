@@ -56,13 +56,6 @@ namespace UIADriver.uia2.pattern
             return rs;
         }
 
-        public override string GetRowOrColumnMajor(string elementId)
-        {
-            var element = AssertPattern(elementId, new CacheRequest());
-            var state = attributeService.GetAttributeString(element, UIA2PropertyDictionary.GetAutomationPropertyName(TablePattern.RowOrColumnMajorProperty.Id));
-            return state == null ? "" : state;
-        }
-
         protected override AutomationElement AssertPattern(string elementId, CacheRequest cacheRequest)
         {
             cacheRequest.Add(AutomationElement.IsTablePatternAvailableProperty);

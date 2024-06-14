@@ -21,12 +21,21 @@ namespace UIADriver.uia2.attribute
 
         public override string? GetAttributeString(AutomationElement element, string attribute)
         {
+            return GetAttributeString(element, attribute, true);
+        }
+
+        public override string? GetAttributeString(AutomationElement element, string attribute, bool updateCache)
+        {
             var found = UIA2PropertyDictionary.GetAutomationProperty(attribute);
             if (found == null) return null;
 
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(found);
-            element = element.GetUpdatedCache(cacheRequest);
+            if (updateCache)
+            {
+                var cacheRequest = new CacheRequest();
+                cacheRequest.Add(found);
+                element = element.GetUpdatedCache(cacheRequest);
+            }
+            
             return basicAttr.GetPropertyStrValue(element, found);
         }
 
@@ -82,6 +91,7 @@ namespace UIADriver.uia2.attribute
             cacheRequest.Add(SelectionItemPattern.IsSelectedProperty);
             cacheRequest.Add(AutomationElement.IsTogglePatternAvailableProperty);
             cacheRequest.Add(TogglePattern.ToggleStateProperty);
+            element = element.GetUpdatedCache(cacheRequest);
 
             if ((bool)element.GetCachedPropertyValue(AutomationElement.IsSelectionItemPatternAvailableProperty))
             {

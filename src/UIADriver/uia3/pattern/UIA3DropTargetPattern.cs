@@ -13,15 +13,6 @@ namespace UIADriver.uia3.pattern
             this.automation = automation;
         }
 
-        public override string GetDropTargetEffect(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_DropTargetDropTargetEffectPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationDropTargetPattern)element.GetCachedPattern(UIA_PatternIds.UIA_DropTargetPatternId);
-            return pattern.CachedDropTargetEffect;
-        }
-
         public override List<string> GetDropTargetEffects(string elementId)
         {
             var cacheRequest = automation.CreateCacheRequest();

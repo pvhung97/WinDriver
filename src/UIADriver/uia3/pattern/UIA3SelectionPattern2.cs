@@ -32,15 +32,6 @@ namespace UIADriver.uia3.pattern
             return new FindElementResponse(finderService.RegisterElement(pattern.CachedFirstSelectedItem));
         }
 
-        public override int GetItemCount(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_Selection2ItemCountPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationSelectionPattern2)element.GetCachedPattern(UIA_PatternIds.UIA_SelectionPattern2Id);
-            return pattern.CachedItemCount;
-        }
-
         public override FindElementResponse GetLastSelectedItem(string elementId)
         {
             var cacheRequest = automation.CreateCacheRequest();

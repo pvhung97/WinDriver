@@ -29,6 +29,7 @@ namespace UIADriver.uia2.session
             GetWindowManageService().InitPids(foundWindow.Item2);
             GetWindowManageService().InitCurrentWnd(foundWindow.Item3);
             Utilities.BringWindowToTop(foundWindow.Item1);
+            foundWindow.Item3.SetFocus();
         }
 
         private Tuple<int, int, AutomationElement>? SearchForWindowLaunchedByApp(HashSet<int> pids)

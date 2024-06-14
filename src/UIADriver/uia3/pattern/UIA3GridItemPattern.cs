@@ -26,42 +26,6 @@ namespace UIADriver.uia3.pattern
             return element;
         }
 
-        public override int GetRow(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_GridItemRowPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationGridItemPattern)element.GetCachedPattern(UIA_PatternIds.UIA_GridItemPatternId);
-            return pattern.CachedRow;
-        }
-
-        public override int GetColumn(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_GridItemColumnPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationGridItemPattern)element.GetCachedPattern(UIA_PatternIds.UIA_GridItemPatternId);
-            return pattern.CachedColumn;
-        }
-
-        public override int GetRowSpan(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_GridItemRowSpanPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationGridItemPattern)element.GetCachedPattern(UIA_PatternIds.UIA_GridItemPatternId);
-            return pattern.CachedRowSpan;
-        }
-
-        public override int GetColSpan(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_GridItemColumnSpanPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationGridItemPattern)element.GetCachedPattern(UIA_PatternIds.UIA_GridItemPatternId);
-            return pattern.CachedColumnSpan;
-        }
-
         public override FindElementResponse GetContainingGrid(string elementId)
         {
             var cacheRequest = automation.CreateCacheRequest();

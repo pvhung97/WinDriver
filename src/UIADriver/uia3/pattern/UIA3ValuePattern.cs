@@ -14,24 +14,6 @@ namespace UIADriver.uia3.pattern
             this.automation = automation;
         }
 
-        public override string GetValue(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_ValueValuePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationValuePattern)element.GetCachedPattern(UIA_PatternIds.UIA_ValuePatternId);
-            return pattern.CachedValue;
-        }
-
-        public override bool IsReadOnly(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_ValueIsReadOnlyPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationValuePattern)element.GetCachedPattern(UIA_PatternIds.UIA_ValuePatternId);
-            return pattern.CachedIsReadOnly != 0;
-        }
-
         public override void SetValue(string elementId, string value)
         {
             var element = AssertPattern(elementId, automation.CreateCacheRequest());

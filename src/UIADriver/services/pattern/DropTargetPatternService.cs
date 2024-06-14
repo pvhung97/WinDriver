@@ -4,7 +4,6 @@
     {
         protected DropTargetPatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
 
-        public abstract string GetDropTargetEffect(string elementId);
         public abstract List<string> GetDropTargetEffects(string elementId);
     }
 }

@@ -14,42 +14,6 @@ namespace UIADriver.uia3.pattern
             this.automation = automation;
         }
 
-        public override int GetAnnotationTypeId(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_AnnotationTypesPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationAnnotationPattern)element.GetCachedPattern(UIA_PatternIds.UIA_AnnotationPatternId);
-            return pattern.CachedAnnotationTypeId;
-        }
-
-        public override string GetAnnotationTypeName(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_AnnotationAnnotationTypeNamePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationAnnotationPattern)element.GetCachedPattern(UIA_PatternIds.UIA_AnnotationPatternId);
-            return pattern.CachedAnnotationTypeName;
-        }
-
-        public override string GetAuthor(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_AnnotationAuthorPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationAnnotationPattern)element.GetCachedPattern(UIA_PatternIds.UIA_AnnotationPatternId);
-            return pattern.CachedAuthor;
-        }
-
-        public override string GetDateTime(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_AnnotationDateTimePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationAnnotationPattern)element.GetCachedPattern(UIA_PatternIds.UIA_AnnotationPatternId);
-            return pattern.CachedDateTime;
-        }
-
         public override FindElementResponse GetTarget(string elementId)
         {
             var cacheRequest = automation.CreateCacheRequest();

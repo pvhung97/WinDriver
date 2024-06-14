@@ -9,33 +9,6 @@ namespace UIADriver.uia2.pattern
     {
         public UIA2TransformPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
 
-        public override bool CanMove(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(TransformPattern.CanMoveProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (TransformPattern)element.GetCachedPattern(TransformPattern.Pattern);
-            return pattern.Cached.CanMove;
-        }
-
-        public override bool CanResize(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(TransformPattern.CanResizeProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (TransformPattern)element.GetCachedPattern(TransformPattern.Pattern);
-            return pattern.Cached.CanResize;
-        }
-
-        public override bool CanRotate(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(TransformPattern.CanRotateProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (TransformPattern)element.GetCachedPattern(TransformPattern.Pattern);
-            return pattern.Cached.CanRotate;
-        }
-
         public override void Move(string elementId, double x, double y)
         {
             var element = AssertPattern(elementId, new CacheRequest());

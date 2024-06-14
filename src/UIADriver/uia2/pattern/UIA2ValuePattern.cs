@@ -9,24 +9,6 @@ namespace UIADriver.uia2.pattern
     {
         public UIA2ValuePattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
 
-        public override string GetValue(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(ValuePattern.ValueProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (ValuePattern)element.GetCachedPattern(ValuePattern.Pattern);
-            return pattern.Cached.Value;
-        }
-
-        public override bool IsReadOnly(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(ValuePattern.IsReadOnlyProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (ValuePattern)element.GetCachedPattern(ValuePattern.Pattern);
-            return pattern.Cached.IsReadOnly;
-        }
-
         public override void SetValue(string elementId, string value)
         {
             var element = AssertPattern(elementId, new CacheRequest());

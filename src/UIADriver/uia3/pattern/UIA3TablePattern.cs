@@ -59,13 +59,6 @@ namespace UIADriver.uia3.pattern
             return rs;
         }
 
-        public override string GetRowOrColumnMajor(string elementId)
-        {
-            var element = AssertPattern(elementId, automation.CreateCacheRequest());
-            var state = attributeService.GetAttributeString(element, nameof(UIA3PropertyEnum.Table_RowOrColumnMajor));
-            return state == null ? "" : state;
-        }
-
         protected override IUIAutomationElement AssertPattern(string elementId, IUIAutomationCacheRequest cacheRequest)
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsTablePatternAvailablePropertyId);

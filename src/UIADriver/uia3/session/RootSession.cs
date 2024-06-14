@@ -48,7 +48,7 @@ namespace UIADriver.uia3.session
             return GetElementFinderService().GetActiveElement();
         }
 
-        protected override ActionOptions getActionOption()
+        protected override ActionOptions GetActionOption()
         {
             return new RootSessionActionOptions(automation, GetWindowManageService().getCurrentWindow(null), GetElementFinderService());
         }

@@ -1,7 +1,6 @@
 ﻿using Interop.UIAutomationClient;
 using System.Xml.Linq;
 using UIADriver.services;
-using UIADriver.uia3.attribute;
 
 namespace UIADriver.uia3.sourcebuilder
 {
@@ -22,12 +21,17 @@ namespace UIADriver.uia3.sourcebuilder
         protected override void buildRecursive(XElement parent, Dictionary<XElement, IUIAutomationElement> mapping, IUIAutomationElement element, IUIAutomationTreeWalker walker, IUIAutomationCacheRequest request, int layer)
         {
             if (layer > capabilities.maxTreeDepth) return;
-            IUIAutomationElement elementNode = walker.GetFirstChildElementBuildCache(element, request);
+            var elementNode = walker.GetFirstChildElementBuildCache(element, request);
 
             while (elementNode != null)
             {
                 try
                 {
+                    if (checkIfElementCanCauseInfiniteLoop(elementNode, walker))
+                    {
+                        break;
+                    }
+
                     XElement elementXml = createXElement(elementNode);
                     if (elementXml != null)
                     {
@@ -75,25 +79,25 @@ namespace UIADriver.uia3.sourcebuilder
         {
             if (layer > capabilities.maxTreeDepth) return;
 
-            try
+            var propValue = attrService.GetAttributeString(element, propertyName);
+            if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
             {
-                var updated = element.BuildUpdatedCache(request);
-                var propValue = attrService.GetAttributeString(updated, propertyName);
-                if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
-                {
-                    rs.Add(updated);
-                    if (stopAtFirst) return;
-                }
+                rs.Add(element);
+                if (stopAtFirst) return;
             }
-            catch { }
 
-            var child = walker.GetFirstChildElement(element);
+            var child = walker.GetFirstChildElementBuildCache(element, request);
             while (child != null)
             {
+                if (checkIfElementCanCauseInfiniteLoop(child, walker))
+                {
+                    break;
+                }
+
                 findElementByPropertyRecursive(child, propertyName, propertyValue, stopAtFirst, layer + 1, walker, request, rs);
                 if (rs.Count > 0 && stopAtFirst) return;
 
-                child = walker.GetNextSiblingElement(child);
+                child = walker.GetNextSiblingElementBuildCache(child, request);
             }
         }
 

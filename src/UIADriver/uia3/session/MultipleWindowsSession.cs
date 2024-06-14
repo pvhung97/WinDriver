@@ -42,7 +42,7 @@ namespace UIADriver.uia3.session
             });
         }
 
-        protected override ActionOptions getActionOption()
+        protected override ActionOptions GetActionOption()
         {
             return new UIA3ActionOptions(automation, GetWindowManageService().getCurrentWindow(null), GetElementFinderService());
         }

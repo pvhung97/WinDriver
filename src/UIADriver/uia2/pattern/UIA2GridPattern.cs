@@ -10,15 +10,6 @@ namespace UIADriver.uia2.pattern
     {
         public UIA2GridPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
 
-        public override int GetColumnCount(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(GridPattern.ColumnCountProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (GridPattern)element.GetCachedPattern(GridPattern.Pattern);
-            return pattern.Cached.ColumnCount;
-        }
-
         public override FindElementResponse GetItem(string elementId, int row, int column)
         {
             var cacheRequest = new CacheRequest();
@@ -32,15 +23,6 @@ namespace UIADriver.uia2.pattern
             } catch { }
             if (rsp == null) throw new NoSuchElement($"No item found with row {row} column {column}");
             return rsp;
-        }
-
-        public override int GetRowCount(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(GridPattern.RowCountProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (GridPattern)element.GetCachedPattern(GridPattern.Pattern);
-            return pattern.Cached.RowCount;
         }
 
         protected override AutomationElement AssertPattern(string elementId, CacheRequest cacheRequest)

@@ -9,15 +9,6 @@ namespace UIADriver.uia2.pattern
     {
         public UIA2MultipleViewPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
 
-        public override int GetCurrentViewId(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(MultipleViewPattern.CurrentViewProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (MultipleViewPattern)element.GetCachedPattern(MultipleViewPattern.Pattern);
-            return pattern.Cached.CurrentView;
-        }
-
         public override List<int> GetSupportedViewIds(string elementId)
         {
             var cacheRequest = new CacheRequest();

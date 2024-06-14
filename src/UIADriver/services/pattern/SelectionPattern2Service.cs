@@ -9,6 +9,5 @@ namespace UIADriver.services.pattern
         public abstract FindElementResponse GetFirstSelectedItem(string elementId);
         public abstract FindElementResponse GetLastSelectedItem(string elementId);
         public abstract FindElementResponse GetCurrentSelectedItem(string elementId);
-        public abstract int GetItemCount(string elementId);
     }
 }

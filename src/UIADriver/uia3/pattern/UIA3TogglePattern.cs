@@ -13,13 +13,6 @@ namespace UIADriver.uia3.pattern
             this.automation = automation;
         }
 
-        public override string GetToggleState(string elementId)
-        {
-            var element = AssertPattern(elementId, automation.CreateCacheRequest());
-            var state = attributeService.GetAttributeString(element, nameof(UIA3PropertyEnum.Toggle_ToggleState));
-            return state == null ? "" : state;
-        }
-
         public override void Toggle(string elementId)
         {
             var element = AssertPattern(elementId, automation.CreateCacheRequest());

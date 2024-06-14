@@ -4,8 +4,6 @@
     {
         protected ValuePatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
 
-        public abstract bool IsReadOnly(string elementId);
-        public abstract string GetValue(string elementId);
         public abstract void SetValue(string elementId, string value);
     }
 }

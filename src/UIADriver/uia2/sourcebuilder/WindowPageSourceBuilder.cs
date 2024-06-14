@@ -74,25 +74,20 @@ namespace UIADriver.uia2.sourcebuilder
         {
             if (layer > capabilities.maxTreeDepth) return;
 
-            try
+            var propValue = attrService.GetAttributeString(element, propertyName, false);
+            if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
             {
-                var updated = element.GetUpdatedCache(request);
-                var propValue = attrService.GetAttributeString(updated, propertyName);
-                if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
-                {
-                    rs.Add(updated);
-                    if (stopAtFirst) return;
-                }
+                rs.Add(element);
+                if (stopAtFirst) return;
             }
-            catch { }
 
-            var child = walker.GetFirstChild(element);
+            var child = walker.GetFirstChild(element, request);
             while (child != null)
             {
                 findElementByPropertyRecursive(child, propertyName, propertyValue, stopAtFirst, layer + 1, walker, request, rs);
                 if (rs.Count > 0 && stopAtFirst) return;
 
-                child = walker.GetNextSibling(child);
+                child = walker.GetNextSibling(child, request);
             }
         }
     }

@@ -13,60 +13,6 @@ namespace UIADriver.uia3.pattern
             this.automation = automation;
         }
 
-        public override double GetHorizontalScrollPercent(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_ScrollHorizontalScrollPercentPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationScrollPattern)element.GetCachedPattern(UIA_PatternIds.UIA_ScrollPatternId);
-            return pattern.CachedHorizontalScrollPercent;
-        }
-
-        public override double GetHorizontalViewSizePercent(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_ScrollHorizontalViewSizePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationScrollPattern)element.GetCachedPattern(UIA_PatternIds.UIA_ScrollPatternId);
-            return pattern.CachedHorizontalViewSize;
-        }
-
-        public override double GetVerticalScrollPercent(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_ScrollVerticalScrollPercentPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationScrollPattern)element.GetCachedPattern(UIA_PatternIds.UIA_ScrollPatternId);
-            return pattern.CachedVerticalScrollPercent;
-        }
-
-        public override double GetVerticalViewSizePercent(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_ScrollVerticalViewSizePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationScrollPattern)element.GetCachedPattern(UIA_PatternIds.UIA_ScrollPatternId);
-            return pattern.CachedVerticalViewSize;
-        }
-
-        public override bool IsHorizontallyScrollable(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_ScrollHorizontallyScrollablePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationScrollPattern)element.GetCachedPattern(UIA_PatternIds.UIA_ScrollPatternId);
-            return pattern.CachedHorizontallyScrollable != 0;
-        }
-
-        public override bool IsVerticallyScrollable(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_ScrollVerticallyScrollablePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationScrollPattern)element.GetCachedPattern(UIA_PatternIds.UIA_ScrollPatternId);
-            return pattern.CachedVerticallyScrollable != 0;
-        }
-
         protected ScrollAmount validateScrollAmount(string amount)
         {
             switch (amount)

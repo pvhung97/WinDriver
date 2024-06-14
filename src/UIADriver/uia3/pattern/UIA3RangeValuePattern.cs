@@ -13,60 +13,6 @@ namespace UIADriver.uia3.pattern
             this.automation = automation;
         }
 
-        public override double GetLargeChange(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_RangeValueLargeChangePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationRangeValuePattern)element.GetCachedPattern(UIA_PatternIds.UIA_RangeValuePatternId);
-            return pattern.CachedLargeChange;
-        }
-
-        public override double GetMaximum(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_RangeValueMaximumPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationRangeValuePattern)element.GetCachedPattern(UIA_PatternIds.UIA_RangeValuePatternId);
-            return pattern.CachedMaximum;
-        }
-
-        public override double GetMinimum(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_RangeValueMinimumPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationRangeValuePattern)element.GetCachedPattern(UIA_PatternIds.UIA_RangeValuePatternId);
-            return pattern.CachedMinimum;
-        }
-
-        public override double GetSmallChange(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_RangeValueSmallChangePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationRangeValuePattern)element.GetCachedPattern(UIA_PatternIds.UIA_RangeValuePatternId);
-            return pattern.CachedSmallChange;
-        }
-
-        public override double GetValue(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_RangeValueValuePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationRangeValuePattern)element.GetCachedPattern(UIA_PatternIds.UIA_RangeValuePatternId);
-            return pattern.CachedValue;
-        }
-
-        public override bool IsReadOnly(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_RangeValueIsReadOnlyPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationRangeValuePattern)element.GetCachedPattern(UIA_PatternIds.UIA_RangeValuePatternId);
-            return pattern.CachedIsReadOnly != 0;
-        }
-
         public override void SetValue(string elementId, double value)
         {
             var element = AssertPattern(elementId, automation.CreateCacheRequest());

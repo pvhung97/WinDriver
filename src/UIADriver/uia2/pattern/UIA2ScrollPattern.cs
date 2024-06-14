@@ -9,60 +9,6 @@ namespace UIADriver.uia2.pattern
     {
         public UIA2ScrollPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
 
-        public override double GetHorizontalScrollPercent(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(ScrollPattern.HorizontalScrollPercentProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (ScrollPattern)element.GetCachedPattern(ScrollPattern.Pattern);
-            return pattern.Cached.HorizontalScrollPercent;
-        }
-
-        public override double GetHorizontalViewSizePercent(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(ScrollPattern.HorizontalViewSizeProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (ScrollPattern)element.GetCachedPattern(ScrollPattern.Pattern);
-            return pattern.Cached.HorizontalViewSize;
-        }
-
-        public override double GetVerticalScrollPercent(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(ScrollPattern.VerticalScrollPercentProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (ScrollPattern)element.GetCachedPattern(ScrollPattern.Pattern);
-            return pattern.Cached.VerticalScrollPercent;
-        }
-
-        public override double GetVerticalViewSizePercent(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(ScrollPattern.VerticalViewSizeProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (ScrollPattern)element.GetCachedPattern(ScrollPattern.Pattern);
-            return pattern.Cached.VerticalViewSize;
-        }
-
-        public override bool IsHorizontallyScrollable(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(ScrollPattern.HorizontallyScrollableProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (ScrollPattern)element.GetCachedPattern(ScrollPattern.Pattern);
-            return pattern.Cached.HorizontallyScrollable;
-        }
-
-        public override bool IsVerticallyScrollable(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(ScrollPattern.VerticallyScrollableProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (ScrollPattern)element.GetCachedPattern(ScrollPattern.Pattern);
-            return pattern.Cached.VerticallyScrollable;
-        }
-
         protected ScrollAmount validateScrollAmount(string amount)
         {
             switch (amount)

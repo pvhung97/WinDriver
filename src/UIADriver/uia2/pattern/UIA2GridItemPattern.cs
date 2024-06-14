@@ -10,24 +10,6 @@ namespace UIADriver.uia2.pattern
     {
         public UIA2GridItemPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
 
-        public override int GetColSpan(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(GridItemPattern.ColumnSpanProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (GridItemPattern)element.GetCachedPattern(GridItemPattern.Pattern);
-            return pattern.Cached.ColumnSpan;
-        }
-
-        public override int GetColumn(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(GridItemPattern.ColumnProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (GridItemPattern)element.GetCachedPattern(GridItemPattern.Pattern);
-            return pattern.Cached.Column;
-        }
-
         public override FindElementResponse GetContainingGrid(string elementId)
         {
             var cacheRequest = new CacheRequest();
@@ -36,24 +18,6 @@ namespace UIADriver.uia2.pattern
             var pattern = (GridItemPattern)element.GetCachedPattern(GridItemPattern.Pattern);
             var gridId = finderService.RegisterElement(pattern.Cached.ContainingGrid);
             return new FindElementResponse(gridId);
-        }
-
-        public override int GetRow(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(GridItemPattern.RowProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (GridItemPattern)element.GetCachedPattern(GridItemPattern.Pattern);
-            return pattern.Cached.Row;
-        }
-
-        public override int GetRowSpan(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(GridItemPattern.RowSpanProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (GridItemPattern)element.GetCachedPattern(GridItemPattern.Pattern);
-            return pattern.Cached.RowSpan;
         }
 
         protected override AutomationElement AssertPattern(string elementId, CacheRequest cacheRequest)

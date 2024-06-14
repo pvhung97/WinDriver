@@ -9,12 +9,6 @@ namespace UIADriver.services.pattern
     {
         protected WindowPatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
 
-        public abstract bool CanMaximize(string elementId);
-        public abstract bool CanMinimize(string elementId);
-        public abstract bool IsTopmost(string elementId);
-        public abstract bool IsModal(string elementId);
-        public abstract string GetVisualState(string elementId);
-        public abstract string GetInteractionState(string elementId);
         public abstract void SetVisualState(string elementId, string state);
         public abstract void WaitForInputIdle(string elementId, int timeout);
         public abstract void Close(string elementId);

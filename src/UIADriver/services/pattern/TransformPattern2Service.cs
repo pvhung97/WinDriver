@@ -6,9 +6,5 @@
 
         public abstract void Zoom(string elementId, double value);
         public abstract void ZoomByUnit(string elementId, string zoomUnit);
-        public abstract bool CanZoom(string elementId);
-        public abstract double GetZoomLevel(string elementId);
-        public abstract double GetZoomMinimum(string elementId);
-        public abstract double GetZoomMaximum(string elementId);
     }
 }

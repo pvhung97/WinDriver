@@ -14,7 +14,7 @@ namespace UIADriver.uia3.session
             var argumentBuilder = new StringBuilder();
             foreach (var argument in capabilities.appArgument)
             {
-                argumentBuilder.Append("\"");
+                argumentBuilder.Append('"');
                 string escaped = argument.Replace("\\", "\\\\").Replace("\"", "\\\"");
                 argumentBuilder.Append(escaped);
                 argumentBuilder.Append("\" ");
@@ -29,6 +29,7 @@ namespace UIADriver.uia3.session
             GetWindowManageService().InitPids(foundWindow.Item2);
             GetWindowManageService().InitCurrentWnd(foundWindow.Item3);
             Utilities.BringWindowToTop(foundWindow.Item1);
+            foundWindow.Item3.SetFocus();
         }
 
         private Tuple<int, int, IUIAutomationElement>? SearchForWindowLaunchedByApp(HashSet<int> pids)

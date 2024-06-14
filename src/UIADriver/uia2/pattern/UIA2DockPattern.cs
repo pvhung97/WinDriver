@@ -9,13 +9,6 @@ namespace UIADriver.uia2.pattern
     {
         public UIA2DockPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
 
-        public override string GetDockPosition(string elementId)
-        {
-            var element = AssertPattern(elementId, new CacheRequest());
-            var position = attributeService.GetAttributeString(element, UIA2PropertyDictionary.GetAutomationPropertyName(DockPattern.DockPositionProperty.Id));
-            return position == null ? "" : position;
-        }
-
         public override void SetDockPosition(string elementId, string dockPosition)
         {
             DockPosition dp;

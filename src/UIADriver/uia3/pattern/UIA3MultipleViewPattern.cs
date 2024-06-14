@@ -14,15 +14,6 @@ namespace UIADriver.uia3.pattern
             this.automation = automation;
         }
 
-        public override int GetCurrentViewId(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_MultipleViewCurrentViewPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationMultipleViewPattern)element.GetCachedPattern(UIA_PatternIds.UIA_MultipleViewPatternId);
-            return pattern.CachedCurrentView;
-        }
-
         public override List<int> GetSupportedViewIds(string elementId)
         {
             var cacheRequest = automation.CreateCacheRequest();

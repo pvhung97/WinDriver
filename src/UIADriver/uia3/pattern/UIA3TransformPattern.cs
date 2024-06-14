@@ -13,33 +13,6 @@ namespace UIADriver.uia3.pattern
             this.automation = automation;
         }
 
-        public override bool CanMove(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_TransformCanMovePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationTransformPattern)element.GetCachedPattern(UIA_PatternIds.UIA_TransformPatternId);
-            return pattern.CachedCanMove != 0;
-        }
-
-        public override bool CanResize(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_TransformCanResizePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationTransformPattern)element.GetCachedPattern(UIA_PatternIds.UIA_TransformPatternId);
-            return pattern.CachedCanResize != 0;
-        }
-
-        public override bool CanRotate(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_TransformCanRotatePropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationTransformPattern)element.GetCachedPattern(UIA_PatternIds.UIA_TransformPatternId);
-            return pattern.CachedCanRotate != 0;
-        }
-
         public override void Move(string elementId, double x, double y)
         {
             var element = AssertPattern(elementId, automation.CreateCacheRequest());

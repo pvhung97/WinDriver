@@ -37,15 +37,6 @@ namespace UIADriver.uia3.pattern
             return rs;
         }
 
-        public override string GetFormula(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_SpreadsheetItemFormulaPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationSpreadsheetItemPattern)element.GetCachedPattern(UIA_PatternIds.UIA_SpreadsheetItemPatternId);
-            return pattern.CachedFormula;
-        }
-
         protected override IUIAutomationElement AssertPattern(string elementId, IUIAutomationCacheRequest cacheRequest)
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsSpreadsheetItemPatternAvailablePropertyId);

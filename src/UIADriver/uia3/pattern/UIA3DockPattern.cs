@@ -26,13 +26,6 @@ namespace UIADriver.uia3.pattern
             return element;
         }
 
-        public override string GetDockPosition(string elementId)
-        {
-            var element = AssertPattern(elementId, automation.CreateCacheRequest());
-            var position = attributeService.GetAttributeString(element, nameof(UIA3PropertyEnum.Dock_DockPosition));
-            return position == null ? "" : position;
-        }
-
         public override void SetDockPosition(string elementId, string dockPosition)
         {
             DockPosition dp = DockPosition.DockPosition_None;

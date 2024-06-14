@@ -30,15 +30,6 @@ namespace UIADriver.uia3.pattern
             return new FindElementResponse(finderService.RegisterElement(pattern.CachedSelectionContainer));
         }
 
-        public override bool IsSelected(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_SelectionItemIsSelectedPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationSelectionItemPattern)element.GetCachedPattern(UIA_PatternIds.UIA_SelectionItemPatternId);
-            return pattern.CachedIsSelected != 0;
-        }
-
         public override void RemoveFromSelection(string elementId)
         {
             var element = AssertPattern(elementId, automation.CreateCacheRequest());

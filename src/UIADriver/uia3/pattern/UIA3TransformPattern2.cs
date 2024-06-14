@@ -13,42 +13,6 @@ namespace UIADriver.uia3.pattern
             this.automation = automation;
         }
 
-        public override bool CanZoom(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_Transform2CanZoomPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationTransformPattern2)element.GetCachedPattern(UIA_PatternIds.UIA_TransformPattern2Id);
-            return pattern.CachedCanZoom != 0;
-        }
-
-        public override double GetZoomLevel(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_Transform2ZoomLevelPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationTransformPattern2)element.GetCachedPattern(UIA_PatternIds.UIA_TransformPattern2Id);
-            return pattern.CachedZoomLevel;
-        }
-
-        public override double GetZoomMaximum(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_Transform2ZoomMaximumPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationTransformPattern2)element.GetCachedPattern(UIA_PatternIds.UIA_TransformPattern2Id);
-            return pattern.CachedZoomMaximum;
-        }
-
-        public override double GetZoomMinimum(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_Transform2ZoomMinimumPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationTransformPattern2)element.GetCachedPattern(UIA_PatternIds.UIA_TransformPattern2Id);
-            return pattern.CachedZoomMinimum;
-        }
-
         public override void Zoom(string elementId, double value)
         {
             var element = AssertPattern(elementId, automation.CreateCacheRequest());

@@ -26,15 +26,6 @@ namespace UIADriver.uia2.pattern
             return new FindElementResponse(finderService.RegisterElement(pattern.Cached.SelectionContainer));
         }
 
-        public override bool IsSelected(string elementId)
-        {
-            var cacheRequest = new CacheRequest();
-            cacheRequest.Add(SelectionItemPattern.IsSelectedProperty);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (SelectionItemPattern)element.GetCachedPattern(SelectionItemPattern.Pattern);
-            return pattern.Cached.IsSelected;
-        }
-
         public override void RemoveFromSelection(string elementId)
         {
             var element = AssertPattern(elementId, new CacheRequest());

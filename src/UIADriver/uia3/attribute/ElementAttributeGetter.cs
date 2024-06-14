@@ -28,12 +28,21 @@ namespace UIADriver.uia3.attribute
 
         public override string? GetAttributeString(IUIAutomationElement element, string attribute)
         {
+            return GetAttributeString(element, attribute, true);
+        }
+
+        public override string? GetAttributeString(IUIAutomationElement element, string attribute, bool updateCache)
+        {
             var found = Enum.TryParse<UIA3PropertyEnum>(attribute, out var propertyId);
             if (found == false) return null;
 
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty((int)propertyId);
-            element = element.BuildUpdatedCache(cacheRequest);
+            if (updateCache)
+            {
+                var cacheRequest = automation.CreateCacheRequest();
+                cacheRequest.AddProperty((int)propertyId);
+                element = element.BuildUpdatedCache(cacheRequest);
+            }
+
             return basicAttr.GetPropertyStrValue(element, (int)propertyId);
         }
 
@@ -49,7 +58,7 @@ namespace UIADriver.uia3.attribute
 
         public override string GetElementTagName(IUIAutomationElement element)
         {
-            var tagName = GetAttributeString(element, nameof(UIA3PropertyEnum.ControlType));
+            var tagName = GetAttributeString(element, Enum.GetName(UIA3PropertyEnum.ControlType));
             return tagName == null ? "Unknown" : tagName;
         }
 
@@ -62,19 +71,19 @@ namespace UIADriver.uia3.attribute
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_NamePropertyId);
 
-            var name = GetAttributeString(element, nameof(UIA3PropertyEnum.Name));
+            var name = GetAttributeString(element, Enum.GetName(UIA3PropertyEnum.Name));
             return name == null ? "" : name;
         }
 
         public override bool IsElementDisplayed(IUIAutomationElement element)
         {
-            var isOffscreen = GetAttributeObject(element, nameof(UIA3PropertyEnum.IsOffscreen));
+            var isOffscreen = GetAttributeObject(element, Enum.GetName(UIA3PropertyEnum.IsOffscreen));
             return isOffscreen == null ? true : !(bool)isOffscreen;
         }
 
         public override bool IsElementEnabled(IUIAutomationElement element)
         {
-            var isEnabled = GetAttributeObject(element, nameof(UIA3PropertyEnum.IsEnabled));
+            var isEnabled = GetAttributeObject(element, Enum.GetName(UIA3PropertyEnum.IsEnabled));
             return isEnabled == null ? false : (bool)isEnabled;
         }
 

@@ -84,6 +84,8 @@ app.MapGet("/", async ctx =>
     await ctx.Response.WriteAsync("ready");
 });
 
+//  Base W3C API
+
 app.MapPost("/session", async context =>
 {
     if (session != null)
@@ -92,13 +94,8 @@ app.MapPost("/session", async context =>
         return;
     }
 
-    SessionCapabilities cap = new SessionCapabilities();
-    cap.automationName = "uia3";
-    cap.aumid = "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App";
-
-
-    //var capabilities = await parseBody(context);
-    //SessionCapabilities cap = SessionCapabilities.ParseCapabilities(capabilities);
+    var capabilities = await parseBody(context);
+    SessionCapabilities cap = SessionCapabilities.ParseCapabilities(capabilities);
 
     if (string.Equals("uia2", cap.automationName, StringComparison.OrdinalIgnoreCase))
     {
@@ -321,6 +318,296 @@ app.MapPost("/session/{id}/element/{elementId}/value", async (HttpContext contex
 app.MapGet("/session/{id}/element/{elementId}/screenshot", async (HttpContext context, string elementId) =>
 {
     await context.Response.WriteAsJsonAsync(new Response(getSession().GetElementScreenshot(elementId)));
+});
+
+//  Element Pattern API
+
+app.MapGet("/session/{id}/annotationPattern/{elementId}/target", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetAnnotationTarget(elementId)));
+});
+
+app.MapGet("/session/{id}/basePattern/{elementId}/labeledBy", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetLabeledBy(elementId)));
+});
+
+app.MapGet("/session/{id}/basePattern/{elementId}/controllerFor", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetControllerFor(elementId)));
+});
+
+app.MapGet("/session/{id}/basePattern/{elementId}/describedBy", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetDescribedBy(elementId)));
+});
+
+app.MapGet("/session/{id}/basePattern/{elementId}/flowsTo", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetFlowsTo(elementId)));
+});
+
+app.MapPost("/session/{id}/basePattern/{elementId}/focus", async (HttpContext context, string elementId) =>
+{
+    getSession().SetFocus(elementId);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/customNavigationPattern/{elementId}/navigate", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    await context.Response.WriteAsJsonAsync(new Response(getSession().NavigateFollowDirection(elementId, data)));
+});
+
+app.MapPost("/session/{id}/dockPattern/{elementId}/position", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().SetDockPosition(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapGet("/session/{id}/dragPattern/{elementId}/dropEffects", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetDropEffects(elementId)));
+});
+
+app.MapGet("/session/{id}/dragPattern/{elementId}/grabbedItems", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetGrabbedItems(elementId)));
+});
+
+app.MapGet("/session/{id}/dropTargetPattern/{elementId}/dropTargetEffects", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetDropTargetEffects(elementId)));
+});
+
+app.MapPost("/session/{id}/expandCollapsePattern/{elementId}/expandCollapse", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().ExpandOrCollapseElement(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapGet("/session/{id}/gridItemPattern/{elementId}/containingGrid", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetContainingGrid(elementId)));
+});
+
+app.MapPost("/session/{id}/gridPattern/{elementId}/item", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetGridItem(elementId, data)));
+});
+
+app.MapPost("/session/{id}/invokePattern/{elementId}/invoke", async (HttpContext context, string elementId) =>
+{
+    getSession().Invoke(elementId);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapGet("/session/{id}/multipleViewPattern/{elementId}/supportedViews", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetSupportedViewIds(elementId)));
+});
+
+app.MapGet("/session/{id}/multipleViewPattern/{elementId}/viewName/{viewId}", async (HttpContext context, string elementId, string viewId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetViewName(elementId, viewId)));
+});
+
+app.MapPost("/session/{id}/multipleViewPattern/{elementId}/currentView", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().SetCurrentView(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/rangeValuePattern/{elementId}/value", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().SetRangeValue(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/scrollItemPattern/{elementId}/scrollIntoView", async (HttpContext context, string elementId) =>
+{
+    getSession().ScrollIntoView(elementId);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/scrollPattern/{elementId}/scroll", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().Scroll(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/scrollPattern/{elementId}/scrollPercent", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().SetScrollPercent(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/selectionItemPattern/{elementId}/select", async (HttpContext context, string elementId) =>
+{
+    getSession().Select(elementId);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/selectionItemPattern/{elementId}/selection", async (HttpContext context, string elementId) =>
+{
+    getSession().AddToSelection(elementId);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapDelete("/session/{id}/selectionItemPattern/{elementId}/selection", async (HttpContext context, string elementId) =>
+{
+    getSession().RemoveFromSelection(elementId);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapGet("/session/{id}/selectionItemPattern/{elementId}/selectionContainer", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetSelectionContainer(elementId)));
+});
+
+app.MapGet("/session/{id}/selectionPattern2/{elementId}/firstSelected", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetFirstSelectedItem(elementId)));
+});
+
+app.MapGet("/session/{id}/selectionPattern2/{elementId}/lastSelected", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetLastSelectedItem(elementId)));
+});
+
+app.MapGet("/session/{id}/selectionPattern2/{elementId}/currentSelected", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetCurrentSelectedItem(elementId)));
+});
+
+app.MapGet("/session/{id}/spreadSheetItemPattern/{elementId}/annotationObjects", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetAnnotationObjects(elementId)));
+});
+
+app.MapGet("/session/{id}/spreadSheetPattern/{elementId}/item/{name}", async (HttpContext context, string elementId, string name) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetSpreadSheetItemByName(elementId, name)));
+});
+
+app.MapGet("/session/{id}/tableItemPattern/{elementId}/rowHeaderItems", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetRowHeaderItems(elementId)));
+});
+
+app.MapGet("/session/{id}/tableItemPattern/{elementId}/columnHeaderItems", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetColumnHeaderItems(elementId)));
+});
+
+app.MapGet("/session/{id}/tablePattern/{elementId}/rowHeaders", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetRowHeaderItems(elementId)));
+});
+
+app.MapGet("/session/{id}/tablePattern/{elementId}/columnHeaders", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetColumnHeaderItems(elementId)));
+});
+
+app.MapPost("/session/{id}/togglePattern/{elementId}/toggle", async (HttpContext context, string elementId) =>
+{
+    getSession().Toggle(elementId);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/transformPattern2/{elementId}/zoom", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().Zoom(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/transformPattern2/{elementId}/zoomByUnit", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().ZoomByUnit(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/transformPattern/{elementId}/move", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().Move(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/transformPattern/{elementId}/resize", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().Resize(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/transformPattern/{elementId}/rotate", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().Rotate(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/valuePattern/{elementId}/value", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().SetValue(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/virtualizedItemPattern/{elementId}/realize", async (HttpContext context, string elementId) =>
+{
+    getSession().Realize(elementId);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/windowPattern/{elementId}/visualState", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().SetVisualState(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/windowPattern/{elementId}/waitForInputIdle", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().WaitForInputIdle(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapDelete("/session/{id}/windowPattern/{elementId}", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().CloseWindow(elementId);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapGet("/session/{id}/windowPattern/{elementId}/rect", async (HttpContext context, string elementId) =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetWindowRect(elementId)));
+});
+
+app.MapPost("/session/{id}/windowPattern/{elementId}/bringToTop", async (HttpContext context, string elementId) =>
+{
+    getSession().BringWindowToTop(elementId);
+    await context.Response.WriteAsJsonAsync(new Response(null));
+});
+
+app.MapPost("/session/{id}/windowPattern/{elementId}/rect", async (HttpContext context, string elementId) =>
+{
+    var data = await parseBody(context);
+    getSession().SetWindowRect(elementId, data);
+    await context.Response.WriteAsJsonAsync(new Response(null));
 });
 
 app.Run();

@@ -42,7 +42,7 @@ namespace UIADriver.uia2.session
             });
         }
         
-        protected override ActionOptions getActionOption()
+        protected override ActionOptions GetActionOption()
         {
             return new UIA2ActionOptions(GetWindowManageService().getCurrentWindow(null), GetElementFinderService());
         }

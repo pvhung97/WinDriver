@@ -27,24 +27,6 @@ namespace UIADriver.uia3.pattern
             return element;
         }
 
-        public override int GetColumnCount(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_GridColumnCountPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationGridPattern)element.GetCachedPattern(UIA_PatternIds.UIA_GridPatternId);
-            return pattern.CachedColumnCount;
-        }
-
-        public override int GetRowCount(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_GridRowCountPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationGridPattern)element.GetCachedPattern(UIA_PatternIds.UIA_GridPatternId);
-            return pattern.CachedRowCount;
-        }
-
         public override FindElementResponse GetItem(string elementId, int row, int column)
         {
             var cacheRequest = automation.CreateCacheRequest();

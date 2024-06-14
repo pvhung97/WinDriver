@@ -14,15 +14,6 @@ namespace UIADriver.uia3.pattern
             this.automation = automation;
         }
 
-        public override string GetDropEffect(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_DragDropEffectPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationDragPattern)element.GetCachedPattern(UIA_PatternIds.UIA_DragPatternId);
-            return pattern.CachedDropEffect;
-        }
-
         public override List<string> GetDropEffects(string elementId)
         {
             var cacheRequest = automation.CreateCacheRequest();
@@ -53,15 +44,6 @@ namespace UIADriver.uia3.pattern
                 }
             }
             return rs;
-        }
-
-        public override bool IsGrabbed(string elementId)
-        {
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_DragIsGrabbedPropertyId);
-            var element = AssertPattern(elementId, cacheRequest);
-            var pattern = (IUIAutomationDragPattern)element.GetCachedPattern(UIA_PatternIds.UIA_DragPatternId);
-            return pattern.CachedIsGrabbed != 0;
         }
 
         protected override IUIAutomationElement AssertPattern(string elementId, IUIAutomationCacheRequest cacheRequest)

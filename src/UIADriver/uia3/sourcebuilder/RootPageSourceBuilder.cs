@@ -1,4 +1,5 @@
 ﻿using Interop.UIAutomationClient;
+using System.Windows;
 using System.Xml.Linq;
 using UIADriver.services;
 using UIADriver.win32native;
@@ -35,10 +36,16 @@ namespace UIADriver.uia3.sourcebuilder
             {
                 try
                 {
-                    if (Win32Methods.IsIconic((int)elementNode.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId)))
+                    int hwnd = (int)elementNode.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+                    if (hwnd != 0 && Win32Methods.IsIconic(hwnd))
                     {
                         elementNode = walker.GetNextSiblingElementBuildCache(elementNode, request);
                         continue;
+                    }
+
+                    if (checkIfElementCanCauseInfiniteLoop(elementNode, walker))
+                    {
+                        break;
                     }
 
                     XElement elementXml = createXElement(elementNode);
@@ -181,8 +188,15 @@ namespace UIADriver.uia3.sourcebuilder
             var walker = automation.CreateTreeWalker(automation.CreateTrueCondition());
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(propertyId);
+            cacheRequest.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+            cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsSelectionPatternAvailablePropertyId);
 
-            findElementByPropertyRecursive(topLevelWindow, propertyName, propertyValue, stopAtFirst, 1, walker, cacheRequest, rs);
+            try
+            {
+                var updated = topLevelWindow.BuildUpdatedCache(cacheRequest);
+                findElementByPropertyRecursive(updated, propertyName, propertyValue, stopAtFirst, 1, walker, cacheRequest, rs);
+            } catch { }
+
             return rs;
         }
 
@@ -190,40 +204,37 @@ namespace UIADriver.uia3.sourcebuilder
         {
             if (layer > capabilities.maxTreeDepth) return;
 
-            try
+            var propValue = attrService.GetAttributeString(element, propertyName, false);
+            if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
             {
-                var updated = element.BuildUpdatedCache(request);
-                var propValue = attrService.GetAttributeString(updated, propertyName);
-                if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
-                {
-                    rs.Add(updated);
-                    if (stopAtFirst) return;
-                }
+                rs.Add(element);
+                if (stopAtFirst) return;
             }
-            catch { }
 
-            var wndHdlCache = automation.CreateCacheRequest();
-            wndHdlCache.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
-            var child = walker.GetFirstChildElementBuildCache(element, wndHdlCache);
+            var child = walker.GetFirstChildElementBuildCache(element, request);
             while (child != null)
             {
-                if (layer == 1)
+                int hwnd = (int)child.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+                try
                 {
-                    try
+                    if (hwnd != 0 && Win32Methods.IsIconic(hwnd))
                     {
-                        if (Win32Methods.IsIconic((int)child.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId)))
-                        {
-                            child = walker.GetNextSiblingElement(child);
-                            continue;
-                        }
+                        child = walker.GetNextSiblingElementBuildCache(child, request);
+                        continue;
                     }
-                    catch { }
-                }
 
+                    //  Skip this check if direct child of root
+                    if (layer > 1 && checkIfElementCanCauseInfiniteLoop(child, walker))
+                    {
+                        break;
+                    }
+                }
+                catch { }
+                
                 findElementByPropertyRecursive(child, propertyName, propertyValue, stopAtFirst, layer + 1, walker, request, rs);
                 if (rs.Count > 0 && stopAtFirst) return;
 
-                child = walker.GetNextSiblingElement(child);
+                child = walker.GetNextSiblingElementBuildCache(child, request);
             }
         }
     }

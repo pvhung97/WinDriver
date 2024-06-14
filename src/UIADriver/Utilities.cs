@@ -116,7 +116,6 @@ namespace UIADriver
         {
             Win32Methods.SetWindowPos(hwnd, -2, 0, 0, 0, 0, 0x0002 | 0x0001);
             Win32Methods.SetWindowPos(hwnd, -1, 0, 0, 0, 0, 0x0002 | 0x0001);
-            Win32Methods.SetForegroundWindow(hwnd);
         }
     }
 }

@@ -9,13 +9,6 @@ namespace UIADriver.uia2.pattern
     {
         public UIA2TogglePattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
 
-        public override string GetToggleState(string elementId)
-        {
-            var element = AssertPattern(elementId, new CacheRequest());
-            var state = attributeService.GetAttributeString(element, UIA2PropertyDictionary.GetAutomationPropertyName(TogglePattern.ToggleStateProperty.Id));
-            return state == null ? "" : state;
-        }
-
         public override void Toggle(string elementId)
         {
             var element = AssertPattern(elementId, new CacheRequest());

@@ -41,6 +41,7 @@ namespace UIADriver.uia3.session
             GetWindowManageService().InitPids(foundWindow.Item2);
             GetWindowManageService().InitCurrentWnd(foundWindow.Item3);
             Utilities.BringWindowToTop(foundWindow.Item1);
+            foundWindow.Item3.SetFocus();
         }
 
         public override Task CloseSession()

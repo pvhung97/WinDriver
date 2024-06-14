@@ -6,7 +6,9 @@ using UIADriver.dto.request;
 using UIADriver.dto.response;
 using UIADriver.exception;
 using UIADriver.services;
+using UIADriver.services.pattern;
 using UIADriver.uia3.attribute;
+using UIADriver.uia3.pattern;
 
 namespace UIADriver.uia3.session
 {
@@ -26,7 +28,7 @@ namespace UIADriver.uia3.session
             }
         }
 
-        protected abstract ActionOptions getActionOption();
+        protected abstract ActionOptions GetActionOption();
 
         protected override ScreenshotCapture GetScreenCaptureService()
         {
@@ -59,6 +61,216 @@ namespace UIADriver.uia3.session
                 ActionsService = new UIA3ActionsService(automation, capabilities);
             }
             return ActionsService;
+        }
+
+        protected override AnnotationPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetAnnotationPatternService()
+        {
+            if (AnnotationPatternService == null)
+            {
+                AnnotationPatternService = new UIA3AnnotationPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return AnnotationPatternService;
+        }
+        protected override BasePatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetBasePatternService()
+        {
+            if (BasePatternService == null)
+            {
+                BasePatternService = new UIA3BasePattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return BasePatternService;
+        }
+        protected override CustomNavigationPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetCustomNavigationPatternService()
+        {
+            if (CustomNavigationPatternService == null)
+            {
+                CustomNavigationPatternService = new UIA3CustomNavigationPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return CustomNavigationPatternService;
+        }
+        protected override DockPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetDockPatternService()
+        {
+            if (DockPatternService == null)
+            {
+                DockPatternService = new UIA3DockPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return DockPatternService;
+        }
+        protected override DragPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetDragPatternService()
+        {
+            if (DragPatternService == null)
+            {
+                DragPatternService = new UIA3DragPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return DragPatternService;
+        }
+        protected override DropTargetPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetDropTargetPatternService()
+        {
+            if (DropTargetPatternService == null)
+            {
+                DropTargetPatternService = new UIA3DropTargetPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return DropTargetPatternService;
+        }
+        protected override ExpandCollapsePatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetExpandCollapsePatternService()
+        {
+            if (ExpandCollapsePatternService == null)
+            {
+                ExpandCollapsePatternService = new UIA3ExpandCollapsePattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return ExpandCollapsePatternService;
+        }
+        protected override GridItemPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetGridItemPatternService()
+        {
+            if (GridItemPatternService == null)
+            {
+                GridItemPatternService = new UIA3GridItemPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return GridItemPatternService;
+        }
+        protected override GridPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetGridPatternService()
+        {
+            if (GridPatternService == null)
+            {
+                GridPatternService = new UIA3GridPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return GridPatternService;
+        }
+        protected override InvokePatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetInvokePatternService()
+        {
+            if (InvokePatternService == null)
+            {
+                InvokePatternService = new UIA3InvokePattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return InvokePatternService;
+        }
+        protected override MultipleViewPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetMultipleViewPatternService()
+        {
+            if (MultipleViewPatternService == null)
+            {
+                MultipleViewPatternService = new UIA3MultipleViewPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return MultipleViewPatternService;
+        }
+        protected override RangeValuePatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetRangeValuePatternService()
+        {
+            if (RangeValuePatternService == null)
+            {
+                RangeValuePatternService = new UIA3RangeValuePattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return RangeValuePatternService;
+        }
+        protected override ScrollItemPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetScrollItemPatternService()
+        {
+            if (ScrollItemPatternService == null)
+            {
+                ScrollItemPatternService = new UIA3ScrollItemPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return ScrollItemPatternService;
+        }
+        protected override ScrollPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetScrollPatternService()
+        {
+            if (ScrollPatternService == null)
+            {
+                ScrollPatternService = new UIA3ScrollPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return ScrollPatternService;
+        }
+        protected override SelectionItemPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetSelectionItemPatternService()
+        {
+            if (SelectionItemPatternService == null)
+            {
+                SelectionItemPatternService = new UIA3SelectionItemPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return SelectionItemPatternService;
+        }
+        protected override SelectionPattern2Service<IUIAutomationElement, IUIAutomationCacheRequest> GetSelectionPattern2Service()
+        {
+            if (SelectionPattern2Service == null)
+            {
+                SelectionPattern2Service = new UIA3SelectionPattern2(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return SelectionPattern2Service;
+        }
+        protected override SpreadSheetItemPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetSpreadSheetItemPatternService()
+        {
+            if (SpreadSheetItemPatternService == null)
+            {
+                SpreadSheetItemPatternService = new UIA3SpreadSheetItemPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return SpreadSheetItemPatternService;
+        }
+        protected override SpreadSheetPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetSpreadSheetPatternService()
+        {
+            if (SpreadSheetPatternService == null)
+            {
+                SpreadSheetPatternService = new UIA3SpreadSheetPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return SpreadSheetPatternService;
+        }
+        protected override TableItemPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetTableItemPatternService()
+        {
+            if (TableItemPatternService == null)
+            {
+                TableItemPatternService = new UIA3TableItemPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return TableItemPatternService;
+        }
+        protected override TablePatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetTablePatternService()
+        {
+            if (TablePatternService == null)
+            {
+                TablePatternService = new UIA3TablePattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return TablePatternService;
+        }
+        protected override TogglePatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetTogglePatternService()
+        {
+            if (TogglePatternService == null)
+            {
+                TogglePatternService = new UIA3TogglePattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return TogglePatternService;
+        }
+        protected override TransformPattern2Service<IUIAutomationElement, IUIAutomationCacheRequest> GetTransformPattern2Service()
+        {
+            if (TransformPattern2Service == null)
+            {
+                TransformPattern2Service = new UIA3TransformPattern2(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return TransformPattern2Service;
+
+        }
+        protected override TransformPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetTransformPatternService()
+        {
+            if (TransformPatternService == null)
+            {
+                TransformPatternService = new UIA3TransformPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return TransformPatternService;
+        }
+        protected override ValuePatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetValuePatternService()
+        {
+            if (ValuePatternService == null)
+            {
+                ValuePatternService = new UIA3ValuePattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return ValuePatternService;
+        }
+        protected override VirtualizedItemPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetVirtualizedItemPatternService()
+        {
+            if (VirtualizedItemPatternService == null)
+            {
+                VirtualizedItemPatternService = new UIA3VirtualizedItemPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return VirtualizedItemPatternService;
+        }
+        protected override WindowPatternService<IUIAutomationElement, IUIAutomationCacheRequest> GetWindowPatternService()
+        {
+            if (WindowPatternService == null)
+            {
+                WindowPatternService = new UIA3WindowPattern(GetElementFinderService(), GetElementAttributeService(), automation);
+            }
+            return WindowPatternService;
         }
 
         public override HashSet<string> CollectWindowHandles()
@@ -204,7 +416,7 @@ namespace UIADriver.uia3.session
         public override async Task PerformActions(JsonObject action)
         {
             InputState inputState = InputState.Instance();
-            ActionOptions option = getActionOption();
+            ActionOptions option = GetActionOption();
             var actionsByTick = inputState.ExtractActionSequence(action, option);
             await inputState.DispatchAction(actionsByTick, option);
         }
@@ -212,7 +424,7 @@ namespace UIADriver.uia3.session
         public override async Task ReleaseActions()
         {
             InputState inputState = InputState.Instance();
-            ActionOptions option = getActionOption();
+            ActionOptions option = GetActionOption();
             await inputState.Release(option);
         }
 
@@ -221,7 +433,7 @@ namespace UIADriver.uia3.session
             GetWindowManageService().getCurrentWindowThenFocus(null);
             var element = GetElementFinderService().GetElement(elementId);
 
-            await GetActionsService().ElementClick(elementId, element, getActionOption());
+            await GetActionsService().ElementClick(elementId, element, GetActionOption());
         }
 
         public override void ElementClear(string elementId)
@@ -243,7 +455,7 @@ namespace UIADriver.uia3.session
             GetWindowManageService().getCurrentWindowThenFocus(null);
             var element = GetElementFinderService().GetElement(elementId);
 
-            await GetActionsService().ElementSendKeys(element, text.ToString(), getActionOption());
+            await GetActionsService().ElementSendKeys(element, text.ToString(), GetActionOption());
         }
 
         public override string GetElementScreenshot(string elementId)

@@ -121,7 +121,7 @@ namespace UIADriver.uia2.sourcebuilder
                 rect = System.Windows.Rect.Empty;
             }
 
-            XElement rs = new XElement(tagname,
+            var rs = new XElement(tagname,
                                 new XAttribute("X", ((int)rect.X).ToString()),
                                 new XAttribute("Y", ((int)rect.Y).ToString()),
                                 new XAttribute("Width", ((int)rect.Width).ToString()),
@@ -151,8 +151,14 @@ namespace UIADriver.uia2.sourcebuilder
             var walker = new TreeWalker(Condition.TrueCondition);
             var cacheRequest = new CacheRequest();
             cacheRequest.Add(property);
+            cacheRequest.Add(AutomationElement.NativeWindowHandleProperty);
 
-            findElementByPropertyRecursive(topLevelWindow, propertyName, propertyValue, stopAtFirst, 1, walker, cacheRequest, rs);
+            try
+            {
+                var updated = topLevelWindow.GetUpdatedCache(cacheRequest);
+                findElementByPropertyRecursive(topLevelWindow, propertyName, propertyValue, stopAtFirst, 1, walker, cacheRequest, rs);
+            } catch { }
+            
             return rs;
         }
 
@@ -160,21 +166,14 @@ namespace UIADriver.uia2.sourcebuilder
         {
             if (layer > capabilities.maxTreeDepth) return;
 
-            try
+            var propValue = attrService.GetAttributeString(element, propertyName, false);
+            if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
             {
-                var updated = element.GetUpdatedCache(request);
-                var propValue = attrService.GetAttributeString(updated, propertyName);
-                if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
-                {
-                    rs.Add(updated);
-                    if (stopAtFirst) return;
-                }
+                rs.Add(element);
+                if (stopAtFirst) return;
             }
-            catch { }
 
-            var wndHdlCache = new CacheRequest();
-            wndHdlCache.Add(AutomationElement.NativeWindowHandleProperty);
-            var child = walker.GetFirstChild(element, wndHdlCache);
+            var child = walker.GetFirstChild(element, request);
             while (child != null)
             {
                 if (layer == 1)
@@ -193,7 +192,7 @@ namespace UIADriver.uia2.sourcebuilder
                 findElementByPropertyRecursive(child, propertyName, propertyValue, stopAtFirst, layer + 1, walker, request, rs);
                 if (rs.Count > 0 && stopAtFirst) return;
 
-                child = walker.GetNextSibling(child);
+                child = walker.GetNextSibling(child, request);
             }
         }
     }
