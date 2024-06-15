@@ -587,7 +587,6 @@ app.MapPost("/session/{id}/windowPattern/{elementId}/waitForInputIdle", async (H
 
 app.MapDelete("/session/{id}/windowPattern/{elementId}", async (HttpContext context, string elementId) =>
 {
-    var data = await parseBody(context);
     getSession().CloseWindow(elementId);
     await context.Response.WriteAsJsonAsync(new Response(null));
 });
