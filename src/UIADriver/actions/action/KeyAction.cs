@@ -33,7 +33,7 @@ namespace UIADriver.actions.action
                 throw new InvalidArgument("value must be a single unicode point");
             }
             action.value = value.ToString();
-            string normalized = action.value.Normalize();
+            string normalized = action.value;
             if (normalized.Length != 1) throw new InvalidArgument("value must be a single unicode point");
 
             return action;

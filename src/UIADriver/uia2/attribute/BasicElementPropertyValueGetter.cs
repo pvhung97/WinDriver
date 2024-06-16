@@ -50,7 +50,7 @@ namespace UIADriver.uia2.attribute
             {
                 if (!vb) return null;
             }
-            return v.ToString()?.Normalize();
+            return v.ToString();
         }
 
     }

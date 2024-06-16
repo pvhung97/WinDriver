@@ -109,7 +109,7 @@ namespace UIADriver.uia3.attribute
             {
                 if (!vb) return null;
             }
-            return v.ToString()?.Normalize();
+            return v.ToString();
         }
 
     }

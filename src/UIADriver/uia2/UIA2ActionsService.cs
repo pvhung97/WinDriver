@@ -128,7 +128,7 @@ namespace UIADriver.uia2
                 toDispatch.Add(endDown);
                 toDispatch.Add(endDown.Clone("keyUp"));
             }
-            string normalized = text.ToString().Normalize();
+            string normalized = text.ToString();
             var resetModifier = new KeyAction(inputId, "keyDown");
             resetModifier.value = "\uE000";
             toDispatch.Add(resetModifier);

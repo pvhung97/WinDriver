@@ -16,7 +16,7 @@ public class ActionsSample {
         cap.setPlatform(Platform.WINDOWS);
         cap.setCapability("windriver:aumid", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
         cap.setCapability("windriver:automationName", "uia3");
-        RemoteWebDriver driver = new WinDriver(URI.create("http://localhost:5058").toURL(), cap);
+        RemoteWebDriver driver = new WinDriver(URI.create("http://localhost:5000").toURL(), cap);
 
         try {
             new Actions(driver).sendKeys("5").build().perform();

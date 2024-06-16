@@ -19,7 +19,7 @@ namespace UIADriver.actions.executor
                 throw new UnknownError("Cannot find input source with id " + action.id);
             }
 
-            string key = action.value.Normalize();
+            string key = action.value;
             char c = key[0];
 
             HandleKey(inputSource, c, false, option);
@@ -36,7 +36,7 @@ namespace UIADriver.actions.executor
                 throw new UnknownError("Cannot find input source with id " + action.id);
             }
 
-            string key = action.value.Normalize();
+            string key = action.value;
             char c = key[0];
 
             HandleKey(inputSource, c, true, option);
@@ -189,7 +189,7 @@ namespace UIADriver.actions.executor
             else
             {
                 inputSource.pressed.Add(c);
-                if (keyInfo.useUnicode && keyInfo.keycode == 0)
+                if (keyInfo.useUnicode)
                 {
                     keyInfo.scancode = Convert.ToUInt16(c);
                     keyInfo.keycode = 0;
@@ -197,12 +197,14 @@ namespace UIADriver.actions.executor
                 }
                 else
                 {
-                    var modifierKeyInfo = keyInfo.keycode >> 8;
-                    if (modifierKeyInfo != 0)
+                    var lowByte = keyInfo.keycode & 255;
+                    var highByte = keyInfo.keycode >> 8;
+                    keyInfo.keycode = Convert.ToUInt16(lowByte);
+                    if (highByte != 0)
                     {
-                        bool needShift = (modifierKeyInfo & 1) != 0 && !inputSource.shift;
-                        bool needCtrl = (modifierKeyInfo & 2) != 0 && !inputSource.ctrl;
-                        bool needAlt = (modifierKeyInfo & 4) != 0 && !inputSource.alt;
+                        bool needShift = (highByte & 1) == 1 && !inputSource.shift;
+                        bool needCtrl = (highByte & 2) == 2 && !inputSource.ctrl;
+                        bool needAlt = (highByte & 4) == 4 && !inputSource.alt;
 
                         if (!keyUp)
                         {
@@ -608,7 +610,7 @@ namespace UIADriver.actions.executor
                 default:
                     keyInfo.keycode = convertToUint16(Win32Methods.VkKeyScanEx(c, kbLayout));
                     keyInfo.scancode = Convert.ToUInt16(Win32Methods.MapVirtualKeyEx((uint)(c & 0xFF), 0, kbLayout));
-                    keyInfo.useUnicode = true;
+                    keyInfo.useUnicode = keyInfo.keycode == 0 || keyInfo.keycode > 255;
                     break;
             }
             return keyInfo;
