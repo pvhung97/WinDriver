@@ -10,9 +10,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>4.14.1</version>
+            <groupId>io.github.pvhung97</groupId>
+            <artifactId>windriver-client</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

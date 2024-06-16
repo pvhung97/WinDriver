@@ -4,17 +4,16 @@ import java.net.URI;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
+import io.kanthis.WinDriver;
+import io.kanthis.WinDriverOptions;
+import io.kanthis.by.AutomationIdBy;
 
 public class SwitchWindowSample {
     public static void main(String[] args) throws Exception {
-        DesiredCapabilities cap = new DesiredCapabilities();
-        cap.setPlatform(Platform.WINDOWS);
-        cap.setCapability("windriver:aumid", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
-        cap.setCapability("windriver:automationName", "uia3");
+        WinDriverOptions cap = new WinDriverOptions().setAumid("Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
         RemoteWebDriver driver = new WinDriver(URI.create("http://localhost:5000").toURL(), cap);
 
         try {
@@ -47,18 +46,12 @@ public class SwitchWindowSample {
             driver.manage().window().minimize();
             Thread.sleep(1000);
 
-            DesiredCapabilities capRoot = new DesiredCapabilities();
-            capRoot.setPlatform(Platform.WINDOWS);
-            capRoot.setCapability("windriver:maxTreeDepth", 2);
-            capRoot.setCapability("windriver:automationName", "uia3");
+            WinDriverOptions capRoot = new WinDriverOptions().setMaxTreeDepth(2);
             RemoteWebDriver driverRoot = new WinDriver(URI.create("http://localhost:5000").toURL(), capRoot);
 
             try {
                 String handle = driverRoot.findElement(By.xpath("//Pane[@Name=\"Taskbar\"]")).getAttribute("NativeWindowHandle");
-                DesiredCapabilities capInject = new DesiredCapabilities();
-                capInject.setPlatform(Platform.WINDOWS);
-                capInject.setCapability("windriver:nativeWindowHandle", Integer.parseInt(handle));
-                capInject.setCapability("windriver:automationName", "uia3");
+                WinDriverOptions capInject = new WinDriverOptions().setNativeWindowHandle(Integer.parseInt(handle));
                 RemoteWebDriver driverInject = new WinDriver(URI.create("http://localhost:5000").toURL(), capInject);
 
                 try {

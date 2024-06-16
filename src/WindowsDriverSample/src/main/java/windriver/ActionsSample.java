@@ -4,18 +4,17 @@ import java.net.URI;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.PointerInput;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
+import io.kanthis.WinDriver;
+import io.kanthis.WinDriverOptions;
+import io.kanthis.by.AutomationIdBy;
 
 public class ActionsSample {
     public static void main(String[] args) throws Exception {
-        DesiredCapabilities cap = new DesiredCapabilities();
-        cap.setPlatform(Platform.WINDOWS);
-        cap.setCapability("windriver:aumid", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
-        cap.setCapability("windriver:automationName", "uia3");
+        WinDriverOptions cap = new WinDriverOptions().setAumid("Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
         RemoteWebDriver driver = new WinDriver(URI.create("http://localhost:5000").toURL(), cap);
 
         try {
