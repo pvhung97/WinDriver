@@ -1,5 +1,4 @@
 ﻿using Interop.UIAutomationClient;
-using System.Windows;
 using System.Xml.Linq;
 using UIADriver.services;
 using UIADriver.win32native;
@@ -43,7 +42,8 @@ namespace UIADriver.uia3.sourcebuilder
                         continue;
                     }
 
-                    if (checkIfElementCanCauseInfiniteLoop(elementNode, walker))
+                    //  Layer = 2 means parent is automation root
+                    if (layer > 2 && checkIfElementCanCauseInfiniteLoop(elementNode, walker))
                     {
                         break;
                     }
@@ -223,7 +223,7 @@ namespace UIADriver.uia3.sourcebuilder
                         continue;
                     }
 
-                    //  Skip this check if direct child of root
+                    //  Layer = 1 means element is automation root
                     if (layer > 1 && checkIfElementCanCauseInfiniteLoop(child, walker))
                     {
                         break;
