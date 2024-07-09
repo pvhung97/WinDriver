@@ -16,6 +16,7 @@ namespace UIADriver.services
 
         public abstract PageSource BuildPageSource(T startElement);
         public abstract List<T> FindElementByProperty(T topLevelWindow, string propertyName, string? propertyValue, bool stopAtFirst);
+        public abstract List<T> ResolveXpath(T topLevelWindow, string xpath, bool stopAtFirst);
 
         public class PageSource
         {

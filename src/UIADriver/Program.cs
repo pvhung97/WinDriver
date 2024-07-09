@@ -126,12 +126,12 @@ app.MapPost("/session", async context =>
         {
             session = new UIADriver.uia3.session.WindowsStoreAppSession(cap);
 
-            var capjson = new JsonObject();
-            capjson["platformName"] = "windows";
-            capjson["windriver:automationName"] = "uia3";
-            capjson["windriver:aumid"] = "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App";
-            var sessionRsp = new { sessionId = "debug", capabilities = capjson };
-            await context.Response.WriteAsJsonAsync(new Response(sessionRsp));
+            //var capjson = new JsonObject();
+            //capjson["platformName"] = "windows";
+            //capjson["windriver:automationName"] = "uia3";
+            //capjson["windriver:aumid"] = "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App";
+            //var sessionRsp = new { sessionId = "debug", capabilities = capjson };
+            //await context.Response.WriteAsJsonAsync(new Response(sessionRsp));
             return;
         }
         if (cap.nativeWindowHandle != null)

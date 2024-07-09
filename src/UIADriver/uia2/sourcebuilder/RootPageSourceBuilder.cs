@@ -112,38 +112,6 @@ namespace UIADriver.uia2.sourcebuilder
             ];
         }
 
-        protected XElement createXElement(AutomationElement element)
-        {
-            string tagname = Utilities.GetControlTypeString(element.Cached.ControlType.Id);
-            var rect = element.Cached.BoundingRectangle;
-            if (double.IsInfinity(rect.Width))
-            {
-                rect = System.Windows.Rect.Empty;
-            }
-
-            var rs = new XElement(tagname,
-                                new XAttribute("X", ((int)rect.X).ToString()),
-                                new XAttribute("Y", ((int)rect.Y).ToString()),
-                                new XAttribute("Width", ((int)rect.Width).ToString()),
-                                new XAttribute("Height", ((int)rect.Height).ToString()));
-
-            int controlTypeId = AutomationElement.ControlTypeProperty.Id;
-            var rectId = AutomationElement.BoundingRectangleProperty.Id;
-
-            foreach (var propId in getPropertyList())
-            {
-                if (propId.Id != controlTypeId && propId.Id != rectId)
-                {
-                    string? attrName = UIA2PropertyDictionary.GetAutomationPropertyName(propId.Id);
-                    if (string.IsNullOrEmpty(attrName)) continue;
-                    var value = attrService.GetAttributeString(element, attrName);
-                    if (!string.IsNullOrEmpty(value)) rs.SetAttributeValue(attrName, value);
-                }
-            }
-
-            return rs;
-        }
-
         public override List<AutomationElement> FindElementByProperty(AutomationElement topLevelWindow, string propertyName, string? propertyValue, bool stopAtFirst)
         {
             var property = UIA2PropertyDictionary.GetAutomationProperty(propertyName);

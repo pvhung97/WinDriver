@@ -1,5 +1,6 @@
 ﻿using Interop.UIAutomationClient;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using UIADriver.services;
 using UIADriver.win32native;
 
@@ -143,42 +144,6 @@ namespace UIADriver.uia3.sourcebuilder
                 UIA_PropertyIds.UIA_IsCustomNavigationPatternAvailablePropertyId,
                 UIA_PropertyIds.UIA_IsSelectionPattern2AvailablePropertyId
             ];
-        }
-
-        protected XElement createXElement(IUIAutomationElement element)
-        {
-            string tagname = Utilities.GetControlTypeString((int)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_ControlTypePropertyId));
-            double[] rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
-            if (double.IsInfinity(rect[2]))
-            {
-                rect = [0, 0, 0, 0];
-            }
-
-            XElement rs = new XElement(tagname,
-                                new XAttribute("X", ((int)rect[0]).ToString()),
-                                new XAttribute("Y", ((int)rect[1]).ToString()),
-                                new XAttribute("Width", ((int)rect[2]).ToString()),
-                                new XAttribute("Height", ((int)rect[3]).ToString()));
-
-            foreach (var propId in getPropertyList())
-            {
-                switch (propId)
-                {
-                    case UIA_PropertyIds.UIA_ControlTypePropertyId:
-                    case UIA_PropertyIds.UIA_BoundingRectanglePropertyId:
-                        break;
-                    default:
-                        UIA3PropertyEnum propEnum = (UIA3PropertyEnum)propId;
-                        string? propName = Enum.GetName(propEnum);
-                        if (string.IsNullOrEmpty(propName)) break;
-                        var value = attrService.GetAttributeString(element, propName);
-                        if (!string.IsNullOrEmpty(value)) rs.SetAttributeValue(propName, value);
-                        break;
-                }
-
-            }
-
-            return rs;
         }
 
         public override List<IUIAutomationElement> FindElementByProperty(IUIAutomationElement topLevelWindow, string propertyName, string? propertyValue, bool stopAtFirst)

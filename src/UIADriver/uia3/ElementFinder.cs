@@ -35,7 +35,7 @@ namespace UIADriver.uia3
             switch (request.strategy)
             {
                 case "xpath":
-                    rs = FindElementsWithXpath(request.value, topLevelWindow);
+                    rs = FindElementsWithXpath(request.value, topLevelWindow, stopAtFirst);
                     break;
                 case "name":
                     rs = FindElementsWithPropertyNameAndValue(Enum.GetName(UIA3PropertyEnum.Name), request.value, topLevelWindow, stopAtFirst);
@@ -62,18 +62,9 @@ namespace UIADriver.uia3
             return resp;
         }
 
-        private List<IUIAutomationElement> FindElementsWithXpath(string xpath, IUIAutomationElement topLevelWindow)
+        private List<IUIAutomationElement> FindElementsWithXpath(string xpath, IUIAutomationElement topLevelWindow, bool stopAtFirst)
         {
-            var source = pageSourceService.BuildPageSource(topLevelWindow);
-            var nodes = source.pageSource.XPathSelectElements(xpath);
-            var rs = new List<IUIAutomationElement>();
-
-            foreach (var node in nodes)
-            {
-                source.mapping.TryGetValue(node, out var result);
-                if (result != null) rs.Add(result);
-            }
-            return rs;
+            return pageSourceService.ResolveXpath(topLevelWindow, xpath, stopAtFirst);
         }
 
         private List<IUIAutomationElement> FindElementsWithPropertyNameAndValue(string propertyName, string value, IUIAutomationElement topLevelWindow, bool stopAtFirst)

@@ -31,7 +31,7 @@ namespace UIADriver.uia2
             switch (request.strategy)
             {
                 case "xpath":
-                    rs = FindElementsWithXpath(request.value, topLevelWindow);
+                    rs = FindElementsWithXpath(request.value, topLevelWindow, stopAtFirst);
                     break;
                 case "name":
                     rs = FindElementsWithPropertyNameAndValue(UIA2PropertyDictionary.GetAutomationPropertyName(AutomationElement.NameProperty.Id), request.value, topLevelWindow, stopAtFirst);
@@ -59,18 +59,9 @@ namespace UIADriver.uia2
             return resp;
         }
 
-        private List<AutomationElement> FindElementsWithXpath(string xpath, AutomationElement topLevelWindow)
+        private List<AutomationElement> FindElementsWithXpath(string xpath, AutomationElement topLevelWindow, bool stopAtFirst)
         {
-            var source = pageSourceService.BuildPageSource(topLevelWindow);
-            var nodes = source.pageSource.XPathSelectElements(xpath);
-            var rs = new List<AutomationElement>();
-
-            foreach (var node in nodes)
-            {
-                source.mapping.TryGetValue(node, out var result);
-                if (result != null) rs.Add(result);
-            }
-            return rs;
+            return pageSourceService.ResolveXpath(topLevelWindow, xpath, stopAtFirst);
         }
 
         private List<AutomationElement> FindElementsWithPropertyNameAndValue(string propertyName, string value, AutomationElement topLevelWindow, bool stopAtFirst)
