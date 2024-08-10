@@ -17,7 +17,7 @@ namespace UIADriver.uia3.wndmange
 
         public MultipleWindowManage(IUIAutomation automation, ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> elementFinder) : base(automation, elementFinder) 
         {
-            Console.WriteLine("Manage created>>>");
+
         }
 
         public override List<string> CloseCurrentWindow()

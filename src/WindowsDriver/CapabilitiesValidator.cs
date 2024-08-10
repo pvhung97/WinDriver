@@ -149,7 +149,14 @@ namespace WindowsDriver
                 count++;
             }
 
-            if (count > 1) return new Error("invalid argument", "Use only 1 of these appPath, aumid, nativeWindowHandle");
+            merged.TryGetPropertyValue("windriver:windowNameRegex", out var windowNameRegex);
+            if (windowNameRegex != null)
+            {
+                if (!windowNameRegex.GetValueKind().Equals(JsonValueKind.String)) return new Error("invalid argument", "windriver:windowNameRegex must be string");
+                count++;
+            }
+
+            if (count > 1) return new Error("invalid argument", "Use only 1 of these appPath, aumid, nativeWindowHandle, windowNameRegex");
 
             merged.TryGetPropertyValue("windriver:delayAfterOpenApp", out var delayAfterOpenApp);
             if (delayAfterOpenApp != null)

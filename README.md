@@ -8,7 +8,7 @@ This driver is divided into 2 application WindowsDriver and UIADriver. WindowsDr
 
 # Run WinDriver
 
-Require .NET 8.0 Runtime (ASP.NET Core Hosting Bundle) to run
+Require .NET 8.0 Runtime (Desktop Runtime & ASP.NET Core Hosting Bundle) to run
 
 Use bellow command to start:
 ```
@@ -27,6 +27,7 @@ You can find some sample code inside [WindowsDriverSample](./src/WindowsDriverSa
 | windriver:appPath            	| Executable path                                                      	|               	|
 | windriver:aumid              	| Window store application's aumid                                     	|               	|
 | windriver:nativeWindowHandle 	| NativeWindowHandle of top level window to inject                     	|               	|
+| windriver:windowNameRegex 	| Regex to match name of window to inject                     	        |               	|
 | windriver:appArgument        	| App argument as string array                                         	| []            	|
 | windriver:workingDirectory   	| Application working directory (use with app path only)               	|               	|
 | windriver:delayAfterOpenApp  	| Delay after open app (ms)                                            	| 3000          	|

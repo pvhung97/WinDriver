@@ -30,7 +30,7 @@ namespace WindowsDriver
 
             string currentExePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
             string parentFolder = Directory.GetParent(currentExePath).FullName;
-            string path = Path.Join(parentFolder, "UIADriver", "UIADriver.exe");
+            string path = Path.Join(parentFolder, "UIADriver.exe");
 
             #if DEBUG
             string currentFolder = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;

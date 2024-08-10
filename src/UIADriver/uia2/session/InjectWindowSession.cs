@@ -25,13 +25,10 @@ namespace UIADriver.uia2.session
                 var nativeHdl = element.Cached.NativeWindowHandle;
                 var pid = element.Cached.ProcessId;
 
-                if (!Win32Methods.IsIconic(nativeHdl) && !double.IsInfinity(rect.Width) && rect.Width != 0)
+                if (!Win32Methods.IsIconic(nativeHdl) && !double.IsInfinity(rect.Width) && rect.Width != 0 && nativeHdl == capabilities.nativeWindowHandle)
                 {
-                    if (nativeHdl == capabilities.nativeWindowHandle)
-                    {
-                        foundWindow = Tuple.Create(nativeHdl, pid, element);
-                        break;
-                    }
+                    foundWindow = Tuple.Create(nativeHdl, pid, element);
+                    break;
                 }
 
                 element = walker.GetNextSibling(element, cacheRequest);

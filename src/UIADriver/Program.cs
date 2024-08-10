@@ -114,6 +114,11 @@ app.MapPost("/session", async context =>
             session = new UIADriver.uia2.session.InjectWindowSession(cap);
             return;
         }
+        if (cap.windowNameRegex != null)
+        {
+            session = new UIADriver.uia2.session.InjectByWindowNameSession(cap);
+            return;
+        }
         session = new UIADriver.uia2.session.RootSession(cap);
     } else if (string.Equals("uia3", cap.automationName, StringComparison.OrdinalIgnoreCase))
     {
@@ -137,6 +142,11 @@ app.MapPost("/session", async context =>
         if (cap.nativeWindowHandle != null)
         {
             session = new UIADriver.uia3.session.InjectWindowSession(cap);
+            return;
+        }
+        if (cap.windowNameRegex != null)
+        {
+            session = new UIADriver.uia3.session.InjectByWindowNameSession(cap);
             return;
         }
         session = new UIADriver.uia3.session.RootSession(cap);

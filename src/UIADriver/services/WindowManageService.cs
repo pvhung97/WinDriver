@@ -1,4 +1,5 @@
 ﻿using System.Management;
+using System.Security.Cryptography;
 using UIADriver.dto.request;
 using UIADriver.dto.response;
 
@@ -30,13 +31,18 @@ namespace UIADriver.services
         public abstract List<WndHdlAndPid> CollectWindows();
         public abstract List<WndHdlAndPid> CollectWindows(bool includeIconic);
 
-
         public HashSet<int> InitPids(int pid)
         {
-            pids.Add(pid);
+            return InitPids([pid]);
+        }
+
+        public HashSet<int> InitPids(List<int> pidList)
+        {
+            pidList.ForEach(pid => pids.Add(pid));
             UpdateProcessList();
             return pids;
         }
+
         public abstract void InitCurrentWnd(T currentWnd);
 
         protected void UpdateProcessList()

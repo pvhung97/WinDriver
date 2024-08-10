@@ -8,6 +8,7 @@ namespace UIADriver
         public string? automationName;
         public string? appPath;
         public string? aumid;
+        public string? windowNameRegex;
         public int? nativeWindowHandle;
         public int delayAfterOpenApp = 3000;
         public string[] appArgument = [];
@@ -31,21 +32,24 @@ namespace UIADriver
             if (appPath != null)
             {
                 cap.appPath = appPath.ToString();
-                
             }
 
             data.TryGetPropertyValue("windriver:aumid", out var aumid);
             if (aumid != null)
             {
                 cap.aumid = aumid.ToString();
-                
             }
 
             data.TryGetPropertyValue("windriver:nativeWindowHandle", out var nativeWindowHandle);
             if (nativeWindowHandle != null)
             {
                 cap.nativeWindowHandle = nativeWindowHandle.GetValue<int>();
-                
+            }
+
+            data.TryGetPropertyValue("windriver:windowNameRegex", out var windowNameRegex);
+            if (windowNameRegex != null)
+            {
+                cap.windowNameRegex = windowNameRegex.ToString();
             }
 
             data.TryGetPropertyValue("windriver:delayAfterOpenApp", out var delayAfterOpenApp);
