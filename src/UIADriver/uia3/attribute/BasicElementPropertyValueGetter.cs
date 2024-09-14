@@ -1,4 +1,6 @@
 ﻿using Interop.UIAutomationClient;
+using System.Text;
+using UIADriver.win32native;
 
 namespace UIADriver.uia3.attribute
 {
@@ -39,6 +41,10 @@ namespace UIADriver.uia3.attribute
                     return ((WindowInteractionState)v).ToString().Replace("WindowInteractionState_", "");
                 case UIA_PropertyIds.UIA_WindowWindowVisualStatePropertyId:
                     return ((WindowVisualState)v).ToString().Replace("WindowVisualState_", "");
+                case UIA_PropertyIds.UIA_LegacyIAccessibleRolePropertyId:
+                    return Utilities.GetLocalizedRoleText((int)v);
+                case UIA_PropertyIds.UIA_LegacyIAccessibleStatePropertyId:
+                    return Utilities.GetLocalizedStateText((int)v);
                 case UIA_PropertyIds.UIA_DragIsGrabbedPropertyId:
                 case UIA_PropertyIds.UIA_RangeValueIsReadOnlyPropertyId:
                 case UIA_PropertyIds.UIA_ScrollHorizontallyScrollablePropertyId:

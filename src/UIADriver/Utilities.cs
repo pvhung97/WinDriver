@@ -2,6 +2,8 @@
 using System.Runtime.InteropServices;
 using UIADriver.win32native;
 using System.Text;
+using Interop.UIAutomationClient;
+using System.Globalization;
 
 namespace UIADriver
 {
@@ -105,11 +107,33 @@ namespace UIADriver
             return new Point(Math.Abs(minX), Math.Abs(minY));
         }
 
-        public static string GetLocalizeName(int localizeId)
+        public static string? GetLocalizeName(int localizeId)
         {
-            var data = new StringBuilder(500);
-            Win32Methods.LCIDToLocaleName(Convert.ToUInt32(localizeId), data, data.Capacity, 0);
-            return data.ToString();
+            if (localizeId != 0)
+            {
+                try
+                {
+                    var culture = new CultureInfo(localizeId);
+                    return culture.Name;
+                } catch { }
+            }
+            return null;
+        }
+
+        public static string GetLocalizedStateText(int state)
+        {
+            var stateBuilder = new StringBuilder();
+            var length = Win32Methods.GetStateText(Convert.ToUInt32(state), null, 0);
+            Win32Methods.GetStateText(Convert.ToUInt32(state), stateBuilder, length + 1);
+            return stateBuilder.ToString();
+        }
+
+        public static string GetLocalizedRoleText(int role)
+        {
+            var roleBuilder = new StringBuilder();
+            var length = Win32Methods.GetRoleText(Convert.ToUInt32(role), null, 0);
+            Win32Methods.GetRoleText(Convert.ToUInt32(role), roleBuilder, length + 1);
+            return roleBuilder.ToString();
         }
 
         public static void BringWindowToTop(nint hwnd)

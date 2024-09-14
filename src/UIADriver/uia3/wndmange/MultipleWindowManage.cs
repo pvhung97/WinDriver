@@ -43,11 +43,25 @@ namespace UIADriver.uia3.wndmange
             {
                 cacheRequest = automation.CreateCacheRequest();
                 cacheRequest.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
-            } else cacheRequest.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+                cacheRequest.AddProperty(UIA_PropertyIds.UIA_ProcessIdPropertyId);
+            }
+            else
+            {
+                cacheRequest.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+                cacheRequest.AddProperty(UIA_PropertyIds.UIA_ProcessIdPropertyId);
+            }
 
             try
             {
-                currentWnd = currentWnd?.BuildUpdatedCache(cacheRequest);
+                if (currentWnd != null)
+                {
+                    currentWnd = currentWnd.BuildUpdatedCache(cacheRequest);
+
+                    if ((int)currentWnd.GetCachedPropertyValue(UIA_PropertyIds.UIA_ProcessIdPropertyId) == 0)
+                    {
+                        throw new NoSuchWindowException("Invalid process id");
+                    }
+                }
             } catch (Exception ex)
             {
                 Debug.WriteLine(ex);

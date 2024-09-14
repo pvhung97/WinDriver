@@ -35,9 +35,6 @@ namespace UIADriver.win32native
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
 
-        [DllImport(@"kernel32.dll", SetLastError = true)]
-        public static extern int LCIDToLocaleName(uint Locale, StringBuilder lpName, int cchName, int dwFlags);
-
         [DllImport("user32.dll", SetLastError = true)]
         public static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
 
@@ -80,5 +77,11 @@ namespace UIADriver.win32native
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool GetWindowInfo(IntPtr hmon, ref WindowInfo wi);
+
+        [DllImport("oleacc.dll")]
+        public static extern uint GetRoleText(uint dwRole, StringBuilder lpszRole, uint cchRoleMax);
+
+        [DllImport("oleacc.dll")]
+        public static extern uint GetStateText(uint dwStateBit, StringBuilder lpszStateBit, uint cchStateBitMax);
     }
 }

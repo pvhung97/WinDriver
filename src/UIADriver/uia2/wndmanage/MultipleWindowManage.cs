@@ -40,11 +40,25 @@ namespace UIADriver.uia2.wndmanage
             {
                 cacheRequest = new CacheRequest();
                 cacheRequest.Add(AutomationElement.NativeWindowHandleProperty);
-            } else cacheRequest.Add(AutomationElement.NativeWindowHandleProperty);
+                cacheRequest.Add(AutomationElement.ProcessIdProperty);
+            }
+            else
+            {
+                cacheRequest.Add(AutomationElement.NativeWindowHandleProperty);
+                cacheRequest.Add(AutomationElement.ProcessIdProperty);
+            }
 
             try
             {
-                currentWnd = currentWnd?.GetUpdatedCache(cacheRequest);
+                if (currentWnd != null)
+                {
+                    currentWnd = currentWnd.GetUpdatedCache(cacheRequest);
+
+                    if (currentWnd.Cached.ProcessId == 0)
+                    {
+                        throw new NoSuchWindowException("Invalid process id");
+                    }
+                }
             } catch (Exception ex)
             {
                 Debug.WriteLine(ex);
