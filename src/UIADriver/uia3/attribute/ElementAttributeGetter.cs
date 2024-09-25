@@ -68,17 +68,21 @@ namespace UIADriver.uia3.attribute
             var firstChild = treeWalker.GetFirstChildElement(element);
             if (firstChild != null) return "";
 
-            var cacheRequest = automation.CreateCacheRequest();
-            cacheRequest.AddProperty(UIA_PropertyIds.UIA_NamePropertyId);
-
             var name = GetAttributeString(element, Enum.GetName(UIA3PropertyEnum.Name));
             return name == null ? "" : name;
         }
 
         public override bool IsElementDisplayed(IUIAutomationElement element)
         {
-            var isOffscreen = GetAttributeObject(element, Enum.GetName(UIA3PropertyEnum.IsOffscreen));
-            return isOffscreen == null ? true : !(bool)isOffscreen;
+            var cachedRequest = automation.CreateCacheRequest();
+            cachedRequest.AddProperty(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
+            cachedRequest.AddProperty(UIA_PropertyIds.UIA_IsOffscreenPropertyId);
+            var updatedElement = element.BuildUpdatedCache(cachedRequest);
+
+            var isOffscreen = (bool)updatedElement.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsOffscreenPropertyId);
+            var boundingRect = (double[])updatedElement.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
+            if (isOffscreen || boundingRect[2] == 0 || boundingRect[3] == 0) return false;
+            return true;
         }
 
         public override bool IsElementEnabled(IUIAutomationElement element)

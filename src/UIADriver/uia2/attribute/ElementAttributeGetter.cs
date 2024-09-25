@@ -70,10 +70,14 @@ namespace UIADriver.uia2.attribute
 
         public override bool IsElementDisplayed(AutomationElement element)
         {
-#pragma warning disable CS8604
-            var isOffscreen = GetAttributeObject(element, UIA2PropertyDictionary.GetAutomationPropertyName(AutomationElement.IsOffscreenProperty.Id));
-            return isOffscreen == null ? true : !(bool)isOffscreen;
-#pragma warning restore CS8604
+            var cachedRequest = new CacheRequest();
+            cachedRequest.Add(AutomationElement.BoundingRectangleProperty);
+            cachedRequest.Add(AutomationElement.IsOffscreenProperty);
+            var updatedElement = element.GetUpdatedCache(cachedRequest);
+
+            var boundingRect = updatedElement.Cached.BoundingRectangle;
+            if (updatedElement.Cached.IsOffscreen || boundingRect.Width == 0 || boundingRect.Height == 0) return false;
+            return true;
         }
 
         public override bool IsElementEnabled(AutomationElement element)

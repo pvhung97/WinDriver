@@ -4,7 +4,7 @@ namespace UIADriver.uia2
 {
     public class UIA2PropertyDictionary
     {
-        private static readonly Dictionary<string, int> propertyDictionary = new()
+        public static readonly Dictionary<string, int> propertyDictionary = new()
         {
             { "AcceleratorKey", AutomationElement.AcceleratorKeyProperty.Id },
             { "IsSelectionItemPatternAvailable", AutomationElement.IsSelectionItemPatternAvailableProperty.Id },

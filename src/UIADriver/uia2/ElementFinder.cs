@@ -1,5 +1,4 @@
 ﻿using System.Windows.Automation;
-using System.Xml.XPath;
 using UIADriver.dto.request;
 using UIADriver.dto.response;
 using UIADriver.exception;
@@ -79,16 +78,27 @@ namespace UIADriver.uia2
         public override AutomationElement GetElement(string id, CacheRequest cacheRequest)
         {
             cachedElement.TryGetValue(id, out var element);
-            if (element == null) throw new StaleElementReference("element is stale");
+            if (element == null) throw new StaleElementReference("element might have been removed from screen");
             try
             {
                 element = element.GetUpdatedCache(cacheRequest);
+
+                var treeWalker = new TreeWalker(Condition.TrueCondition);
+                if (treeWalker.GetParent(element) == null && !Automation.Compare(element, AutomationElement.RootElement))
+                {
+                    throw new StaleElementReference("element might have been removed from screen");
+                }
                 return element;
             }
-            catch
+            catch (StaleElementReference)
             {
                 RemoveElement(id);
-                throw new StaleElementReference("element is stale");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                RemoveElement(id);
+                throw new StaleElementReference("element is not accessible or might have been removed from screen: " + ex.Message);
             }
         }
 

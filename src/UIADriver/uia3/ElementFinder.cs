@@ -82,16 +82,27 @@ namespace UIADriver.uia3
         public override IUIAutomationElement GetElement(string id, IUIAutomationCacheRequest cacheRequest)
         {
             cachedElement.TryGetValue(id, out var element);
-            if (element == null) throw new StaleElementReference("element is stale");
+            if (element == null) throw new StaleElementReference("element might have been removed from screen");
             try
             {
                 element = element.BuildUpdatedCache(cacheRequest);
+
+                var treeWalker = automation.CreateTreeWalker(automation.CreateTrueCondition());
+                if (treeWalker.GetParentElement(element) == null && automation.CompareElements(element, automation.GetRootElement()) == 0)
+                {
+                    throw new StaleElementReference("element might have been removed from screen");
+                }
                 return element;
             }
-            catch
+            catch (StaleElementReference)
             {
                 RemoveElement(id);
-                throw new StaleElementReference("element is stale");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                RemoveElement(id);
+                throw new StaleElementReference("element is not accessible or might have been removed from screen: " + ex.Message);
             }
         }
 

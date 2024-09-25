@@ -20,19 +20,20 @@ You can find some sample code inside [WindowsDriverSample](./src/WindowsDriverSa
 
 # Supported Capabilities
 
-| Capabilities                 	| Description                                                          	| Default Value 	|
-|------------------------------	|----------------------------------------------------------------------	|---------------	|
-| platformName                  | Must be "windows"                                                    	|               	|
-| windriver:automationName     	| Must be "uia3" or "uia2"                                              |               	|
-| windriver:appPath            	| Executable path                                                      	|               	|
-| windriver:aumid              	| Window store application's aumid                                     	|               	|
-| windriver:nativeWindowHandle 	| NativeWindowHandle of top level window to inject                     	|               	|
-| windriver:windowNameRegex 	| Regex to match name of window to inject                     	        |               	|
-| windriver:appArgument        	| App argument as string array                                         	| []            	|
-| windriver:workingDirectory   	| Application working directory (use with app path only)               	|               	|
-| windriver:delayAfterOpenApp  	| Delay after open app (ms)                                            	| 3000          	|
-| windriver:maxTreeDepth       	| Maximum depth for automation tree, useful when use with root session 	| 50            	|
-| windriver:commandTimeout     	| Timeout for command (ms)                                             	| 100000        	|
+| Capabilities                 	                | Description                                                          	    | Default Value 	|
+|---------------------------------------------- |--------------------------------------------------------------------------	|---------------	|
+| platformName                                  | Must be "windows"                                                    	    |               	|
+| windriver:automationName     	                | Must be "uia3" or "uia2"                                                  |               	|
+| windriver:appPath            	                | Executable path                                                      	    |               	|
+| windriver:aumid              	                | Window store application's aumid                                     	    |               	|
+| windriver:nativeWindowHandle 	                | NativeWindowHandle of top level window to inject                     	    |               	|
+| windriver:windowNameRegex 	                | Regex to match name of window to inject                     	            |               	|
+| windriver:appArgument        	                | App argument as string array                                         	    | []            	|
+| windriver:workingDirectory   	                | Application working directory (use with app path only)               	    |               	|
+| windriver:delayAfterOpenApp  	                | Delay after open app (ms)                                            	    | 3000          	|
+| windriver:maxTreeDepth       	                | Maximum depth for automation tree, useful when use with root session 	    | 50            	|
+| windriver:commandTimeout     	                | Timeout for command (ms)                                             	    | 100000        	|
+| windriver:additionalPageSourcePattern     	| Allow additional pattern property when get page source and find element   | []        	    |
 
 # Supported Locators
 

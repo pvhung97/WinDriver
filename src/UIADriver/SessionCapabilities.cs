@@ -15,6 +15,7 @@ namespace UIADriver
         public string? workingDirectory;
         public int maxTreeDepth = 50;
         public int delayAfterFocus = 200;
+        public string[] additionalPageSourcePattern = [];
 
         public SessionCapabilities() {}
 
@@ -84,6 +85,16 @@ namespace UIADriver
             if (workingDirectory != null)
             {
                 cap.workingDirectory = workingDirectory.ToString();
+            }
+
+            data.TryGetPropertyValue("windriver:additionalPageSourcePattern", out var additionalPageSourcePattern);
+            if (additionalPageSourcePattern != null)
+            {
+                var patterns = JsonSerializer.Deserialize<string[]>(additionalPageSourcePattern);
+                if (patterns != null)
+                {
+                    cap.additionalPageSourcePattern = patterns;
+                }
             }
 
             return cap;

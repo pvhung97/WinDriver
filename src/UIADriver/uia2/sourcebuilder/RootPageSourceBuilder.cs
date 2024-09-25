@@ -13,7 +13,7 @@ namespace UIADriver.uia2.sourcebuilder
         {
             var walker = new TreeWalker(Condition.TrueCondition);
             var cacheRequest = new CacheRequest();
-            foreach (var item in getPropertyList())
+            foreach (var item in GetPropertyList())
             {
                 cacheRequest.Add(item);
             }
@@ -53,63 +53,6 @@ namespace UIADriver.uia2.sourcebuilder
 
                 elementNode = walker.GetNextSibling(elementNode, request);
             }
-        }
-
-        protected override List<AutomationProperty> getPropertyList()
-        {
-            return [
-                AutomationElement.AcceleratorKeyProperty,
-                AutomationElement.ItemStatusProperty,
-                AutomationElement.ItemTypeProperty,
-                AutomationElement.LocalizedControlTypeProperty,
-                AutomationElement.NameProperty,
-                AutomationElement.NativeWindowHandleProperty,
-                AutomationElement.OrientationProperty,
-                AutomationElement.PositionInSetProperty,
-                AutomationElement.ProcessIdProperty,
-                AutomationElement.RuntimeIdProperty,
-                AutomationElement.SizeOfSetProperty,
-                AutomationElement.AccessKeyProperty,
-                AutomationElement.AutomationIdProperty,
-                AutomationElement.BoundingRectangleProperty,
-                AutomationElement.ClassNameProperty,
-                AutomationElement.ControlTypeProperty,
-                AutomationElement.FrameworkIdProperty,
-                AutomationElement.HasKeyboardFocusProperty,
-                AutomationElement.HeadingLevelProperty,
-                AutomationElement.HelpTextProperty,
-                AutomationElement.CultureProperty,
-                AutomationElement.IsKeyboardFocusableProperty,
-                AutomationElement.IsControlElementProperty,
-                AutomationElement.IsDialogProperty,
-                AutomationElement.IsEnabledProperty,
-                AutomationElement.IsContentElementProperty,
-                AutomationElement.IsOffscreenProperty,
-                AutomationElement.IsPasswordProperty,
-                AutomationElement.IsRequiredForFormProperty,
-
-                AutomationElement.IsSelectionItemPatternAvailableProperty,
-                AutomationElement.IsSelectionPatternAvailableProperty,
-                AutomationElement.IsSynchronizedInputPatternAvailableProperty,
-                AutomationElement.IsTableItemPatternAvailableProperty,
-                AutomationElement.IsTablePatternAvailableProperty,
-                AutomationElement.IsTextPatternAvailableProperty,
-                AutomationElement.IsTogglePatternAvailableProperty,
-                AutomationElement.IsTransformPatternAvailableProperty,
-                AutomationElement.IsValuePatternAvailableProperty,
-                AutomationElement.IsVirtualizedItemPatternAvailableProperty,
-                AutomationElement.IsWindowPatternAvailableProperty,
-                AutomationElement.IsScrollPatternAvailableProperty,
-                AutomationElement.IsScrollItemPatternAvailableProperty,
-                AutomationElement.IsRangeValuePatternAvailableProperty,
-                AutomationElement.IsDockPatternAvailableProperty,
-                AutomationElement.IsExpandCollapsePatternAvailableProperty,
-                AutomationElement.IsGridItemPatternAvailableProperty,
-                AutomationElement.IsGridPatternAvailableProperty,
-                AutomationElement.IsInvokePatternAvailableProperty,
-                AutomationElement.IsItemContainerPatternAvailableProperty,
-                AutomationElement.IsMultipleViewPatternAvailableProperty,
-            ];
         }
 
         public override List<AutomationElement> FindElementByProperty(AutomationElement topLevelWindow, string propertyName, string? propertyValue, bool stopAtFirst)

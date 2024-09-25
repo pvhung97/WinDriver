@@ -198,6 +198,16 @@ namespace WindowsDriver
                 if (!workingDirectory.GetValueKind().Equals(JsonValueKind.String)) return new Error("invalid argument", "windriver:workingDirectory must be string");
             }
 
+            merged.TryGetPropertyValue("windriver:additionalPageSourcePattern", out var additionalPageSourcePattern);
+            if (additionalPageSourcePattern != null)
+            {
+                if (!additionalPageSourcePattern.GetValueKind().Equals(JsonValueKind.Array)) return new Error("invalid argument", "windriver:additionalPageSourcePattern must be string array");
+                foreach (var item in additionalPageSourcePattern.AsArray())
+                {
+                    if (item == null || !item.GetValueKind().Equals(JsonValueKind.String)) return new Error("invalid argument", "windriver:additionalPageSourcePattern must be string array");
+                }
+            }
+
             return null;
         }
     }

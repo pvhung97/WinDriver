@@ -10,7 +10,6 @@ namespace UIADriver.uia2.sourcebuilder
         public PageSourceBuilder(SessionCapabilities capabilities, ElementAttributeService<AutomationElement> attributeService) : base(capabilities, attributeService) { }
 
         protected abstract void buildRecursive(XElement parent, Dictionary<XElement, AutomationElement> mapping, AutomationElement element, TreeWalker treeWalker, CacheRequest cacheRequest, int layer);
-        protected abstract List<AutomationProperty> getPropertyList();
         protected abstract void findElementByPropertyRecursive(AutomationElement element, string propertyName, string? propertyValue, bool stopAtFirst, int layer, TreeWalker walker, CacheRequest request, List<AutomationElement> rs);
 
         protected XElement createXElement(AutomationElement element)
@@ -31,13 +30,13 @@ namespace UIADriver.uia2.sourcebuilder
             int controlTypeId = AutomationElement.ControlTypeProperty.Id;
             var rectId = AutomationElement.BoundingRectangleProperty.Id;
 
-            foreach (var propId in getPropertyList())
+            foreach (var propId in GetPropertyList())
             {
                 if (propId.Id != controlTypeId && propId.Id != rectId)
                 {
                     string? attrName = UIA2PropertyDictionary.GetAutomationPropertyName(propId.Id);
                     if (string.IsNullOrEmpty(attrName)) continue;
-                    var value = attrService.GetAttributeString(element, attrName);
+                    var value = attrService.GetAttributeString(element, attrName, false);
                     if (!string.IsNullOrEmpty(value)) rs.SetAttributeValue(attrName, value);
                 }
             }
@@ -51,7 +50,7 @@ namespace UIADriver.uia2.sourcebuilder
             var segements = XpathParser.Parse(xpath);
 
             var cacheRequest = new CacheRequest();
-            foreach (var item in getPropertyList())
+            foreach (var item in GetPropertyList())
             {
                 cacheRequest.Add(item);
             }
@@ -156,6 +155,116 @@ namespace UIADriver.uia2.sourcebuilder
                     ResolveXpathRecursive(foundElement, segments.GetRange(1, segments.Count - 1), stopAtFirst, layer + 1, cacheRequest, treeWalker, rsList);
                 }
             }
+        }
+
+        protected List<AutomationProperty> GetPropertyList()
+        {
+            return AppendAddionalPatternProperty(GetBasePropertyList());
+        }
+
+        protected List<AutomationProperty> GetBasePropertyList()
+        {
+            return [
+                AutomationElement.AcceleratorKeyProperty,
+                AutomationElement.ItemStatusProperty,
+                AutomationElement.ItemTypeProperty,
+                AutomationElement.LocalizedControlTypeProperty,
+                AutomationElement.NameProperty,
+                AutomationElement.NativeWindowHandleProperty,
+                AutomationElement.OrientationProperty,
+                AutomationElement.PositionInSetProperty,
+                AutomationElement.ProcessIdProperty,
+                AutomationElement.RuntimeIdProperty,
+                AutomationElement.SizeOfSetProperty,
+                AutomationElement.AccessKeyProperty,
+                AutomationElement.AutomationIdProperty,
+                AutomationElement.BoundingRectangleProperty,
+                AutomationElement.ClassNameProperty,
+                AutomationElement.ControlTypeProperty,
+                AutomationElement.FrameworkIdProperty,
+                AutomationElement.HasKeyboardFocusProperty,
+                AutomationElement.HeadingLevelProperty,
+                AutomationElement.HelpTextProperty,
+                AutomationElement.CultureProperty,
+                AutomationElement.IsKeyboardFocusableProperty,
+                AutomationElement.IsControlElementProperty,
+                AutomationElement.IsDialogProperty,
+                AutomationElement.IsEnabledProperty,
+                AutomationElement.IsContentElementProperty,
+                AutomationElement.IsOffscreenProperty,
+                AutomationElement.IsPasswordProperty,
+                AutomationElement.IsRequiredForFormProperty,
+
+                AutomationElement.IsSelectionItemPatternAvailableProperty,
+                AutomationElement.IsSelectionPatternAvailableProperty,
+                AutomationElement.IsSynchronizedInputPatternAvailableProperty,
+                AutomationElement.IsTableItemPatternAvailableProperty,
+                AutomationElement.IsTablePatternAvailableProperty,
+                AutomationElement.IsTextPatternAvailableProperty,
+                AutomationElement.IsTogglePatternAvailableProperty,
+                AutomationElement.IsTransformPatternAvailableProperty,
+                AutomationElement.IsValuePatternAvailableProperty,
+                AutomationElement.IsVirtualizedItemPatternAvailableProperty,
+                AutomationElement.IsWindowPatternAvailableProperty,
+                AutomationElement.IsScrollPatternAvailableProperty,
+                AutomationElement.IsScrollItemPatternAvailableProperty,
+                AutomationElement.IsRangeValuePatternAvailableProperty,
+                AutomationElement.IsDockPatternAvailableProperty,
+                AutomationElement.IsExpandCollapsePatternAvailableProperty,
+                AutomationElement.IsGridItemPatternAvailableProperty,
+                AutomationElement.IsGridPatternAvailableProperty,
+                AutomationElement.IsInvokePatternAvailableProperty,
+                AutomationElement.IsItemContainerPatternAvailableProperty,
+                AutomationElement.IsMultipleViewPatternAvailableProperty,
+            ];
+        }
+
+        protected List<AutomationProperty> AppendAddionalPatternProperty(List<AutomationProperty> basePropertyList)
+        {
+            foreach (var item in capabilities.additionalPageSourcePattern)
+            {
+                switch (item)
+                {
+                    case "Value":
+                    case "RangeValue":
+                    case "Scroll":
+                    case "Grid":
+                    case "Dock":
+                    case "ExpandCollapse":
+                    case "Window":
+                    case "Toggle":
+                    case "Transform":
+                        foreach (var prop in UIA2PropertyDictionary.propertyDictionary)
+                        {
+                            if (prop.Key.StartsWith($"{item}_"))
+                            {
+                                var propAutomation = UIA2PropertyDictionary.GetAutomationProperty(prop.Key);
+                                if (propAutomation != null) basePropertyList.Add(propAutomation);
+                            }
+                        }
+                        break;
+                    case "Selection":
+                        basePropertyList.Add(SelectionPattern.CanSelectMultipleProperty);
+                        basePropertyList.Add(SelectionPattern.IsSelectionRequiredProperty);
+                        break;
+                    case "GridItem":
+                        basePropertyList.Add(GridItemPattern.ColumnProperty);
+                        basePropertyList.Add(GridItemPattern.ColumnSpanProperty);
+                        basePropertyList.Add(GridItemPattern.RowProperty);
+                        basePropertyList.Add(GridItemPattern.RowSpanProperty);
+                        break;
+                    case "MultipleView":
+                        basePropertyList.Add(MultipleViewPattern.CurrentViewProperty);
+                        break;
+                    case "SelectionItem":
+                        basePropertyList.Add(SelectionItemPattern.IsSelectedProperty);
+                        break;
+                    case "Table":
+                        basePropertyList.Add(TablePattern.RowOrColumnMajorProperty);
+                        break;
+                }
+            }
+            return basePropertyList;
         }
 
     }
