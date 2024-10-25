@@ -1,4 +1,5 @@
 ﻿using Interop.UIAutomationClient;
+using System.Diagnostics;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using UIADriver.services;
@@ -34,20 +35,25 @@ namespace UIADriver.uia3.sourcebuilder
 
             foreach (var propId in GetPropertyList())
             {
-                switch (propId)
+                try
                 {
-                    case UIA_PropertyIds.UIA_ControlTypePropertyId:
-                    case UIA_PropertyIds.UIA_BoundingRectanglePropertyId:
-                        break;
-                    default:
-                        UIA3PropertyEnum propEnum = (UIA3PropertyEnum)propId;
-                        string? propName = Enum.GetName(propEnum);
-                        if (string.IsNullOrEmpty(propName)) break;
-                        var value = attrService.GetAttributeString(element, propName, false);
-                        if (!string.IsNullOrEmpty(value)) rs.SetAttributeValue(propName, value);
-                        break;
+                    switch (propId)
+                    {
+                        case UIA_PropertyIds.UIA_ControlTypePropertyId:
+                        case UIA_PropertyIds.UIA_BoundingRectanglePropertyId:
+                            break;
+                        default:
+                            UIA3PropertyEnum propEnum = (UIA3PropertyEnum)propId;
+                            string? propName = Enum.GetName(propEnum);
+                            if (string.IsNullOrEmpty(propName)) break;
+                            var value = attrService.GetAttributeString(element, propName, false);
+                            if (!string.IsNullOrEmpty(value)) rs.SetAttributeValue(propName, value);
+                            break;
+                    }
+                } catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
                 }
-
             }
 
             return rs;

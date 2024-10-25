@@ -8,6 +8,7 @@
 	<UseWindowsForms>true</UseWindowsForms>
 	<UseWPF>true</UseWPF>
 	<BaseOutputPath>..\..\build</BaseOutputPath>
+	<ServerGarbageCollection>false</ServerGarbageCollection>
   </PropertyGroup>
 
   <ItemGroup>

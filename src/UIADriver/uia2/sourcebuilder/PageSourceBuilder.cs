@@ -1,4 +1,5 @@
-﻿using System.Windows.Automation;
+﻿using System.Diagnostics;
+using System.Windows.Automation;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using UIADriver.services;
@@ -32,12 +33,18 @@ namespace UIADriver.uia2.sourcebuilder
 
             foreach (var propId in GetPropertyList())
             {
-                if (propId.Id != controlTypeId && propId.Id != rectId)
+                try
                 {
-                    string? attrName = UIA2PropertyDictionary.GetAutomationPropertyName(propId.Id);
-                    if (string.IsNullOrEmpty(attrName)) continue;
-                    var value = attrService.GetAttributeString(element, attrName, false);
-                    if (!string.IsNullOrEmpty(value)) rs.SetAttributeValue(attrName, value);
+                    if (propId.Id != controlTypeId && propId.Id != rectId)
+                    {
+                        string? attrName = UIA2PropertyDictionary.GetAutomationPropertyName(propId.Id);
+                        if (string.IsNullOrEmpty(attrName)) continue;
+                        var value = attrService.GetAttributeString(element, attrName, false);
+                        if (!string.IsNullOrEmpty(value)) rs.SetAttributeValue(attrName, value);
+                    }
+                } catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
                 }
             }
 
