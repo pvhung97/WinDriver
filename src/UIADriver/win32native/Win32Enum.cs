@@ -997,5 +997,12 @@
             INDIRECT = 2,
             NONE = 3
         }
+
+        public enum PROCESS_DPI_AWARENESS
+        {
+            Process_DPI_Unaware = 0,
+            Process_System_DPI_Aware = 1,
+            Process_Per_Monitor_DPI_Aware = 2
+        }
     }
 }

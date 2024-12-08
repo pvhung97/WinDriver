@@ -7,7 +7,10 @@ using UIADriver;
 using UIADriver.actions;
 using UIADriver.dto.response;
 using UIADriver.exception;
+using UIADriver.win32native;
 using ISession = UIADriver.ISession;
+
+Win32Methods.SetProcessDpiAwareness(Win32Enum.PROCESS_DPI_AWARENESS.Process_Per_Monitor_DPI_Aware);
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
