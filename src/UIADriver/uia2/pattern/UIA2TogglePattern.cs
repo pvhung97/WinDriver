@@ -7,7 +7,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2TogglePattern : TogglePatternService<AutomationElement, CacheRequest>
     {
-        public UIA2TogglePattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2TogglePattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override void Toggle(string elementId)
         {
@@ -20,7 +20,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsTogglePatternAvailableProperty);
             cacheRequest.Add(TogglePattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsTogglePatternAvailableProperty))
             {
                 throw new InvalidArgument("Toggle pattern is not available for this element");

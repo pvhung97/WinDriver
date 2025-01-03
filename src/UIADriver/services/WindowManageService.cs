@@ -1,18 +1,20 @@
 ﻿using System.Management;
 using UIADriver.dto.request;
 using UIADriver.dto.response;
+using UIADriver.win32;
+using UIADriver.win32native;
 
 namespace UIADriver.services
 {
     public abstract class WindowManageService<T, U>
     {
         protected HashSet<int> pids;
-        protected ElementFinderService<T, U> elementFinder;
+        protected ServiceProvider<T, U> serviceProvider;
 
-        public WindowManageService(ElementFinderService<T, U> elementFinder)
+        public WindowManageService(ServiceProvider<T, U> serviceProvider)
         {
             this.pids = [];
-            this.elementFinder = elementFinder;
+            this.serviceProvider = serviceProvider;
         }
 
         public abstract T getCurrentWindow(U? cacheRequest);
@@ -43,6 +45,11 @@ namespace UIADriver.services
         }
 
         public abstract void InitCurrentWnd(T currentWnd);
+
+        public void CloseWindowByHdl(int hdl)
+        {
+            Win32Methods.PostMessage(hdl, Win32Constants.WM_CLOSE, nint.Zero, nint.Zero);
+        }
 
         protected void UpdateProcessList()
         {

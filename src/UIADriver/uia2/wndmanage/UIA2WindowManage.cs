@@ -1,12 +1,15 @@
-﻿using System.Windows.Automation;
+﻿using System.Diagnostics;
+using System.Windows.Automation;
 using UIADriver.dto.response;
 using UIADriver.services;
+using UIADriver.win32;
+using UIADriver.win32native;
 
 namespace UIADriver.uia2.wndmanage
 {
     public abstract class UIA2WindowManage : WindowManageService<AutomationElement, CacheRequest>
     {
-        public UIA2WindowManage(ElementFinderService<AutomationElement, CacheRequest> elementFinder) : base(elementFinder) { }
+        public UIA2WindowManage(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override string GetCurrentWindowHdl()
         {

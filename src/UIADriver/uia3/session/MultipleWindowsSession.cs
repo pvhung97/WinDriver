@@ -1,11 +1,8 @@
 ﻿using Interop.UIAutomationClient;
 using UIADriver.actions;
-using UIADriver.win32;
-using UIADriver.win32native;
-using UIADriver.uia3.sourcebuilder;
 using UIADriver.services;
-using UIADriver.uia3.wndmange;
 using UIADriver.uia3.actionoptions;
+using UIADriver.uia3.serviceProvider;
 
 namespace UIADriver.uia3.session
 {
@@ -13,38 +10,27 @@ namespace UIADriver.uia3.session
     {
         protected MultipleWindowsSession(SessionCapabilities capabilities) : base(capabilities) { }
 
-        protected override PageSourceService<IUIAutomationElement> GetPageSourceService()
+        protected override ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> GetServiceProvider()
         {
-            if (PageSourceService == null)
-            {
-                PageSourceService = new WindowPageSourceBuilder(automation, capabilities, GetElementAttributeService());
-            }
-            return PageSourceService;
-        }
-        protected override WindowManageService<IUIAutomationElement, IUIAutomationCacheRequest> GetWindowManageService()
-        {
-            if (WindowManageService == null)
-            {
-                WindowManageService = new MultipleWindowManage(automation, GetElementFinderService());
-            }
-            return WindowManageService;
+            if (serviceProvider == null) serviceProvider = new MultipleWindowSessionServiceProvider(capabilities, automation);
+            return serviceProvider;
         }
 
         public override Task CloseSession()
         {
             return Task.Run(() =>
             {
-                var wnds = GetWindowManageService().CollectWindowHandles(true);
+                var wnds = GetServiceProvider().GetWindowManageService().CollectWindowHandles(true);
                 foreach (var item in wnds)
                 {
-                    Win32Methods.PostMessage(int.Parse(item), Win32Constants.WM_CLOSE, nint.Zero, nint.Zero);
+                    GetServiceProvider().GetWindowManageService().CloseWindowByHdl(int.Parse(item));
                 };
             });
         }
 
         protected override ActionOptions GetActionOption()
         {
-            return new UIA3ActionOptions(automation, GetWindowManageService().getCurrentWindow(null), GetElementFinderService());
+            return new UIA3ActionOptions(automation, GetServiceProvider().GetWindowManageService().getCurrentWindow(null), GetServiceProvider());
         }
     }
 }

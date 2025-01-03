@@ -9,7 +9,7 @@ namespace UIADriver.uia3.pattern
     public class UIA3WindowPattern : WindowPatternService<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         protected IUIAutomation automation;
-        public UIA3WindowPattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3WindowPattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -63,7 +63,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsWindowPatternAvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_WindowPatternId);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsWindowPatternAvailablePropertyId))
             {
                 throw new InvalidArgument("Window pattern is not available for this element");

@@ -4,7 +4,7 @@ namespace UIADriver.services.pattern
 {
     public abstract class SelectionPattern2Service<T, U> : PatternService<T, U>
     {
-        protected SelectionPattern2Service(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
+        protected SelectionPattern2Service(ServiceProvider<T, U> serviceProvider) : base(serviceProvider) { }
 
         public abstract FindElementResponse GetFirstSelectedItem(string elementId);
         public abstract FindElementResponse GetLastSelectedItem(string elementId);

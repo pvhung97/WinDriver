@@ -7,7 +7,7 @@ namespace UIADriver.services.pattern
 {
     public abstract class WindowPatternService<T, U> : PatternService<T, U>
     {
-        protected WindowPatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
+        protected WindowPatternService(ServiceProvider<T, U> serviceProvider) : base(serviceProvider) { }
 
         public abstract void SetVisualState(string elementId, string state);
         public abstract void WaitForInputIdle(string elementId, int timeout);

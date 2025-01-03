@@ -6,11 +6,11 @@ using UIADriver.services;
 
 namespace UIADriver.uia3.sourcebuilder
 {
-    public abstract class PageSourceBuilder : PageSourceService<IUIAutomationElement>
+    public abstract class PageSourceBuilder : PageSourceService<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         protected IUIAutomation automation;
 
-        public PageSourceBuilder(IUIAutomation automation, SessionCapabilities capabilities, ElementAttributeService<IUIAutomationElement> attrService) : base(capabilities, attrService)
+        public PageSourceBuilder(IUIAutomation automation, SessionCapabilities capabilities, ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider) : base(capabilities, serviceProvider)
         {
             this.automation = automation;
         }
@@ -46,7 +46,7 @@ namespace UIADriver.uia3.sourcebuilder
                             UIA3PropertyEnum propEnum = (UIA3PropertyEnum)propId;
                             string? propName = Enum.GetName(propEnum);
                             if (string.IsNullOrEmpty(propName)) break;
-                            var value = attrService.GetAttributeString(element, propName, false);
+                            var value = serviceProvider.GetElementAttributeService().GetAttributeString(element, propName, false);
                             if (!string.IsNullOrEmpty(value)) rs.SetAttributeValue(propName, value);
                             break;
                     }

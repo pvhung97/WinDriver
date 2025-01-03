@@ -7,7 +7,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2VirtualizedItemPattern : VirtualizedItemPatternService<AutomationElement, CacheRequest>
     {
-        public UIA2VirtualizedItemPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2VirtualizedItemPattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override void Realize(string elementId)
         {
@@ -20,7 +20,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsVirtualizedItemPatternAvailableProperty);
             cacheRequest.Add(VirtualizedItemPattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsVirtualizedItemPatternAvailableProperty))
             {
                 throw new InvalidArgument("Virtualized item pattern is not available for this element");

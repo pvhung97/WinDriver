@@ -8,7 +8,7 @@ namespace UIADriver.uia3.pattern
     public class UIA3TransformPattern2 : TransformPattern2Service<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         protected IUIAutomation automation;
-        public UIA3TransformPattern2(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3TransformPattern2(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -52,7 +52,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsTransformPattern2AvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_TransformPattern2Id);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsTransformPattern2AvailablePropertyId))
             {
                 throw new InvalidArgument("Transform pattern 2 is not available for this element");

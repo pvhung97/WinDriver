@@ -9,7 +9,7 @@ namespace UIADriver.uia3.pattern
     public class UIA3SpreadSheetItemPattern : SpreadSheetItemPatternService<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         protected IUIAutomation automation;
-        public UIA3SpreadSheetItemPattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3SpreadSheetItemPattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -28,7 +28,7 @@ namespace UIADriver.uia3.pattern
                 {
                     try
                     {
-                        string itemId = finderService.RegisterElement(elementArr.GetElement(i));
+                        string itemId = serviceProvider.GetElementFinderService().RegisterElement(elementArr.GetElement(i));
                         rs.Add(new FindElementResponse(itemId));
                     }
                     catch { }
@@ -41,7 +41,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsSpreadsheetItemPatternAvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_SpreadsheetItemPatternId);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsSpreadsheetItemPatternAvailablePropertyId))
             {
                 throw new InvalidArgument("Spread sheet item pattern is not available for this element");

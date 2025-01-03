@@ -7,7 +7,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2InvokePattern : InvokePatternService<AutomationElement, CacheRequest>
     {
-        public UIA2InvokePattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2InvokePattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override void Invoke(string elementId)
         {
@@ -20,7 +20,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsInvokePatternAvailableProperty);
             cacheRequest.Add(InvokePattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsInvokePatternAvailableProperty))
             {
                 throw new InvalidArgument("Invoke pattern is not available for this element");

@@ -8,7 +8,7 @@ namespace UIADriver.uia3.pattern
     public class UIA3ScrollItemPattern : ScrollItemPatternService<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         protected IUIAutomation automation;
-        public UIA3ScrollItemPattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3ScrollItemPattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -24,7 +24,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsScrollItemPatternAvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_ScrollItemPatternId);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsScrollItemPatternAvailablePropertyId))
             {
                 throw new InvalidArgument("Scroll item pattern is not available for this element");

@@ -10,12 +10,12 @@ namespace UIADriver.uia2.actionoptions
     public class UIA2ActionOptions : ActionOptions
     {
         protected AutomationElement topLevelWindow;
-        protected ElementFinderService<AutomationElement, CacheRequest> elementFinder;
+        protected ServiceProvider<AutomationElement, CacheRequest> serviceProvider;
 
-        public UIA2ActionOptions(AutomationElement topLevelWindow, ElementFinderService<AutomationElement, CacheRequest> elementFinder)
+        public UIA2ActionOptions(AutomationElement topLevelWindow, ServiceProvider<AutomationElement, CacheRequest> serviceProvider)
         {
             this.topLevelWindow = topLevelWindow;
-            this.elementFinder = elementFinder;
+            this.serviceProvider = serviceProvider;
         }
 
         public override void AssertPositionInViewPort(int x, int y)
@@ -53,7 +53,7 @@ namespace UIADriver.uia2.actionoptions
                 origin.AsObject().TryGetPropertyValue("element-6066-11e4-a52e-4f735466cecf", out var elementId);
                 if (elementId != null)
                 {
-                    var element = elementFinder.GetElement(elementId.ToString());
+                    var element = serviceProvider.GetElementFinderService().GetElement(elementId.ToString());
                     var rect = element.Cached.BoundingRectangle;
 
                     var windowLocation = GetCurrentWindowLocation();

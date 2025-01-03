@@ -2,13 +2,11 @@
 {
     public abstract class PatternService<T, U>
     {
-        protected ElementFinderService<T, U> finderService;
-        protected ElementAttributeService<T> attributeService;
+        protected ServiceProvider<T, U> serviceProvider;
 
-        public PatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService)
+        public PatternService(ServiceProvider<T, U> serviceProvider)
         {
-            this.finderService = finderService;
-            this.attributeService = attributeService;
+            this.serviceProvider = serviceProvider;
         }
 
         protected abstract T AssertPattern(string elementId, U cacheRequest);

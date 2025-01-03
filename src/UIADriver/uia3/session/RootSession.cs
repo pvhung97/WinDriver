@@ -4,8 +4,7 @@ using UIADriver.actions;
 using UIADriver.dto.response;
 using UIADriver.services;
 using UIADriver.uia3.actionoptions;
-using UIADriver.uia3.sourcebuilder;
-using UIADriver.uia3.wndmange;
+using UIADriver.uia3.serviceProvider;
 
 namespace UIADriver.uia3.session
 {
@@ -13,21 +12,10 @@ namespace UIADriver.uia3.session
     {
         public RootSession(SessionCapabilities capabilities) : base(capabilities) { }
 
-        protected override PageSourceService<IUIAutomationElement> GetPageSourceService()
+        protected override ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> GetServiceProvider()
         {
-            if (PageSourceService == null)
-            {
-                PageSourceService = new RootPageSourceBuilder(automation, capabilities, GetElementAttributeService());
-            }
-            return PageSourceService;
-        }
-        protected override WindowManageService<IUIAutomationElement, IUIAutomationCacheRequest> GetWindowManageService()
-        {
-            if (WindowManageService == null)
-            {
-                WindowManageService = new RootWindowManage(automation, GetElementFinderService());
-            }
-            return WindowManageService;
+            if (serviceProvider == null) serviceProvider = new RootSessionServiceProvider(capabilities, automation);
+            return serviceProvider;
         }
 
         public override Task CloseSession()
@@ -45,19 +33,19 @@ namespace UIADriver.uia3.session
 
         public override FindElementResponse GetActiveElement()
         {
-            return GetElementFinderService().GetActiveElement();
+            return GetServiceProvider().GetElementFinderService().GetActiveElement();
         }
 
         protected override ActionOptions GetActionOption()
         {
-            return new RootSessionActionOptions(automation, GetWindowManageService().getCurrentWindow(null), GetElementFinderService());
+            return new RootSessionActionOptions(automation, GetServiceProvider().GetWindowManageService().getCurrentWindow(null), GetServiceProvider());
         }
 
         public override string GetScreenshot()
         {
-            using (Bitmap bmp = GetScreenCaptureService().CaptureAllMonitor())
+            using (Bitmap bmp = GetServiceProvider().GetScreenCaptureService().CaptureAllMonitor())
             {
-                return GetScreenCaptureService().ConvertToBase64(bmp);
+                return GetServiceProvider().GetScreenCaptureService().ConvertToBase64(bmp);
             }
         }
     }

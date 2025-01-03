@@ -20,11 +20,11 @@ namespace UIADriver.uia3.session
             p.Start();
 
             Thread.Sleep(capabilities.delayAfterOpenApp);
-            var pids = GetWindowManageService().InitPids(p.Id);
+            var pids = GetServiceProvider().GetWindowManageService().InitPids(p.Id);
             if (pids.Count == 1 && p.HasExited) throw new SessionNotStartException("Session cannot be created. Check if provided path can be execute");
-            var windows = GetWindowManageService().CollectWindows();
+            var windows = GetServiceProvider().GetWindowManageService().CollectWindows();
             if (windows.Count == 0) throw new SessionNotStartException("Session cannot be created. Cannot find any window");
-            GetWindowManageService().InitCurrentWnd(windows[0].window);
+            GetServiceProvider().GetWindowManageService().InitCurrentWnd(windows[0].window);
             Utilities.BringWindowToTop(windows[0].hdl);
             windows[0].window.SetFocus();
         }

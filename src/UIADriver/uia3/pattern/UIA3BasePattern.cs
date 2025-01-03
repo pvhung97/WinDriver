@@ -8,7 +8,7 @@ namespace UIADriver.uia3.pattern
     public class UIA3BasePattern : BasePatternService<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         protected IUIAutomation automation;
-        public UIA3BasePattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3BasePattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -26,7 +26,7 @@ namespace UIADriver.uia3.pattern
                 {
                     try
                     {
-                        string itemId = finderService.RegisterElement(elementArr.GetElement(i));
+                        string itemId = serviceProvider.GetElementFinderService().RegisterElement(elementArr.GetElement(i));
                         rs.Add(new FindElementResponse(itemId));
                     }
                     catch { }
@@ -48,7 +48,7 @@ namespace UIADriver.uia3.pattern
                 {
                     try
                     {
-                        string itemId = finderService.RegisterElement(elementArr.GetElement(i));
+                        string itemId = serviceProvider.GetElementFinderService().RegisterElement(elementArr.GetElement(i));
                         rs.Add(new FindElementResponse(itemId));
                     }
                     catch { }
@@ -70,7 +70,7 @@ namespace UIADriver.uia3.pattern
                 {
                     try
                     {
-                        string itemId = finderService.RegisterElement(elementArr.GetElement(i));
+                        string itemId = serviceProvider.GetElementFinderService().RegisterElement(elementArr.GetElement(i));
                         rs.Add(new FindElementResponse(itemId));
                     }
                     catch { }
@@ -84,7 +84,7 @@ namespace UIADriver.uia3.pattern
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_LabeledByPropertyId);
             var element = AssertPattern(elementId, cacheRequest);
-            return new FindElementResponse(finderService.RegisterElement(element.CachedLabeledBy));
+            return new FindElementResponse(serviceProvider.GetElementFinderService().RegisterElement(element.CachedLabeledBy));
         }
 
         public override void SetFocus(string elementId)
@@ -95,7 +95,7 @@ namespace UIADriver.uia3.pattern
 
         protected override IUIAutomationElement AssertPattern(string elementId, IUIAutomationCacheRequest cacheRequest)
         {
-            return finderService.GetElement(elementId, cacheRequest);
+            return serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
         }
     }
 }

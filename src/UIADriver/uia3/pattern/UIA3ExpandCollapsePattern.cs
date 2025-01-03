@@ -9,7 +9,7 @@ namespace UIADriver.uia3.pattern
     public class UIA3ExpandCollapsePattern : ExpandCollapsePatternService<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         protected IUIAutomation automation;
-        public UIA3ExpandCollapsePattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3ExpandCollapsePattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -18,7 +18,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsExpandCollapsePatternAvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_ExpandCollapsePatternId);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsExpandCollapsePatternAvailablePropertyId))
             {
                 throw new InvalidArgument("Expand collapse pattern is not available for this element");

@@ -8,7 +8,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2GridPattern : GridPatternService<AutomationElement, CacheRequest>
     {
-        public UIA2GridPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2GridPattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override FindElementResponse GetItem(string elementId, int row, int column)
         {
@@ -18,7 +18,7 @@ namespace UIADriver.uia2.pattern
             FindElementResponse? rsp = null;
             try
             {
-                var itemId = finderService.RegisterElement(pattern.GetItem(row, column));
+                var itemId = serviceProvider.GetElementFinderService().RegisterElement(pattern.GetItem(row, column));
                 rsp = new FindElementResponse(itemId);
             } catch { }
             if (rsp == null) throw new NoSuchElement($"No item found with row {row} column {column}");
@@ -29,7 +29,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsGridPatternAvailableProperty);
             cacheRequest.Add(GridPattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsGridPatternAvailableProperty))
             {
                 throw new InvalidArgument("Grid pattern is not available for this element");

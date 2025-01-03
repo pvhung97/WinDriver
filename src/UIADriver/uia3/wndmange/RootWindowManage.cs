@@ -10,7 +10,7 @@ namespace UIADriver.uia3.wndmange
     {
         private IUIAutomationElement root;
 
-        public RootWindowManage(IUIAutomation automation, ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> elementFinder) : base(automation, elementFinder)
+        public RootWindowManage(IUIAutomation automation, ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider) : base(automation, serviceProvider)
         {
             this.root = automation.GetRootElement();
         }

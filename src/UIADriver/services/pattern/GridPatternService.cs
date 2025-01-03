@@ -4,7 +4,7 @@ namespace UIADriver.services.pattern
 {
     public abstract class GridPatternService<T, U> : PatternService<T, U>
     {
-        protected GridPatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
+        protected GridPatternService(ServiceProvider<T, U> serviceProvider) : base(serviceProvider) { }
 
         public abstract FindElementResponse GetItem(string elementId, int row, int column);
     }

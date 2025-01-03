@@ -6,9 +6,9 @@ using UIADriver.services;
 
 namespace UIADriver.uia2.sourcebuilder
 {
-    public abstract class PageSourceBuilder : PageSourceService<AutomationElement>
+    public abstract class PageSourceBuilder : PageSourceService<AutomationElement, CacheRequest>
     {
-        public PageSourceBuilder(SessionCapabilities capabilities, ElementAttributeService<AutomationElement> attributeService) : base(capabilities, attributeService) { }
+        public PageSourceBuilder(SessionCapabilities capabilities, ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(capabilities, serviceProvider) { }
 
         protected abstract void buildRecursive(XElement parent, Dictionary<XElement, AutomationElement> mapping, AutomationElement element, TreeWalker treeWalker, CacheRequest cacheRequest, int layer);
         protected abstract void findElementByPropertyRecursive(AutomationElement element, string propertyName, string? propertyValue, bool stopAtFirst, int layer, TreeWalker walker, CacheRequest request, List<AutomationElement> rs);
@@ -39,7 +39,7 @@ namespace UIADriver.uia2.sourcebuilder
                     {
                         string? attrName = UIA2PropertyDictionary.GetAutomationPropertyName(propId.Id);
                         if (string.IsNullOrEmpty(attrName)) continue;
-                        var value = attrService.GetAttributeString(element, attrName, false);
+                        var value = serviceProvider.GetElementAttributeService().GetAttributeString(element, attrName, false);
                         if (!string.IsNullOrEmpty(value)) rs.SetAttributeValue(attrName, value);
                     }
                 } catch (Exception ex)

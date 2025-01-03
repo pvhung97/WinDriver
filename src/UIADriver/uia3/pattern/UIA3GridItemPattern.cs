@@ -9,7 +9,7 @@ namespace UIADriver.uia3.pattern
     public class UIA3GridItemPattern : GridItemPatternService<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         protected IUIAutomation automation;
-        public UIA3GridItemPattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3GridItemPattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -18,7 +18,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsGridItemPatternAvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_GridItemPatternId);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsGridItemPatternAvailablePropertyId))
             {
                 throw new InvalidArgument("Grid item pattern is not available for this element");
@@ -32,7 +32,7 @@ namespace UIADriver.uia3.pattern
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_GridItemContainingGridPropertyId);
             var element = AssertPattern(elementId, cacheRequest);
             var pattern = (IUIAutomationGridItemPattern)element.GetCachedPattern(UIA_PatternIds.UIA_GridItemPatternId);
-            string gridId = finderService.RegisterElement(pattern.CachedContainingGrid);
+            string gridId = serviceProvider.GetElementFinderService().RegisterElement(pattern.CachedContainingGrid);
             return new FindElementResponse(gridId);
         }
     }

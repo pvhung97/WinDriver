@@ -2,7 +2,7 @@
 {
     public abstract class TogglePatternService<T, U> : PatternService<T, U>
     {
-        protected TogglePatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
+        protected TogglePatternService(ServiceProvider<T, U> serviceProvider) : base(serviceProvider) { }
 
         public abstract void Toggle(string elementId);
     }

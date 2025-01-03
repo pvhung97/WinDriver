@@ -8,7 +8,7 @@ namespace UIADriver.uia3.sourcebuilder
 {
     public class RootPageSourceBuilder : PageSourceBuilder
     {
-        public RootPageSourceBuilder(IUIAutomation automation, SessionCapabilities capabilities, ElementAttributeService<IUIAutomationElement> attrService) : base(automation, capabilities, attrService) { }
+        public RootPageSourceBuilder(IUIAutomation automation, SessionCapabilities capabilities, ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider) : base(automation, capabilities, serviceProvider) { }
 
         public override PageSource BuildPageSource(IUIAutomationElement startElement)
         {
@@ -86,7 +86,7 @@ namespace UIADriver.uia3.sourcebuilder
         {
             if (layer > capabilities.maxTreeDepth) return;
 
-            var propValue = attrService.GetAttributeString(element, propertyName, false);
+            var propValue = serviceProvider.GetElementAttributeService().GetAttributeString(element, propertyName, false);
             if (propertyValue == propValue || propValue != null && propValue.Equals(propertyValue))
             {
                 rs.Add(element);

@@ -6,7 +6,7 @@ using UIADriver.services;
 
 namespace UIADriver.uia3.actionoptions
 {
-    public class RootSessionActionOptions(IUIAutomation automation, IUIAutomationElement topLevelWindow, ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> elementFinder) : UIA3ActionOptions(automation, topLevelWindow, elementFinder)
+    public class RootSessionActionOptions(IUIAutomation automation, IUIAutomationElement topLevelWindow, ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider) : UIA3ActionOptions(automation, topLevelWindow, serviceProvider)
     {
         public override void AssertPositionInViewPort(int x, int y) { }
 
@@ -22,7 +22,7 @@ namespace UIADriver.uia3.actionoptions
                 origin.AsObject().TryGetPropertyValue("element-6066-11e4-a52e-4f735466cecf", out var elementId);
                 if (elementId != null)
                 {
-                    var element = elementFinder.GetElement(elementId.ToString());
+                    var element = serviceProvider.GetElementFinderService().GetElement(elementId.ToString());
                     double[] rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
                     int x = (int)rect[0];
                     int y = (int)rect[1];

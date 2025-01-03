@@ -9,7 +9,7 @@ namespace UIADriver.uia3.pattern
     {
         protected IUIAutomation automation;
 
-        public UIA3DockPattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3DockPattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -18,7 +18,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsDockPatternAvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_DockPatternId);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool) element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsDockPatternAvailablePropertyId))
             {
                 throw new InvalidArgument("Dock pattern is not available for this element");

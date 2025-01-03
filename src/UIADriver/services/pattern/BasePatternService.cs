@@ -4,7 +4,7 @@ namespace UIADriver.services.pattern
 {
     public abstract class BasePatternService<T, U> : PatternService<T, U>
     {
-        protected BasePatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
+        protected BasePatternService(ServiceProvider<T, U> serviceProvider) : base(serviceProvider) { }
 
         public abstract void SetFocus(string elementId);
         public abstract FindElementResponse GetLabeledBy(string elementId);

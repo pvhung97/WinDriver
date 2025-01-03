@@ -7,7 +7,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2RangeValuePattern : RangeValuePatternService<AutomationElement, CacheRequest>
     {
-        public UIA2RangeValuePattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2RangeValuePattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override void SetValue(string elementId, double value)
         {
@@ -20,7 +20,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsRangeValuePatternAvailableProperty);
             cacheRequest.Add(RangeValuePattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsRangeValuePatternAvailableProperty))
             {
                 throw new InvalidArgument("Range value pattern is not available for this element");

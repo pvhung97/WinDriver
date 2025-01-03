@@ -7,7 +7,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2ValuePattern : ValuePatternService<AutomationElement, CacheRequest>
     {
-        public UIA2ValuePattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2ValuePattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override void SetValue(string elementId, string value)
         {
@@ -20,7 +20,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsValuePatternAvailableProperty);
             cacheRequest.Add(ValuePattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsValuePatternAvailableProperty))
             {
                 throw new InvalidArgument("Value pattern is not available for this element");

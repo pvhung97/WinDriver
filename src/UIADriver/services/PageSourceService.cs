@@ -2,16 +2,16 @@
 
 namespace UIADriver.services
 {
-    public abstract class PageSourceService<T>
+    public abstract class PageSourceService<T, U>
     {
         protected SessionCapabilities capabilities;
-        protected ElementAttributeService<T> attrService;
+        protected ServiceProvider<T, U> serviceProvider;
 
-        public PageSourceService(SessionCapabilities capabilities, ElementAttributeService<T> attrService)
+        public PageSourceService(SessionCapabilities capabilities, ServiceProvider<T, U> serviceProvider)
         {
             this.capabilities = capabilities;
 
-            this.attrService = attrService;
+            this.serviceProvider = serviceProvider;
         }
 
         public abstract PageSource BuildPageSource(T startElement);

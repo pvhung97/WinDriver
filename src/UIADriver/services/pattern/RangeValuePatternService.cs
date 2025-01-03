@@ -2,7 +2,7 @@
 {
     public abstract class RangeValuePatternService<T, U> : PatternService<T, U>
     {
-        protected RangeValuePatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
+        protected RangeValuePatternService(ServiceProvider<T, U> serviceProvider) : base(serviceProvider) { }
 
         public abstract void SetValue(string elementId, double value);
     }

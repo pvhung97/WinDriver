@@ -10,7 +10,7 @@ namespace UIADriver.uia3.pattern
     {
         protected IUIAutomation automation;
 
-        public UIA3GridPattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3GridPattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -19,7 +19,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsGridPatternAvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_GridPatternId);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsGridPatternAvailablePropertyId))
             {
                 throw new InvalidArgument("Grid pattern is not available for this element");
@@ -35,7 +35,7 @@ namespace UIADriver.uia3.pattern
             FindElementResponse? rsp = null;
             try
             {
-                var itemId = finderService.RegisterElement(pattern.GetItem(row, column));
+                var itemId = serviceProvider.GetElementFinderService().RegisterElement(pattern.GetItem(row, column));
                 rsp = new FindElementResponse(itemId);
             } catch { }
             if (rsp == null) throw new NoSuchElement($"No item found with row {row} column {column}");

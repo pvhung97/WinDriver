@@ -9,7 +9,7 @@ namespace UIADriver.uia3.pattern
     {
         protected IUIAutomation automation;
 
-        public UIA3MultipleViewPattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3MultipleViewPattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -41,7 +41,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsMultipleViewPatternAvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_MultipleViewPatternId);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsMultipleViewPatternAvailablePropertyId))
             {
                 throw new InvalidArgument("Multiple view pattern is not available for this element");

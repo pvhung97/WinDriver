@@ -7,7 +7,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2ScrollItemPattern : ScrollItemPatternService<AutomationElement, CacheRequest>
     {
-        public UIA2ScrollItemPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2ScrollItemPattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override void ScrollIntoView(string elementId)
         {
@@ -20,7 +20,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsScrollItemPatternAvailableProperty);
             cacheRequest.Add(ScrollItemPattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsScrollItemPatternAvailableProperty))
             {
                 throw new InvalidArgument("Scroll item pattern is not available for this element");

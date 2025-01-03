@@ -7,7 +7,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2MultipleViewPattern : MultipleViewPatternService<AutomationElement, CacheRequest>
     {
-        public UIA2MultipleViewPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2MultipleViewPattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override List<int> GetSupportedViewIds(string elementId)
         {
@@ -36,7 +36,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsMultipleViewPatternAvailableProperty);
             cacheRequest.Add(MultipleViewPattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsMultipleViewPatternAvailableProperty))
             {
                 throw new InvalidArgument("Multiple view pattern is not available for this element");

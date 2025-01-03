@@ -4,7 +4,7 @@ namespace UIADriver.services.pattern
 {
     public abstract class SpreadSheetPatternService<T, U> : PatternService<T, U>
     {
-        protected SpreadSheetPatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
+        protected SpreadSheetPatternService(ServiceProvider<T, U> serviceProvider) : base(serviceProvider) { }
 
         public abstract FindElementResponse GetItemByName(string elementId, string name);
     }

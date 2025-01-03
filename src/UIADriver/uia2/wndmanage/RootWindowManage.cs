@@ -10,7 +10,7 @@ namespace UIADriver.uia2.wndmanage
     {
         protected AutomationElement root;
 
-        public RootWindowManage(ElementFinderService<AutomationElement, CacheRequest> elementFinder) : base(elementFinder)
+        public RootWindowManage(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider)
         {
             root = AutomationElement.RootElement;
         }

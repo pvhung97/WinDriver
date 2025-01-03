@@ -8,7 +8,7 @@ namespace UIADriver.uia3.pattern
     public class UIA3VirtualizedItemPattern : VirtualizedItemPatternService<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         protected IUIAutomation automation;
-        public UIA3VirtualizedItemPattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3VirtualizedItemPattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -24,7 +24,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsVirtualizedItemPatternAvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_VirtualizedItemPatternId);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsVirtualizedItemPatternAvailablePropertyId))
             {
                 throw new InvalidArgument("Virtualized item pattern is not available for this element");

@@ -9,7 +9,7 @@ namespace UIADriver.uia3.pattern
     public class UIA3TableItemPattern : TableItemPatternService<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         protected IUIAutomation automation;
-        public UIA3TableItemPattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3TableItemPattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -28,7 +28,7 @@ namespace UIADriver.uia3.pattern
                 {
                     try
                     {
-                        string itemId = finderService.RegisterElement(elementArr.GetElement(i));
+                        string itemId = serviceProvider.GetElementFinderService().RegisterElement(elementArr.GetElement(i));
                         rs.Add(new FindElementResponse(itemId));
                     }
                     catch { }
@@ -51,7 +51,7 @@ namespace UIADriver.uia3.pattern
                 {
                     try
                     {
-                        string itemId = finderService.RegisterElement(elementArr.GetElement(i));
+                        string itemId = serviceProvider.GetElementFinderService().RegisterElement(elementArr.GetElement(i));
                         rs.Add(new FindElementResponse(itemId));
                     }
                     catch { }
@@ -64,7 +64,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsTableItemPatternAvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_TableItemPatternId);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsTableItemPatternAvailablePropertyId))
             {
                 throw new InvalidArgument("Table item pattern is not available for this element");

@@ -8,16 +8,14 @@ namespace UIADriver.services
         protected Dictionary<string, T> cachedElement;
         protected Dictionary<string, string> cachedRuntimeId;
 
-        protected PageSourceService<T> pageSourceService;
-        protected ElementAttributeService<T> attrService;
+        protected ServiceProvider<T, U> serviceProvider;
 
-        public ElementFinderService(PageSourceService<T> pageSourceService, ElementAttributeService<T> attrService)
+        public ElementFinderService(ServiceProvider<T, U> serviceProvider)
         {
             this.cachedElement = [];
             this.cachedRuntimeId = [];
 
-            this.pageSourceService = pageSourceService;
-            this.attrService = attrService;
+            this.serviceProvider = serviceProvider;
         }
 
         public void ResetCache()
@@ -28,7 +26,7 @@ namespace UIADriver.services
 
         public string RegisterElement(T element)
         {
-            string? runtimeId = attrService.GetAttributeString(element, "RuntimeId");
+            string? runtimeId = serviceProvider.GetElementAttributeService().GetAttributeString(element, "RuntimeId");
             if (runtimeId == null || runtimeId.Length == 0)
             {
                 string newId = Guid.NewGuid().ToString();

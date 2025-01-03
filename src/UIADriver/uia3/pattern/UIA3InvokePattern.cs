@@ -9,7 +9,7 @@ namespace UIADriver.uia3.pattern
     {
         protected IUIAutomation automation;
 
-        public UIA3InvokePattern(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3InvokePattern(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -25,7 +25,7 @@ namespace UIADriver.uia3.pattern
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsInvokePatternAvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_InvokePatternId);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsInvokePatternAvailablePropertyId))
             {
                 throw new InvalidArgument("Invoke pattern is not available for this element");

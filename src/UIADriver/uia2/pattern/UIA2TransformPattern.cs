@@ -7,7 +7,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2TransformPattern : TransformPatternService<AutomationElement, CacheRequest>
     {
-        public UIA2TransformPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2TransformPattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override void Move(string elementId, double x, double y)
         {
@@ -34,7 +34,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsTransformPatternAvailableProperty);
             cacheRequest.Add(TransformPattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsTransformPatternAvailableProperty))
             {
                 throw new InvalidArgument("Transform pattern is not available for this element");

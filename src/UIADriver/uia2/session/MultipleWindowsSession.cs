@@ -1,11 +1,8 @@
 ﻿using System.Windows.Automation;
 using UIADriver.actions;
-using UIADriver.win32;
-using UIADriver.win32native;
-using UIADriver.uia2.sourcebuilder;
 using UIADriver.services;
-using UIADriver.uia2.wndmanage;
 using UIADriver.uia2.actionoptions;
+using UIADriver.uia2.serviceProvider;
 
 namespace UIADriver.uia2.session
 {
@@ -13,38 +10,27 @@ namespace UIADriver.uia2.session
     {
         protected MultipleWindowsSession(SessionCapabilities capabilities) : base(capabilities) { }
 
-        protected override PageSourceService<AutomationElement> GetPageSourceService()
+        protected override ServiceProvider<AutomationElement, CacheRequest> GetServiceProvider()
         {
-            if (PageSourceService == null)
-            {
-                PageSourceService = new WindowPageSourceBuilder(capabilities, GetElementAttributeService());
-            }
-            return PageSourceService;
-        }
-        protected override WindowManageService<AutomationElement, CacheRequest> GetWindowManageService()
-        {
-            if (WindowManageService == null)
-            {
-                WindowManageService = new MultipleWindowManage(GetElementFinderService());
-            }
-            return WindowManageService;
+            if (serviceProvider == null) serviceProvider = new MultipleWindowSessionServiceProvider(capabilities);
+            return serviceProvider;
         }
 
         public override Task CloseSession()
         {
             return Task.Run(() =>
             {
-                var wnds = GetWindowManageService().CollectWindowHandles(true);
+                var wnds = GetServiceProvider().GetWindowManageService().CollectWindowHandles(true);
                 foreach (var item in wnds)
                 {
-                    Win32Methods.PostMessage(int.Parse(item), Win32Constants.WM_CLOSE, nint.Zero, nint.Zero);
+                    GetServiceProvider().GetWindowManageService().CloseWindowByHdl(int.Parse(item));
                 };
             });
         }
         
         protected override ActionOptions GetActionOption()
         {
-            return new UIA2ActionOptions(GetWindowManageService().getCurrentWindow(null), GetElementFinderService());
+            return new UIA2ActionOptions(GetServiceProvider().GetWindowManageService().getCurrentWindow(null), GetServiceProvider());
         }
     }
 }

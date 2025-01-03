@@ -4,7 +4,7 @@ namespace UIADriver.services.pattern
 {
     public abstract class SelectionItemPatternService<T, U> : PatternService<T, U>
     {
-        protected SelectionItemPatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
+        protected SelectionItemPatternService(ServiceProvider<T, U> serviceProvider) : base(serviceProvider) { }
 
         public abstract void Select(string elementId);
         public abstract void AddToSelection(string elementId);

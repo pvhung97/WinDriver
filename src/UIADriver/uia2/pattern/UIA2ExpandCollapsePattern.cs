@@ -7,7 +7,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2ExpandCollapsePattern : ExpandCollapsePatternService<AutomationElement, CacheRequest>
     {
-        public UIA2ExpandCollapsePattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2ExpandCollapsePattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override void ExpandOrCollapseElement(string elementId, bool expand)
         {
@@ -21,7 +21,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsExpandCollapsePatternAvailableProperty);
             cacheRequest.Add(ExpandCollapsePattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsExpandCollapsePatternAvailableProperty))
             {
                 throw new InvalidArgument("Expand collapse pattern is not available for this element");

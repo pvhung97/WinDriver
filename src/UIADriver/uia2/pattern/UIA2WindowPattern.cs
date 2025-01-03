@@ -8,7 +8,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2WindowPattern : WindowPatternService<AutomationElement, CacheRequest>
     {
-        public UIA2WindowPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2WindowPattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override void Close(string elementId)
         {
@@ -59,7 +59,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsWindowPatternAvailableProperty);
             cacheRequest.Add(WindowPattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsWindowPatternAvailableProperty))
             {
                 throw new InvalidArgument("Window pattern is not available for this element");

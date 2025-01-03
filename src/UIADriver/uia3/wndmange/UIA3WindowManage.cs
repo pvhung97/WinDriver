@@ -1,6 +1,9 @@
 ﻿using Interop.UIAutomationClient;
+using System.Diagnostics;
 using UIADriver.dto.response;
 using UIADriver.services;
+using UIADriver.win32;
+using UIADriver.win32native;
 
 namespace UIADriver.uia3.wndmange
 {
@@ -8,7 +11,7 @@ namespace UIADriver.uia3.wndmange
     {
         protected IUIAutomation automation;
 
-        public UIA3WindowManage(IUIAutomation automation, ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> elementFinder) : base(elementFinder)
+        public UIA3WindowManage(IUIAutomation automation, ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider) : base(serviceProvider)
         { 
             this.automation = automation;
         }

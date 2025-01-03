@@ -15,12 +15,12 @@ namespace UIADriver.uia2.wndmanage
     {
         protected AutomationElement? currentWnd;
 
-        public MultipleWindowManage(ElementFinderService<AutomationElement, CacheRequest> elementFinder) : base(elementFinder) { }
+        public MultipleWindowManage(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override List<string> CloseCurrentWindow()
         {
             int currentHdl = getCurrentWindow(null).Cached.NativeWindowHandle;
-            Win32Methods.PostMessage(currentHdl, Win32Constants.WM_CLOSE, nint.Zero, nint.Zero);
+            CloseWindowByHdl(currentHdl);
             return CollectWindowHandles();
         }
 
@@ -161,7 +161,7 @@ namespace UIADriver.uia2.wndmanage
                 throw new NoSuchWindowException("No such window with handle: " + rq.handle);
             }
 
-            if (newHdl != currentHdl) elementFinder.ResetCache();
+            if (newHdl != currentHdl) serviceProvider.GetElementFinderService().ResetCache();
             currentWnd = rs.window;
         }
 

@@ -23,11 +23,11 @@ namespace UIADriver.uia2.session
             if (pidW32 == 0) throw new SessionNotStartException("Session cannot be created. Cannot launch app with aumid " + capabilities.aumid);
             Thread.Sleep(capabilities.delayAfterOpenApp);
             int pid = Convert.ToInt32(pidW32);
-            var pids = GetWindowManageService().InitPids(pid);
+            var pids = GetServiceProvider().GetWindowManageService().InitPids(pid);
             var foundWindow = SearchForWindowLaunchedByApp(pids);
             if (foundWindow == null) throw new SessionNotStartException("Session cannot be created. Cannot find any window");
-            GetWindowManageService().InitPids(foundWindow.Item2);
-            GetWindowManageService().InitCurrentWnd(foundWindow.Item3);
+            GetServiceProvider().GetWindowManageService().InitPids(foundWindow.Item2);
+            GetServiceProvider().GetWindowManageService().InitCurrentWnd(foundWindow.Item3);
             Utilities.BringWindowToTop(foundWindow.Item1);
             foundWindow.Item3.SetFocus();
         }

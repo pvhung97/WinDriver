@@ -2,7 +2,7 @@
 {
     public abstract class MultipleViewPatternService<T, U> : PatternService<T, U>
     {
-        protected MultipleViewPatternService(ElementFinderService<T, U> finderService, ElementAttributeService<T> attributeService) : base(finderService, attributeService) { }
+        protected MultipleViewPatternService(ServiceProvider<T, U> serviceProvider) : base(serviceProvider) { }
 
         public abstract List<int> GetSupportedViewIds(string elementId);
         public abstract string GetViewName(string elementId, int viewId);

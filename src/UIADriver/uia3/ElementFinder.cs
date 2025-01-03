@@ -1,5 +1,4 @@
 ﻿using Interop.UIAutomationClient;
-using System.Xml.XPath;
 using UIADriver.dto.request;
 using UIADriver.dto.response;
 using UIADriver.exception;
@@ -11,7 +10,7 @@ namespace UIADriver.uia3
     {
         private IUIAutomation automation;
 
-        public ElementFinder(IUIAutomation automation, PageSourceService<IUIAutomationElement> pageSourceService, ElementAttributeService<IUIAutomationElement> attrService) : base(pageSourceService, attrService)
+        public ElementFinder(IUIAutomation automation, ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -64,12 +63,12 @@ namespace UIADriver.uia3
 
         private List<IUIAutomationElement> FindElementsWithXpath(string xpath, IUIAutomationElement topLevelWindow, bool stopAtFirst)
         {
-            return pageSourceService.ResolveXpath(topLevelWindow, xpath, stopAtFirst);
+            return serviceProvider.GetPageSourceService().ResolveXpath(topLevelWindow, xpath, stopAtFirst);
         }
 
         private List<IUIAutomationElement> FindElementsWithPropertyNameAndValue(string propertyName, string value, IUIAutomationElement topLevelWindow, bool stopAtFirst)
         {
-            return pageSourceService.FindElementByProperty(topLevelWindow, propertyName, value, stopAtFirst);
+            return serviceProvider.GetPageSourceService().FindElementByProperty(topLevelWindow, propertyName, value, stopAtFirst);
         }
 
         public override IUIAutomationElement GetElement(string id)

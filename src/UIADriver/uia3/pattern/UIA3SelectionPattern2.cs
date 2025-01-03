@@ -9,7 +9,7 @@ namespace UIADriver.uia3.pattern
     public class UIA3SelectionPattern2 : SelectionPattern2Service<IUIAutomationElement, IUIAutomationCacheRequest>
     {
         protected IUIAutomation automation;
-        public UIA3SelectionPattern2(ElementFinderService<IUIAutomationElement, IUIAutomationCacheRequest> finderService, ElementAttributeService<IUIAutomationElement> attributeService, IUIAutomation automation) : base(finderService, attributeService)
+        public UIA3SelectionPattern2(ServiceProvider<IUIAutomationElement, IUIAutomationCacheRequest> serviceProvider, IUIAutomation automation) : base(serviceProvider)
         {
             this.automation = automation;
         }
@@ -20,7 +20,7 @@ namespace UIADriver.uia3.pattern
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_Selection2CurrentSelectedItemPropertyId);
             var element = AssertPattern(elementId, cacheRequest);
             var pattern = (IUIAutomationSelectionPattern2)element.GetCachedPattern(UIA_PatternIds.UIA_SelectionPattern2Id);
-            return new FindElementResponse(finderService.RegisterElement(pattern.CachedCurrentSelectedItem));
+            return new FindElementResponse(serviceProvider.GetElementFinderService().RegisterElement(pattern.CachedCurrentSelectedItem));
         }
 
         public override FindElementResponse GetFirstSelectedItem(string elementId)
@@ -29,7 +29,7 @@ namespace UIADriver.uia3.pattern
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_Selection2FirstSelectedItemPropertyId);
             var element = AssertPattern(elementId, cacheRequest);
             var pattern = (IUIAutomationSelectionPattern2)element.GetCachedPattern(UIA_PatternIds.UIA_SelectionPattern2Id);
-            return new FindElementResponse(finderService.RegisterElement(pattern.CachedFirstSelectedItem));
+            return new FindElementResponse(serviceProvider.GetElementFinderService().RegisterElement(pattern.CachedFirstSelectedItem));
         }
 
         public override FindElementResponse GetLastSelectedItem(string elementId)
@@ -38,14 +38,14 @@ namespace UIADriver.uia3.pattern
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_Selection2LastSelectedItemPropertyId);
             var element = AssertPattern(elementId, cacheRequest);
             var pattern = (IUIAutomationSelectionPattern2)element.GetCachedPattern(UIA_PatternIds.UIA_SelectionPattern2Id);
-            return new FindElementResponse(finderService.RegisterElement(pattern.CachedLastSelectedItem));
+            return new FindElementResponse(serviceProvider.GetElementFinderService().RegisterElement(pattern.CachedLastSelectedItem));
         }
 
         protected override IUIAutomationElement AssertPattern(string elementId, IUIAutomationCacheRequest cacheRequest)
         {
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_IsSelectionPattern2AvailablePropertyId);
             cacheRequest.AddPattern(UIA_PatternIds.UIA_SelectionPattern2Id);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_IsSelectionPattern2AvailablePropertyId))
             {
                 throw new InvalidArgument("Selection pattern 2 is not available for this element");

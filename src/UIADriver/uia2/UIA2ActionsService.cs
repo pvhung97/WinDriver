@@ -5,7 +5,6 @@ using UIADriver.actions.action;
 using UIADriver.actions.inputsource;
 using UIADriver.exception;
 using UIADriver.services;
-using UIADriver.uia3;
 using Action = UIADriver.actions.action.Action;
 
 namespace UIADriver.uia2

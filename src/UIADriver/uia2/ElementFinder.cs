@@ -8,7 +8,7 @@ namespace UIADriver.uia2
 {
     public class ElementFinder :ElementFinderService<AutomationElement, CacheRequest>
     {
-        public ElementFinder(PageSourceService<AutomationElement> pageSourceService, ElementAttributeService<AutomationElement> attrService) : base(pageSourceService, attrService) { }
+        public ElementFinder(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override FindElementResponse FindElement(FindElementRequest request, AutomationElement topLevelWindow)
         {
@@ -60,12 +60,12 @@ namespace UIADriver.uia2
 
         private List<AutomationElement> FindElementsWithXpath(string xpath, AutomationElement topLevelWindow, bool stopAtFirst)
         {
-            return pageSourceService.ResolveXpath(topLevelWindow, xpath, stopAtFirst);
+            return serviceProvider.GetPageSourceService().ResolveXpath(topLevelWindow, xpath, stopAtFirst);
         }
 
         private List<AutomationElement> FindElementsWithPropertyNameAndValue(string propertyName, string value, AutomationElement topLevelWindow, bool stopAtFirst)
         {
-            return pageSourceService.FindElementByProperty(topLevelWindow, propertyName, value, stopAtFirst);
+            return serviceProvider.GetPageSourceService().FindElementByProperty(topLevelWindow, propertyName, value, stopAtFirst);
         }
 
         public override AutomationElement GetElement(string id)

@@ -8,7 +8,7 @@ namespace UIADriver.uia2.pattern
 {
     public class UIA2TableItemPattern : TableItemPatternService<AutomationElement, CacheRequest>
     {
-        public UIA2TableItemPattern(ElementFinderService<AutomationElement, CacheRequest> finderService, ElementAttributeService<AutomationElement> attributeService) : base(finderService, attributeService) { }
+        public UIA2TableItemPattern(ServiceProvider<AutomationElement, CacheRequest> serviceProvider) : base(serviceProvider) { }
 
         public override List<FindElementResponse> GetColumnHeaderItems(string elementId)
         {
@@ -24,7 +24,7 @@ namespace UIADriver.uia2.pattern
                 {
                     try
                     {
-                        var itemId = finderService.RegisterElement(e);
+                        var itemId = serviceProvider.GetElementFinderService().RegisterElement(e);
                         rs.Add(new FindElementResponse(itemId));
                     }
                     catch { }
@@ -47,7 +47,7 @@ namespace UIADriver.uia2.pattern
                 {
                     try
                     {
-                        var itemId = finderService.RegisterElement(e);
+                        var itemId = serviceProvider.GetElementFinderService().RegisterElement(e);
                         rs.Add(new FindElementResponse(itemId));
                     }
                     catch { }
@@ -60,7 +60,7 @@ namespace UIADriver.uia2.pattern
         {
             cacheRequest.Add(AutomationElement.IsTableItemPatternAvailableProperty);
             cacheRequest.Add(TableItemPattern.Pattern);
-            var element = finderService.GetElement(elementId, cacheRequest);
+            var element = serviceProvider.GetElementFinderService().GetElement(elementId, cacheRequest);
             if (!(bool)element.GetCachedPropertyValue(AutomationElement.IsTableItemPatternAvailableProperty))
             {
                 throw new InvalidArgument("Table item pattern is not available for this element");

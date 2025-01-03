@@ -40,8 +40,8 @@ namespace UIADriver.uia3.session
             }
 
             if (foundWindows.Count == 0) throw new SessionNotStartException("Session cannot be created. Cannot find any window");
-            GetWindowManageService().InitPids(foundWindows.Select(item => item.Item2).ToList());
-            GetWindowManageService().InitCurrentWnd(foundWindows[0].Item3);
+            GetServiceProvider().GetWindowManageService().InitPids(foundWindows.Select(item => item.Item2).ToList());
+            GetServiceProvider().GetWindowManageService().InitCurrentWnd(foundWindows[0].Item3);
             Utilities.BringWindowToTop(foundWindows[0].Item1);
             foundWindows[0].Item3.SetFocus();
         }
