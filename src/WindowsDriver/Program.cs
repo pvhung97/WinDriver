@@ -55,6 +55,20 @@ app.Use(async (context, next) =>
 
         var response = await httpClient.SendAsync(message);
         var result = await response.Content.ReadAsStringAsync();
+
+        if (path.EndsWith("/window") && context.Request.Method.Equals("DELETE") && response.StatusCode == HttpStatusCode.OK)
+        {
+            var handleAfterCloseResponse = JsonSerializer.Deserialize<JsonObject>(result);
+            if (handleAfterCloseResponse != null)
+            {
+                handleAfterCloseResponse.TryGetPropertyValue("value", out var handleAfterClose);
+                if (handleAfterClose != null && handleAfterClose.GetValueKind() == JsonValueKind.Array && handleAfterClose.AsArray().Count() == 0)
+                {
+                    await SessionManage.Instance().CloseSession(sessionId);
+                }
+            }
+        }
+
         context.Response.StatusCode = (int)response.StatusCode;
         await context.Response.WriteAsJsonAsync(JsonNode.Parse(result));
 

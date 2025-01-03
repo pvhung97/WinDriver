@@ -32,11 +32,6 @@ namespace WindowsDriver
             string parentFolder = Directory.GetParent(currentExePath).FullName;
             string path = Path.Join(parentFolder, "UIADriver.exe");
 
-            #if DEBUG
-            string currentFolder = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
-            path = Path.Join(currentFolder, "UIADriver", "bin", "x64", "Release", "net8.0-windows", "UIADriver.exe");
-            #endif
-
             Debug.WriteLine(currentExePath);
             if (driverOptions != null)
             {
@@ -135,15 +130,13 @@ namespace WindowsDriver
         public async Task CloseSession(string sessionId, HttpContext context)
         {
             await CloseSession(sessionId);
-            sessionUrl.Remove(sessionId, out var removed);
-            if (removed != null) removed.Dispose();
             await context.Response.WriteAsJsonAsync(new Response(null));
         }
 
-        private async Task CloseSession(string sessionId)
+        public async Task CloseSession(string sessionId)
         {
             bool hasSession = sessionUrl.TryGetValue(sessionId, out var sessionInfo);
-            if (hasSession && sessionInfo != null)
+            if (hasSession && sessionInfo != null && !sessionInfo.p.HasExited)
             {
                 //  Tell driver to shutdown
                 string url = sessionInfo.url + "/session/" + sessionId;
@@ -160,6 +153,9 @@ namespace WindowsDriver
                     sessionInfo.p.Kill();
                 }
             }
+
+            sessionUrl.Remove(sessionId, out var removed);
+            removed?.Dispose();
         }
 
         public SessionInfo? FindSessionInfo(string sessionId)

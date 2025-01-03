@@ -183,10 +183,6 @@ app.MapDelete("/session/{id}/window", async context =>
 {
     var afterClosed = getSession().CloseCurrentWindow();
     await context.Response.WriteAsJsonAsync(new Response(afterClosed));
-    if (afterClosed.Count == 0)
-    {
-        _ = app.StopAsync();
-    }
 });
 
 app.MapPost("/session/{id}/window", async context =>
