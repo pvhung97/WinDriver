@@ -20,24 +20,32 @@ namespace UIADriver.uia2.session
             var walker = new TreeWalker(Condition.TrueCondition);
 
             List<Tuple<int, int, AutomationElement>> foundWindows = [];
-            var element = walker.GetFirstChild(rootElement, cacheRequest);
-            while (element != null)
+            List<nint> allTopLevelHdl = GetServiceProvider().GetWindowManageService().CollectAllTopLevelHdl();
+            foreach (var hdl in allTopLevelHdl)
             {
-                var rect = element.Cached.BoundingRectangle;
-                var nativeHdl = element.Cached.NativeWindowHandle;
-                var pid = element.Cached.ProcessId;
-                var windowName = element.Cached.Name;
-
-                if (!Win32Methods.IsIconic(nativeHdl) && !double.IsInfinity(rect.Width) && rect.Width != 0)
+                AutomationElement? element = null;
+                try
                 {
-                    var match = Regex.Match(windowName, capabilities.windowNameRegex);
-                    if (match.Success && match.Value.Length == windowName.Length)
+                    element = AutomationElement.FromHandle(hdl);
+                    if (element != null) element = element.GetUpdatedCache(cacheRequest);
+                }
+                catch { }
+                if (element != null)
+                {
+                    var rect = element.Cached.BoundingRectangle;
+                    var nativeHdl = element.Cached.NativeWindowHandle;
+                    var pid = element.Cached.ProcessId;
+                    var windowName = element.Cached.Name;
+
+                    if (!Win32Methods.IsIconic(nativeHdl) && !double.IsInfinity(rect.Width) && rect.Width != 0)
                     {
-                        foundWindows.Add(Tuple.Create(nativeHdl, pid, element));
+                        var match = Regex.Match(windowName, capabilities.windowNameRegex);
+                        if (match.Success && match.Value.Length == windowName.Length)
+                        {
+                            foundWindows.Add(Tuple.Create(nativeHdl, pid, element));
+                        }
                     }
                 }
-
-                element = walker.GetNextSibling(element, cacheRequest);
             }
 
             if (foundWindows.Count == 0) throw new SessionNotStartException("Session cannot be created. Cannot find any window");

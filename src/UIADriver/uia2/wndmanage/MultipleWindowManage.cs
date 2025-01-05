@@ -174,39 +174,79 @@ namespace UIADriver.uia2.wndmanage
         {
             List<WndHdlAndPid> rs = new List<WndHdlAndPid>();
             UpdateProcessList();
-            var rootElement = AutomationElement.RootElement;
+
+            var allHwnd = CollectAllTopLevelHdl();
+
             var cacheRequest = new CacheRequest();
             cacheRequest.Add(AutomationElement.BoundingRectangleProperty);
             cacheRequest.Add(AutomationElement.NativeWindowHandleProperty);
             cacheRequest.Add(AutomationElement.ProcessIdProperty);
-            var walker = new TreeWalker(Condition.TrueCondition);
-
-            var element = walker.GetFirstChild(rootElement, cacheRequest);
-            while (element != null)
+            foreach (var item in allHwnd)
             {
+                AutomationElement? fromHdlElement = null;
                 try
                 {
-                    var rect = element.Cached.BoundingRectangle;
-                    var nativeHdl = element.Cached.NativeWindowHandle;
-                    var pid = element.Cached.ProcessId;
+                    fromHdlElement = AutomationElement.FromHandle(item);
+                    if (fromHdlElement != null) fromHdlElement = fromHdlElement.GetUpdatedCache(cacheRequest);
+                }
+                catch { }
+                if (fromHdlElement != null)
+                {
+                    var rect = fromHdlElement.Cached.BoundingRectangle;
+                    var nativeHdl = fromHdlElement.Cached.NativeWindowHandle;
+                    var pid = fromHdlElement.Cached.ProcessId;
 
+                    bool shouldAdd = false;
                     if (pids.Contains(pid))
+                    {
+                        shouldAdd = true;
+                    }
+                    else
+                    {
+                        var ancestorInTree = GetAncesetorWindowInUIATree(fromHdlElement);
+                        if (ancestorInTree != null)
+                        {
+                            ancestorInTree = ancestorInTree.GetUpdatedCache(cacheRequest);
+                            var ancestorPid = (int)ancestorInTree.GetCachedPropertyValue(AutomationElement.ProcessIdProperty);
+
+                            if (pids.Contains(ancestorPid))
+                            {
+                                shouldAdd = true;
+                            }
+                        }
+                    }
+
+                    if (shouldAdd)
                     {
                         if (includeIconic)
                         {
-                            rs.Add(new WndHdlAndPid(nativeHdl, pid, element));
+                            rs.Add(new WndHdlAndPid(nativeHdl, pid, fromHdlElement));
                         }
                         else if (!Win32Methods.IsIconic(nativeHdl) && !double.IsInfinity(rect.Width) && rect.Width != 0)
                         {
-                            rs.Add(new WndHdlAndPid(nativeHdl, pid, element));
+                            rs.Add(new WndHdlAndPid(nativeHdl, pid, fromHdlElement));
                         }
                     }
                 }
-                catch (Exception) { }
-
-                element = walker.GetNextSibling(element, cacheRequest);
             }
             return rs;
+        }
+
+        public AutomationElement? GetAncesetorWindowInUIATree(AutomationElement current)
+        {
+            var treeWalker = new TreeWalker(Condition.TrueCondition);
+            var parentPointer = current;
+            if (parentPointer == null) return null;
+
+            AutomationElement? ancestorPointer = treeWalker.GetParent(parentPointer);
+            while (ancestorPointer != null)
+            {
+                var newAncestor = treeWalker.GetParent(ancestorPointer);
+                if (newAncestor == null) break;
+                parentPointer = ancestorPointer;
+                ancestorPointer = newAncestor;
+            }
+            return parentPointer;
         }
 
     }

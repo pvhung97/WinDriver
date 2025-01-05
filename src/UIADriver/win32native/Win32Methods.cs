@@ -86,5 +86,15 @@ namespace UIADriver.win32native
 
         [DllImport("SHCore.dll", SetLastError = true)]
         public static extern bool SetProcessDpiAwareness(PROCESS_DPI_AWARENESS awareness);
+
+        public delegate bool EnumWindowsProc(nint hWnd, nint lParam);
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool IsWindowVisible(nint hwnd);
+
+        [DllImport("dwmapi.dll", SetLastError = true)]
+        public static extern int DwmGetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, out bool pvAttribute, int cbAttribute);
     }
 }

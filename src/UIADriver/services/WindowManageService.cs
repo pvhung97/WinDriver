@@ -1,8 +1,11 @@
 ﻿using System.Management;
+using System.Runtime.InteropServices;
 using UIADriver.dto.request;
 using UIADriver.dto.response;
 using UIADriver.win32;
 using UIADriver.win32native;
+using static UIADriver.win32native.Win32Enum;
+using static UIADriver.win32native.Win32Methods;
 
 namespace UIADriver.services
 {
@@ -80,6 +83,19 @@ namespace UIADriver.services
             pids = newPids.ToHashSet();
         }
 
+        public bool IsWindowVisible(int hwnd)
+        {
+            return Win32Methods.IsWindowVisible(hwnd) && !new HdlCollector().IsWindowCloaked(hwnd);
+        }
+
+        public List<nint> CollectAllTopLevelHdl()
+        {
+            var collector = new HdlCollector();
+            var proc = new EnumWindowsProc(collector.LoopWindow);
+            Win32Methods.EnumWindows(proc, 0);
+            return collector.hdlList;
+        }
+
         public class WndHdlAndPid
         {
             public int hdl;
@@ -91,6 +107,33 @@ namespace UIADriver.services
                 this.hdl = hdl;
                 this.pid = pid;
                 this.window = window;
+            }
+        }
+
+        public class HdlCollector
+        {
+            public List<nint> hdlList;
+
+            public HdlCollector()
+            {
+                this.hdlList = new List<nint>();
+            }
+
+            //  Refer to: https://devblogs.microsoft.com/oldnewthing/20200302-00/?p=103507
+            public bool IsWindowCloaked(nint hwnd)
+            {
+                bool isCloaked = false;
+                var success = Win32Methods.DwmGetWindowAttribute(hwnd, DwmWindowAttribute.Cloaked, out isCloaked, Marshal.SizeOf(isCloaked));
+                return isCloaked;
+            }
+
+            public bool LoopWindow(nint hWnd, nint lParam)
+            {
+                if (Win32Methods.IsWindowVisible(hWnd) && !IsWindowCloaked(hWnd))
+                {
+                    this.hdlList.Add(hWnd);
+                }
+                return true;
             }
         }
     }

@@ -17,26 +17,33 @@ namespace UIADriver.uia3.session
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_NamePropertyId);
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_ProcessIdPropertyId);
-            var walker = automation.CreateTreeWalker(automation.CreateTrueCondition());
 
             List<Tuple<int, int, IUIAutomationElement>> foundWindows = [];
-            var element = walker.GetFirstChildElementBuildCache(rootElement, cacheRequest);
-            while (element != null)
+            List<nint> allTopLevelHdl = GetServiceProvider().GetWindowManageService().CollectAllTopLevelHdl();
+            foreach (var hdl in allTopLevelHdl)
             {
-                var rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
-                var windowName = (string)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_NamePropertyId);
-                var nativeHdl = (int)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
-                var pid = (int)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_ProcessIdPropertyId);
-
-                if (!Win32Methods.IsIconic(nativeHdl) && !double.IsInfinity(rect[2]) && rect[2] != 0)
+                IUIAutomationElement? element = null;
+                try
                 {
-                    var match = Regex.Match(windowName, capabilities.windowNameRegex);
-                    if (match.Success && match.Value.Length == windowName.Length)
+                    element = automation.ElementFromHandleBuildCache(hdl, cacheRequest);
+                }
+                catch { }
+                if (element != null)
+                {
+                    var rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
+                    var windowName = (string)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_NamePropertyId);
+                    var nativeHdl = (int)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+                    var pid = (int)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_ProcessIdPropertyId);
+
+                    if (!Win32Methods.IsIconic(nativeHdl) && !double.IsInfinity(rect[2]) && rect[2] != 0)
                     {
-                        foundWindows.Add(Tuple.Create(nativeHdl, pid, element));
+                        var match = Regex.Match(windowName, capabilities.windowNameRegex);
+                        if (match.Success && match.Value.Length == windowName.Length)
+                        {
+                            foundWindows.Add(Tuple.Create(nativeHdl, pid, element));
+                        }
                     }
                 }
-                element = walker.GetNextSiblingElementBuildCache(element, cacheRequest);
             }
 
             if (foundWindows.Count == 0) throw new SessionNotStartException("Session cannot be created. Cannot find any window");

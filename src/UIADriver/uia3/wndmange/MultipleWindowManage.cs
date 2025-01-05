@@ -179,42 +179,83 @@ namespace UIADriver.uia3.wndmange
         {
             List<WndHdlAndPid> rs = [];
             UpdateProcessList();
-            var rootElement = automation.GetRootElement();
+
+            var allHwnd = CollectAllTopLevelHdl();
+
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_ProcessIdPropertyId);
-            var walker = automation.CreateTreeWalker(automation.CreateTrueCondition());
 
-            var element = walker.GetFirstChildElementBuildCache(rootElement, cacheRequest);
-            while (element != null)
+            foreach (var item in allHwnd)
             {
+                IUIAutomationElement? fromHdlElement = null;
                 try
                 {
-                    var rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
-                    var nativeHdl = (int)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
-                    var pid = (int)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_ProcessIdPropertyId);
+                    fromHdlElement = automation.ElementFromHandleBuildCache(item, cacheRequest);
+                }
+                catch { }
 
+                if (fromHdlElement != null)
+                {
+                    var rect = (double[])fromHdlElement.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
+                    var nativeHdl = (int)fromHdlElement.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+                    var pid = (int)fromHdlElement.GetCachedPropertyValue(UIA_PropertyIds.UIA_ProcessIdPropertyId);
+
+                    bool shouldAdd = false;
                     if (pids.Contains(pid))
+                    {
+                        shouldAdd = true;
+                    }
+                    else
+                    {
+                        var ancestorInTree = GetAncesetorWindowInUIATree(fromHdlElement);
+                        if (ancestorInTree != null)
+                        {
+                            ancestorInTree = ancestorInTree.BuildUpdatedCache(cacheRequest);
+                            var ancestorPid = (int)ancestorInTree.GetCachedPropertyValue(UIA_PropertyIds.UIA_ProcessIdPropertyId);
+
+                            if (pids.Contains(ancestorPid))
+                            {
+                                shouldAdd = true;
+                            }
+                        }
+                    }
+
+                    if (shouldAdd)
                     {
                         if (includeIconic)
                         {
-                            rs.Add(new WndHdlAndPid(nativeHdl, pid, element));
+                            shouldAdd = true;
+                            rs.Add(new WndHdlAndPid(nativeHdl, pid, fromHdlElement));
                         }
                         else if (!Win32Methods.IsIconic(nativeHdl) && !double.IsInfinity(rect[2]) && rect[2] != 0)
                         {
-                            rs.Add(new WndHdlAndPid(nativeHdl, pid, element));
+                            shouldAdd = true;
+                            rs.Add(new WndHdlAndPid(nativeHdl, pid, fromHdlElement));
                         }
                     }
                 }
-                catch (Exception) { }
-
-                element = walker.GetNextSiblingElementBuildCache(element, cacheRequest);
             }
             return rs;
         }
 
-        
+        public IUIAutomationElement? GetAncesetorWindowInUIATree(IUIAutomationElement current)
+        {
+            var treeWalker = automation.CreateTreeWalker(automation.CreateTrueCondition());
+            var parentPointer = current;
+            if (parentPointer == null) return null;
+
+            IUIAutomationElement? ancestorPointer = treeWalker.GetParentElement(parentPointer);
+            while (ancestorPointer != null)
+            {
+                var newAncestor = treeWalker.GetParentElement(ancestorPointer);
+                if (newAncestor == null) break;
+                parentPointer = ancestorPointer;
+                ancestorPointer = newAncestor;
+            }
+            return parentPointer;
+        }
 
     }
 }

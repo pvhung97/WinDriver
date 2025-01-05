@@ -9,17 +9,22 @@ namespace UIADriver.uia3.session
         public InjectWindowSession(SessionCapabilities capabilities) : base(capabilities)
         {
             if (capabilities.nativeWindowHandle == null) throw new SessionNotStartException("Session cannot be created. Cannot find window with handle " + capabilities.aumid);
+            if (!GetServiceProvider().GetWindowManageService().IsWindowVisible(capabilities.nativeWindowHandle.Value)) throw new SessionNotStartException("Session cannot be created. Cannot find window with handle " + capabilities.aumid);
 
             var rootElement = automation.GetRootElement();
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_ProcessIdPropertyId);
-            var walker = automation.CreateTreeWalker(automation.CreateTrueCondition());
 
             Tuple<int, int, IUIAutomationElement>? foundWindow = null;
-            var element = walker.GetFirstChildElementBuildCache(rootElement, cacheRequest);
-            while (element != null)
+            IUIAutomationElement? element = null;
+            try
+            {
+                element = automation.ElementFromHandleBuildCache(capabilities.nativeWindowHandle.Value, cacheRequest);
+            }
+            catch { }
+            if (element != null)
             {
                 var rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
                 var nativeHdl = (int)element.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
@@ -28,10 +33,7 @@ namespace UIADriver.uia3.session
                 if (!Win32Methods.IsIconic(nativeHdl) && !double.IsInfinity(rect[2]) && rect[2] != 0 && nativeHdl == capabilities.nativeWindowHandle)
                 {
                     foundWindow = Tuple.Create(nativeHdl, pid, element);
-                    break;
                 }
-
-                element = walker.GetNextSiblingElementBuildCache(element, cacheRequest);
             }
 
             if (foundWindow == null) throw new SessionNotStartException("Session cannot be created. Cannot find any window");

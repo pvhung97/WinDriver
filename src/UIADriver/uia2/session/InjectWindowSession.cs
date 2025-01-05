@@ -9,17 +9,23 @@ namespace UIADriver.uia2.session
         public InjectWindowSession(SessionCapabilities capabilities) : base(capabilities)
         {
             if (capabilities.nativeWindowHandle == null) throw new SessionNotStartException("Session cannot be created. Cannot find window with handle " + capabilities.aumid);
+            if (!GetServiceProvider().GetWindowManageService().IsWindowVisible(capabilities.nativeWindowHandle.Value)) throw new SessionNotStartException("Session cannot be created. Cannot find window with handle " + capabilities.aumid);
 
             var rootElement = AutomationElement.RootElement;
             var cacheRequest = new CacheRequest();
             cacheRequest.Add(AutomationElement.BoundingRectangleProperty);
             cacheRequest.Add(AutomationElement.NativeWindowHandleProperty);
             cacheRequest.Add(AutomationElement.ProcessIdProperty);
-            var walker = new TreeWalker(Condition.TrueCondition);
 
             Tuple<int, int, AutomationElement>? foundWindow = null;
-            var element = walker.GetFirstChild(rootElement, cacheRequest);
-            while (element != null)
+            AutomationElement? element = null;
+            try
+            {
+                element = AutomationElement.FromHandle(capabilities.nativeWindowHandle.Value);
+                if (element != null) element = element.GetUpdatedCache(cacheRequest);
+            }
+            catch { }
+            if (element != null)
             {
                 var rect = element.Cached.BoundingRectangle;
                 var nativeHdl = element.Cached.NativeWindowHandle;
@@ -28,10 +34,7 @@ namespace UIADriver.uia2.session
                 if (!Win32Methods.IsIconic(nativeHdl) && !double.IsInfinity(rect.Width) && rect.Width != 0 && nativeHdl == capabilities.nativeWindowHandle)
                 {
                     foundWindow = Tuple.Create(nativeHdl, pid, element);
-                    break;
                 }
-
-                element = walker.GetNextSibling(element, cacheRequest);
             }
 
             if (foundWindow == null) throw new SessionNotStartException("Session cannot be created. Cannot find any window");
