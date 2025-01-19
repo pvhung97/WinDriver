@@ -9,6 +9,7 @@
 	<UseWPF>true</UseWPF>
 	<BaseOutputPath>..\..\build</BaseOutputPath>
 	<ServerGarbageCollection>false</ServerGarbageCollection>
+	<ApplicationManifest>uiadriver.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>

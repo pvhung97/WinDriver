@@ -84,9 +84,6 @@ namespace UIADriver.win32native
         [DllImport("oleacc.dll")]
         public static extern uint GetStateText(uint dwStateBit, StringBuilder lpszStateBit, uint cchStateBitMax);
 
-        [DllImport("SHCore.dll", SetLastError = true)]
-        public static extern bool SetProcessDpiAwareness(PROCESS_DPI_AWARENESS awareness);
-
         public delegate bool EnumWindowsProc(nint hWnd, nint lParam);
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
