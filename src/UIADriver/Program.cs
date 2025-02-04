@@ -171,6 +171,11 @@ app.MapGet("/session/{id}/title", async context =>
     await context.Response.WriteAsJsonAsync(new Response(getSession().GetCurrentWindowTitle()));
 });
 
+app.MapGet("/session/{id}/url", async context =>
+{
+    await context.Response.WriteAsJsonAsync(new Response(getSession().GetCurrentWindowProcessPath()));
+});
+
 app.MapGet("/session/{id}/window", async context =>
 {
     await context.Response.WriteAsJsonAsync(new Response(getSession().GetCurrentWindowHdl()));

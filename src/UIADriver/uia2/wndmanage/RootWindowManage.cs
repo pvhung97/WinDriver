@@ -40,18 +40,18 @@ namespace UIADriver.uia2.wndmanage
             CacheRequest cacheRequest = new CacheRequest();
             cacheRequest.Add(AutomationElement.NativeWindowHandleProperty);
             cacheRequest.Add(AutomationElement.ProcessIdProperty);
-            var wnd = getCurrentWindow(cacheRequest);
+            var wnd = GetCurrentWindow(cacheRequest);
             return [new WndHdlAndPid(wnd.Cached.NativeWindowHandle, wnd.Cached.ProcessId, root)];
         }
 
-        public override AutomationElement getCurrentWindow(CacheRequest? cacheRequest)
+        public override AutomationElement GetCurrentWindow(CacheRequest? cacheRequest)
         {
             return cacheRequest == null ? AutomationElement.RootElement : AutomationElement.RootElement.GetUpdatedCache(cacheRequest);
         }
 
-        public override AutomationElement getCurrentWindowThenFocus(CacheRequest? cacheRequest)
+        public override AutomationElement GetCurrentWindowThenFocus(CacheRequest? cacheRequest)
         {
-            return getCurrentWindow(cacheRequest);
+            return GetCurrentWindow(cacheRequest);
         }
 
         public override void InitCurrentWnd(AutomationElement wnd) { }

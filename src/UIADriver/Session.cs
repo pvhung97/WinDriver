@@ -23,6 +23,7 @@ namespace UIADriver
         public abstract HashSet<string> CollectWindowHandles();
         public abstract Task CloseSession();
         public abstract string GetCurrentWindowTitle();
+        public abstract string GetCurrentWindowProcessPath();
         public abstract string GetCurrentWindowHdl();
         public abstract RectResponse GetCurrentWindowRect();
         public abstract RectResponse MinimizeCurrentWindow();

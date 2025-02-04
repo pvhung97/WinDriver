@@ -1,4 +1,5 @@
 ﻿using Interop.UIAutomationClient;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using UIADriver.actions;
@@ -63,6 +64,11 @@ namespace UIADriver.uia3.session
             return GetServiceProvider().GetWindowManageService().GetCurrentWindowTitle();
         }
 
+        public override string GetCurrentWindowProcessPath()
+        {
+            return GetServiceProvider().GetWindowManageService().GetCurrentWindowProcessPath();
+        }
+
         public override string GetCurrentWindowHdl()
         {
             return GetServiceProvider().GetWindowManageService().GetCurrentWindowHdl();
@@ -84,20 +90,20 @@ namespace UIADriver.uia3.session
 
         public override string GetPageSource()
         {
-            var wnd = GetServiceProvider().GetWindowManageService().getCurrentWindow(null);
+            var wnd = GetServiceProvider().GetWindowManageService().GetCurrentWindow(null);
             return GetServiceProvider().GetPageSourceService().BuildPageSource(wnd).pageSource.ToString();
         }
 
         public override FindElementResponse FindElement(JsonObject data)
         {
             FindElementRequest rq = FindElementRequest.Validate(data);
-            return GetServiceProvider().GetElementFinderService().FindElement(rq, GetServiceProvider().GetWindowManageService().getCurrentWindow(null));
+            return GetServiceProvider().GetElementFinderService().FindElement(rq, GetServiceProvider().GetWindowManageService().GetCurrentWindow(null));
         }
 
         public override List<FindElementResponse> FindElements(JsonObject data)
         {
             FindElementRequest rq = FindElementRequest.Validate(data);
-            return GetServiceProvider().GetElementFinderService().FindElements(rq, GetServiceProvider().GetWindowManageService().getCurrentWindow(null));
+            return GetServiceProvider().GetElementFinderService().FindElements(rq, GetServiceProvider().GetWindowManageService().GetCurrentWindow(null));
         }
 
         public override FindElementResponse FindElementFromElement(string elementId, JsonObject data)
@@ -183,7 +189,7 @@ namespace UIADriver.uia3.session
 
         public override async Task ElementClick(string elementId)
         {
-            GetServiceProvider().GetWindowManageService().getCurrentWindowThenFocus(null);
+            GetServiceProvider().GetWindowManageService().GetCurrentWindowThenFocus(null);
             var element = GetServiceProvider().GetElementFinderService().GetElement(elementId);
 
             await GetServiceProvider().GetActionsService().ElementClick(elementId, element, GetActionOption());
@@ -191,7 +197,7 @@ namespace UIADriver.uia3.session
 
         public override void ElementClear(string elementId)
         {
-            GetServiceProvider().GetWindowManageService().getCurrentWindowThenFocus(null);
+            GetServiceProvider().GetWindowManageService().GetCurrentWindowThenFocus(null);
             var element = GetServiceProvider().GetElementFinderService().GetElement(elementId);
 
             GetServiceProvider().GetActionsService().ElementClear(element);
@@ -205,7 +211,7 @@ namespace UIADriver.uia3.session
                 throw new InvalidArgument("text must be string");
             }
 
-            GetServiceProvider().GetWindowManageService().getCurrentWindowThenFocus(null);
+            GetServiceProvider().GetWindowManageService().GetCurrentWindowThenFocus(null);
             var element = GetServiceProvider().GetElementFinderService().GetElement(elementId);
 
             await GetServiceProvider().GetActionsService().ElementSendKeys(element, text.ToString(), GetActionOption());
@@ -213,7 +219,7 @@ namespace UIADriver.uia3.session
 
         public override string GetElementScreenshot(string elementId)
         {
-            GetServiceProvider().GetWindowManageService().getCurrentWindow(null);
+            GetServiceProvider().GetWindowManageService().GetCurrentWindow(null);
             //  Get element already include rect in cache
             var element = GetServiceProvider().GetElementFinderService().GetElement(elementId);
             double[] rect = (double[])element.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);

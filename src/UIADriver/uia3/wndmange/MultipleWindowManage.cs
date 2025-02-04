@@ -22,7 +22,7 @@ namespace UIADriver.uia3.wndmange
 
         public override List<string> CloseCurrentWindow()
         {
-            int currentHdl = (int) getCurrentWindow(null).GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+            int currentHdl = (int) GetCurrentWindow(null).GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             CloseWindowByHdl(currentHdl);
             return CollectWindowHandles();
         }
@@ -37,7 +37,7 @@ namespace UIADriver.uia3.wndmange
             return CollectWindows(includeIconic).Select(i => i.hdl.ToString()).ToList();
         }
 
-        public override IUIAutomationElement getCurrentWindow(IUIAutomationCacheRequest? cacheRequest)
+        public override IUIAutomationElement GetCurrentWindow(IUIAutomationCacheRequest? cacheRequest)
         {
             if (cacheRequest == null)
             {
@@ -71,12 +71,12 @@ namespace UIADriver.uia3.wndmange
             return currentWnd;
         }
 
-        public override IUIAutomationElement getCurrentWindowThenFocus(IUIAutomationCacheRequest? cacheRequest)
+        public override IUIAutomationElement GetCurrentWindowThenFocus(IUIAutomationCacheRequest? cacheRequest)
         {
             var request = cacheRequest == null ? automation.CreateCacheRequest() : cacheRequest;
             request.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             request.AddProperty(UIA_PropertyIds.UIA_IsWindowPatternAvailablePropertyId);
-            var currentWindow = getCurrentWindow(request);
+            var currentWindow = GetCurrentWindow(request);
 
             int hdl = (int)currentWindow.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             nint currentFocus = Win32Methods.GetForegroundWindow();
@@ -96,7 +96,7 @@ namespace UIADriver.uia3.wndmange
 
         public override RectResponse MaximizeCurrentWindow()
         {
-            int currentHdl = (int)getCurrentWindow(null).GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+            int currentHdl = (int)GetCurrentWindow(null).GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             if (Win32Methods.IsIconic(currentHdl)) Win32Methods.ShowWindow(currentHdl, Win32Constants.SW_RESTORE);
             Win32Methods.ShowWindow(currentHdl, Win32Constants.SW_SHOWMAXIMIZED);
             int lastError = Marshal.GetLastWin32Error();
@@ -110,7 +110,7 @@ namespace UIADriver.uia3.wndmange
 
         public override RectResponse MinimizeCurrentWindow()
         {
-            int currentHdl = (int)getCurrentWindow(null).GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+            int currentHdl = (int)GetCurrentWindow(null).GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             if (!Win32Methods.IsIconic(currentHdl))
             {
                 Win32Methods.ShowWindow(currentHdl, Win32Constants.SW_SHOWMINIMIZED);
@@ -126,7 +126,7 @@ namespace UIADriver.uia3.wndmange
 
         public override RectResponse SetWindowRect(SetRectRequest rq)
         {
-            int currentHdl = (int)getCurrentWindow(null).GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+            int currentHdl = (int)GetCurrentWindow(null).GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             Win32Methods.ShowWindow(currentHdl, Win32Constants.SW_RESTORE);
 
             var currentRect = GetCurrentWindowRect();
@@ -152,7 +152,7 @@ namespace UIADriver.uia3.wndmange
             int currentHdl = 0;
             try
             {
-                currentHdl = (int)getCurrentWindow(null).GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
+                currentHdl = (int)GetCurrentWindow(null).GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             } catch (Exception ex)
             {
                 Debug.WriteLine(ex);

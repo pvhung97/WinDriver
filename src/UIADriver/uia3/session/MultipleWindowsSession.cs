@@ -30,7 +30,7 @@ namespace UIADriver.uia3.session
 
         protected override ActionOptions GetActionOption()
         {
-            return new UIA3ActionOptions(automation, GetServiceProvider().GetWindowManageService().getCurrentWindow(null), GetServiceProvider());
+            return new UIA3ActionOptions(automation, GetServiceProvider().GetWindowManageService().GetCurrentWindow(null), GetServiceProvider());
         }
     }
 }

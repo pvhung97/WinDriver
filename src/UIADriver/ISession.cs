@@ -9,6 +9,7 @@ namespace UIADriver
         public HashSet<string> CollectWindowHandles();
         public Task CloseSession();
         public string GetCurrentWindowTitle();
+        public string GetCurrentWindowProcessPath();
         public string GetCurrentWindowHdl();
         public RectResponse GetCurrentWindowRect();
         public RectResponse MinimizeCurrentWindow();

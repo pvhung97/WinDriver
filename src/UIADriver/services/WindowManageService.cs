@@ -20,9 +20,10 @@ namespace UIADriver.services
             this.serviceProvider = serviceProvider;
         }
 
-        public abstract T getCurrentWindow(U? cacheRequest);
-        public abstract T getCurrentWindowThenFocus(U? cacheRequest);
+        public abstract T GetCurrentWindow(U? cacheRequest);
+        public abstract T GetCurrentWindowThenFocus(U? cacheRequest);
         public abstract string GetCurrentWindowTitle();
+        public abstract string GetCurrentWindowProcessPath();
         public abstract string GetCurrentWindowHdl();
         public abstract List<string> CollectWindowHandles();
         public abstract List<string> CollectWindowHandles(bool includeIconic);
@@ -81,6 +82,25 @@ namespace UIADriver.services
                 i++;
             }
             pids = newPids.ToHashSet();
+        }
+
+        protected string? GetProcessPathFromProcessId(int pid)
+        {
+            string query = "SELECT ProcessId, ExecutablePath FROM Win32_Process WHERE ProcessId = " + pid;
+            var searcher = new ManagementObjectSearcher(query);
+            var results = searcher.Get();
+            string? processPath = null;
+            if (results != null && results.Count > 0)
+            {
+                foreach (ManagementObject obj in results)
+                {
+                    processPath = obj["ExecutablePath"].ToString();
+                    obj.Dispose();
+                }
+                results.Dispose();
+            }
+            searcher.Dispose();
+            return processPath;
         }
 
         public bool IsWindowVisible(int hwnd)

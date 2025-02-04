@@ -38,7 +38,7 @@ namespace UIADriver.uia3.session
 
         protected override ActionOptions GetActionOption()
         {
-            return new RootSessionActionOptions(automation, GetServiceProvider().GetWindowManageService().getCurrentWindow(null), GetServiceProvider());
+            return new RootSessionActionOptions(automation, GetServiceProvider().GetWindowManageService().GetCurrentWindow(null), GetServiceProvider());
         }
 
         public override string GetScreenshot()

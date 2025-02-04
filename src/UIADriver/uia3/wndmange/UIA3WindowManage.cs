@@ -1,9 +1,6 @@
 ﻿using Interop.UIAutomationClient;
-using System.Diagnostics;
 using UIADriver.dto.response;
 using UIADriver.services;
-using UIADriver.win32;
-using UIADriver.win32native;
 
 namespace UIADriver.uia3.wndmange
 {
@@ -20,7 +17,7 @@ namespace UIADriver.uia3.wndmange
         {
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
-            var wnd = getCurrentWindow(cacheRequest);
+            var wnd = GetCurrentWindow(cacheRequest);
             var hdl = (int)wnd.GetCachedPropertyValue(UIA_PropertyIds.UIA_NativeWindowHandlePropertyId);
             return hdl.ToString();
         }
@@ -29,7 +26,7 @@ namespace UIADriver.uia3.wndmange
         {
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
-            var wnd = getCurrentWindow(cacheRequest);
+            var wnd = GetCurrentWindow(cacheRequest);
             double[] rect = (double[])wnd.GetCachedPropertyValue(UIA_PropertyIds.UIA_BoundingRectanglePropertyId);
             return new RectResponse((int)rect[0], (int)rect[1], double.IsInfinity(rect[2]) ? 0 : (int)rect[2], double.IsInfinity(rect[3]) ? 0 : (int)rect[3]);
         }
@@ -38,8 +35,18 @@ namespace UIADriver.uia3.wndmange
         {
             var cacheRequest = automation.CreateCacheRequest();
             cacheRequest.AddProperty(UIA_PropertyIds.UIA_NamePropertyId);
-            var wnd = getCurrentWindow(cacheRequest);
+            var wnd = GetCurrentWindow(cacheRequest);
             return (string)wnd.GetCachedPropertyValue(UIA_PropertyIds.UIA_NamePropertyId);
+        }
+
+        public override string GetCurrentWindowProcessPath()
+        {
+            var cacheRequest = automation.CreateCacheRequest();
+            cacheRequest.AddProperty(UIA_PropertyIds.UIA_ProcessIdPropertyId);
+            var wnd = GetCurrentWindow(cacheRequest);
+            var processPath = GetProcessPathFromProcessId((int)wnd.GetCachedPropertyValue(UIA_PropertyIds.UIA_ProcessIdPropertyId));
+            if (processPath == null) return "";
+            return new Uri(processPath).AbsoluteUri;
         }
     }
 }

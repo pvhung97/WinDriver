@@ -37,7 +37,7 @@ namespace UIADriver.uia2.session
 
         protected override ActionOptions GetActionOption()
         {
-            return new RootSessionActionOptions(GetServiceProvider().GetWindowManageService().getCurrentWindow(null), GetServiceProvider());
+            return new RootSessionActionOptions(GetServiceProvider().GetWindowManageService().GetCurrentWindow(null), GetServiceProvider());
         }
 
         public override string GetScreenshot()

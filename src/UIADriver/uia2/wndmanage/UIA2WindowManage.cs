@@ -15,7 +15,7 @@ namespace UIADriver.uia2.wndmanage
         {
             var cacheRequest = new CacheRequest();
             cacheRequest.Add(AutomationElement.NativeWindowHandleProperty);
-            var wnd = getCurrentWindow(cacheRequest);
+            var wnd = GetCurrentWindow(cacheRequest);
             return wnd.Cached.NativeWindowHandle.ToString();
         }
 
@@ -23,7 +23,7 @@ namespace UIADriver.uia2.wndmanage
         {
             var cacheRequest = new CacheRequest();
             cacheRequest.Add(AutomationElement.BoundingRectangleProperty);
-            var wnd = getCurrentWindow(cacheRequest);
+            var wnd = GetCurrentWindow(cacheRequest);
             var rect = wnd.Cached.BoundingRectangle;
             return new RectResponse((int)rect.X, (int)rect.Y, double.IsInfinity(rect.Width) ? 0 : (int)rect.Width, double.IsInfinity(rect.Height) ? 0 : (int)rect.Height);
         }
@@ -32,8 +32,18 @@ namespace UIADriver.uia2.wndmanage
         {
             var cacheRequest = new CacheRequest();
             cacheRequest.Add(AutomationElement.NameProperty);
-            var wnd = getCurrentWindow(cacheRequest);
+            var wnd = GetCurrentWindow(cacheRequest);
             return wnd.Cached.Name;
+        }
+
+        public override string GetCurrentWindowProcessPath()
+        {
+            var cacheRequest = new CacheRequest();
+            cacheRequest.Add(AutomationElement.ProcessIdProperty);
+            var wnd = GetCurrentWindow(cacheRequest);
+            var processPath = GetProcessPathFromProcessId(wnd.Cached.ProcessId);
+            if (processPath == null) return "";
+            return new Uri(processPath).AbsoluteUri;
         }
     }
 }
