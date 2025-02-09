@@ -11,7 +11,7 @@ namespace UIADriver.exception
 
         public override HttpStatusCode GetStatusCode()
         {
-            return HttpStatusCode.NotFound;
+            return HttpStatusCode.BadRequest;
         }
     }
 }
