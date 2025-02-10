@@ -137,7 +137,7 @@ namespace UIADriver.uia2
                 {
                     case '\uE008':
                         {
-                            var modifierKey = new KeyAction(inputId, keySource.shift ? "keyDown" : "keyUp");
+                            var modifierKey = new KeyAction(inputId, !keySource.shift ? "keyDown" : "keyUp");
                             modifierKey.value = $"{c}";
                             keySource.shift = !keySource.shift;
                             toDispatch.Add(modifierKey);
@@ -145,7 +145,7 @@ namespace UIADriver.uia2
                         }
                     case '\uE009':
                         {
-                            var modifierKey = new KeyAction(inputId, keySource.ctrl ? "keyDown" : "keyUp");
+                            var modifierKey = new KeyAction(inputId, !keySource.ctrl ? "keyDown" : "keyUp");
                             modifierKey.value = $"{c}";
                             keySource.ctrl = !keySource.ctrl;
                             toDispatch.Add(modifierKey);
@@ -153,7 +153,7 @@ namespace UIADriver.uia2
                         }
                     case '\uE00A':
                         {
-                            var modifierKey = new KeyAction(inputId, keySource.alt ? "keyDown" : "keyUp");
+                            var modifierKey = new KeyAction(inputId, !keySource.alt ? "keyDown" : "keyUp");
                             modifierKey.value = $"{c}";
                             keySource.alt = !keySource.alt;
                             toDispatch.Add(modifierKey);
@@ -161,7 +161,7 @@ namespace UIADriver.uia2
                         }
                     case '\uE03D':
                         {
-                            var modifierKey = new KeyAction(inputId, keySource.meta ? "keyDown" : "keyUp");
+                            var modifierKey = new KeyAction(inputId, !keySource.meta ? "keyDown" : "keyUp");
                             modifierKey.value = $"{c}";
                             keySource.meta = !keySource.meta;
                             toDispatch.Add(modifierKey);
