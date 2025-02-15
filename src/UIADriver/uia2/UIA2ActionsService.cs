@@ -26,6 +26,7 @@ namespace UIADriver.uia2
             elementCacheRequest.Add(AutomationElement.IsOffscreenProperty);
             elementCacheRequest.Add(ValuePattern.IsReadOnlyProperty);
             elementCacheRequest.Add(AutomationElement.IsEnabledProperty);
+            elementCacheRequest.Add(AutomationElement.HasKeyboardFocusProperty);
             element = element.GetUpdatedCache(elementCacheRequest);
             element.TryGetCachedPattern(ValuePattern.Pattern, out var pattern);
             if (pattern is ValuePattern valuePattern)
@@ -51,6 +52,7 @@ namespace UIADriver.uia2
                 }
 
                 element.SetFocus();
+                element = WaitUntilElementPropertyEqual(element, elementCacheRequest, AutomationElement.HasKeyboardFocusProperty, true, capabilities.delayAfterFocus);
                 valuePattern.SetValue("");
             }
             else throw new InvalidElementState("Element is not editable");
@@ -180,7 +182,11 @@ namespace UIADriver.uia2
             }
 
             await inputState.DispatchAction(toDispatch.Select(a => new List<Action>() { a }).ToList(), options);
-            await inputState.Release(options);
+            try
+            {
+                //  After send ALT + F4, current window may already closed
+                await inputState.Release(options);
+            } catch { }
         }
 
         public override async Task PerformActions(List<List<actions.action.Action>> actionsByTick, ActionOptions options)
